@@ -1,0 +1,119 @@
+p {
+  padding: 0;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+ul {
+  padding: 0;
+  margin: 0;
+}
+.network-wrapper {
+}
+
+.network-wrapper .container {
+  padding-top: 60px;
+}
+
+.network-wrapper .conn-card {
+  display: flex;
+  justify-content: space-between;
+  max-width: 80%;
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+}
+
+.network-wrapper .left {
+  display: flex;
+}
+
+.network-wrapper .left img {
+  --dimension: 90px;
+  height: var(--dimension);
+  width: var(--dimension);
+  border-radius: calc(var(--dimension) / 2);
+  cursor: pointer;
+}
+
+.network-wrapper .left div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.network-wrapper .left .name {
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.network-wrapper .left .name:hover {
+  text-decoration: underline;
+}
+
+.network-wrapper .left .title {
+  color: #666666;
+  font-size: 13px;
+  margin-left: 2px;
+}
+
+.network-wrapper .right {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.network-wrapper .right .message {
+  border: 1px solid var(--blue-color-button);
+  color: var(--blue-color-button);
+  background-color: white;
+  border-radius: 15px;
+  height: 35px;
+  width: 100px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.network-wrapper .right .message:hover {
+  background-color: var(--blue-hover-color-button);
+}
+
+.network-wrapper .right .options {
+  background: url('../img/options.png') no-repeat scroll 0 0 transparent;
+  padding: 17px;
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  border: none;
+}
+
+.network-wrapper .dropdown {
+  --radius: 5px;
+  position: absolute;
+  bottom: -15px;
+  right: 35px;
+  width: 170px;
+  padding: 5px;
+  list-style: none;
+  border: none;
+  border-radius: var(--radius) 0px var(--radius) var(--radius);
+  text-align: left;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  background-color: white;
+}
+.network-wrapper li {
+  text-align: left;
+  padding: 2px;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.network-wrapper li:hover {
+  background-color: #ebebeb;
+}
+
+/* #ebebeb*/

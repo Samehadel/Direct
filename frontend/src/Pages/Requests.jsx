@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import image from '../assets/img/team/team-3.jpg';
-import ConnectionsServiceAPIs from '../assets/service/ConnectionsServiceAPIs';
+import RequestsServiceAPIs from '../assets/service/RequestsServiceAPIs';
 import '../assets/css/connections.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ function Requests(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        ConnectionsServiceAPIs.accessConnectionRequests()
+        RequestsServiceAPIs.accessConnectionRequests()
             .then(res => {
                 console.log(res);
                 setRequests(res.data)
@@ -27,7 +27,7 @@ function Requests(props) {
     }, [])
 
     const accept = (requestId) => {
-        ConnectionsServiceAPIs.acceptConnectionRequests(requestId)
+        RequestsServiceAPIs.acceptConnectionRequests(requestId)
             .then(res => {
                 console.log(res);
                 setRequests(requests.filter(req => req.id !== requestId))
@@ -38,7 +38,7 @@ function Requests(props) {
     }
 
     const ignore = (requestId) => {
-        ConnectionsServiceAPIs.ignoreConnectionRequests(requestId)
+        RequestsServiceAPIs.ignoreConnectionRequests(requestId)
             .then(res => {
                 console.log(res);
                 setRequests(requests.filter(req => req.id !== requestId))

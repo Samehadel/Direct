@@ -10,6 +10,8 @@
 --------------------------------------------------------------*/
 :root {
   scroll-behavior: smooth;
+  --blue-color-button: #4154f1;
+  --blue-hover-color-button: #e2f0fe;
 }
 
 body {

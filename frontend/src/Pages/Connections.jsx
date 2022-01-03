@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ConnectionsServiceAPIs from './../assets/service/ConnectionsServiceAPIs';
+import SuggestionsServiceAPIs from './../assets/service/SuggestionsServiceAPIs';
+import RequestsServiceAPIs from './../assets/service/RequestsServiceAPIs';
 import '../assets/css/connections.css';
 import image from '../assets/img/team/team-3.jpg';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +13,7 @@ function Connections(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        ConnectionsServiceAPIs.retrieveProfiles()
+        SuggestionsServiceAPIs.retrieveSuggestedConnections()
             .then(res => {
                 console.log(res.data);
                 setProfiles(res.data)
@@ -27,7 +29,7 @@ function Connections(props) {
 
     const sendConnectionRequest = (receiverId) => {
         console.log('Sending Request To: ', receiverId);
-        ConnectionsServiceAPIs.sendConnectionRequest(receiverId)
+        RequestsServiceAPIs.sendConnectionRequest(receiverId)
             .then(res => {
                 console.log(res);
                 setProfiles(profiles.filter(p => p.id !== receiverId))

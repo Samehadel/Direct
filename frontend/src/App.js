@@ -9,9 +9,10 @@ import Signin from './Pages/Signin';
 import Signup from './Pages/Signup';
 import Connections from './Pages/Connections';
 import Requests from './Pages/Requests';
-import Header from './Components/Header';
+import Header from './Components/Header.jsx';
 import AuthenticatedRoute from './Components/AuthenticatedRoute';
 import Keywords from './Pages/Keywords';
+import Network from './Pages/Network';
 
 function App() {
   return (
@@ -42,6 +43,14 @@ function App() {
           element={
             <AuthenticatedRoute>
               <Keywords />
+            </AuthenticatedRoute>
+          }
+        />
+        <Route
+          path='/network'
+          element={
+            <AuthenticatedRoute>
+              <Network />
             </AuthenticatedRoute>
           }
         />

@@ -57,9 +57,9 @@
 }
 
 .connect {
-  border: 1px solid #4154f1;
+  border: 1px solid var(--blue-color-button);
   width: 85%;
-  color: #4154f1;
+  color: var(--blue-color-button);
   font-weight: 500;
   background-color: transparent;
   padding: 5px;
@@ -68,8 +68,8 @@
 }
 
 .accept {
-  border: 1px solid #013289;
-  color: #013289;
+  border: 1px solid var(--blue-color-button);
+  color: var(--blue-color-button);
   font-weight: 500;
   background-color: transparent;
   padding: 5px;

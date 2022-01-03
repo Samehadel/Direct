@@ -17,10 +17,10 @@
 		<java.version>1.8</java.version>
 	</properties>
 
-	<groupId>com.company.app.ws</groupId>
-	<artifactId>mobile-app-ws</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>mobile-app-ws</name>
+	<groupId>com.direct.app</groupId>
+	<artifactId>spring-app</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>Direct</name>
 
 	<description>Demo project for Spring Boot</description>
 
