@@ -81,7 +81,7 @@ function Keywords() {
     // Rendering
     return (
         <section className='keywords-wrapper'>
-            <input type='text' placeholder='Search For Keyword...' onChange={handleChange} value={query} />
+            <input type='text' placeholder='Search For Keyword...' onChange={handleChange} value={query} className='in' />
             <div className='keywords'>
                 {result.map(k =>
                     <button style={{ backgroundColor: k.subscribed ? "#6edf5f" : '#bebebe' }} key={k.id} onClick={() => subscribe(k.id)}>
@@ -91,7 +91,6 @@ function Keywords() {
             </div>
         </section >
     );
-
 
 }
 

@@ -50,32 +50,48 @@ public class KeywordServiceImplementation implements IKeywordService {
 	@Override
 	public List<KeywordDto> getKeywords() throws Exception{
 
-		long userId = userService.retrieveUserId();
-
 		//List of keyword DTOs
 		ArrayList<KeywordDto> keywordsDto = new ArrayList<KeywordDto>();
 		KeywordDto dto = new KeywordDto();
 		
 		//Use Repository
 		Iterable<KeywordEntity> keywords = keywordRepo.findAll();
-		
-		// Another service call
-		List<SubscriptionDto> subscriptions = subscriptionService.getSubscriptions(userId);
 
 		Iterator<KeywordEntity> itr = keywords.iterator();
-		
+
+
 		while(itr.hasNext()) {
 			BeanUtils.copyProperties(itr.next(), dto);
-			for(SubscriptionDto sub: subscriptions){
-				if(sub.getKeywordId() == dto.getId())
-					dto.setSubscribed(true);
-			}
+
 			keywordsDto.add(dto);
 			
 			dto = new KeywordDto();
 		}
 	
 		return keywordsDto;
+	}
+
+	@Override
+	public List<KeywordDto> getKeywordsWithSubscriptions() throws Exception {
+		long userId = userService.retrieveUserId();
+		List<KeywordDto> keywords = getKeywords();
+		assignSubscriptions(keywords, userId);
+
+		return keywords;
+	}
+
+	private List<KeywordDto> assignSubscriptions(List<KeywordDto>keywords, long userId){
+		// Another service call
+		List<SubscriptionDto> subscriptions = subscriptionService.getSubscriptions(userId);
+
+		for(KeywordDto dto: keywords){
+			for(SubscriptionDto sub: subscriptions){
+				if(sub.getKeywordId() == dto.getId())
+					dto.setSubscribed(true);
+			}
+		}
+
+		return keywords;
 	}
 
 }

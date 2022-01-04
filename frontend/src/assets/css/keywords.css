@@ -23,7 +23,8 @@
 
 .keywords button {
   margin: 5px;
-  height: 40px;
+  min-height: 40px;
   border: none;
   border-radius: 10px;
+  
 }

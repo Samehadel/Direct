@@ -28,17 +28,17 @@ public class PublicationsControllerTest {
     }
 
     @Test
-    public void publishJobPost_happy_path_test(){
+    public void publishJobPost_happy_path_test() throws Exception {
 
-        ResponseEntity responseEntity = publicationsController.publishJobPost(new PublicationRequestModel(), 1l);
+        ResponseEntity responseEntity = publicationsController.publishJobPost(new PublicationRequestModel());
 
         // Assertion Stage
         Assert.assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
     }
     @Test
-    public void accessInboxPublications_happy_path_test(){
+    public void accessInboxPublications_happy_path_test() throws Exception {
 
-        ResponseEntity responseEntity = publicationsController.accessInboxPublications(1l);
+        ResponseEntity responseEntity = publicationsController.accessInboxPublications();
 
         // Assertion Stage
         Assert.assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);

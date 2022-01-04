@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IPublicationsService {
 
-	public List<PublicationResponseModel> retrievePublications(long userId);
+	public List<PublicationResponseModel> retrievePublications() throws Exception;
 	public void publish(PublicationRequestModel publication) throws Exception;
 	
 }

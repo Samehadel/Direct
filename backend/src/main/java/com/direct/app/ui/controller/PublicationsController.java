@@ -22,7 +22,7 @@ public class PublicationsController {
 	
 	
 	@PostMapping("/publish")
-	public ResponseEntity publishJobPost(@RequestBody PublicationRequestModel publication){
+	public ResponseEntity publishJobPost(@RequestBody PublicationRequestModel publication) throws Exception {
 
 		publicationService.publish(publication);
 
@@ -31,10 +31,10 @@ public class PublicationsController {
 				.build();
 	}
 	
-	@GetMapping("/{userId}")
-	public ResponseEntity accessInboxPublications(@PathVariable long userId){
+	@GetMapping
+	public ResponseEntity accessInboxPublications() throws Exception {
 		//Use of service
-		List<PublicationResponseModel> publications = publicationService.retrievePublications(userId);
+		List<PublicationResponseModel> publications = publicationService.retrievePublications();
 
 		return ResponseEntity
 				.status(HttpStatus.OK)

@@ -13,6 +13,8 @@ import Header from './Components/Header.jsx';
 import AuthenticatedRoute from './Components/AuthenticatedRoute';
 import Keywords from './Pages/Keywords';
 import Network from './Pages/Network';
+import Publish from './Pages/Publish';
+import Inbox from './Pages/Inbox';
 
 function App() {
   return (
@@ -51,6 +53,22 @@ function App() {
           element={
             <AuthenticatedRoute>
               <Network />
+            </AuthenticatedRoute>
+          }
+        />
+        <Route
+          path='/publish'
+          element={
+            <AuthenticatedRoute>
+              <Publish />
+            </AuthenticatedRoute>
+          }
+        />
+        <Route
+          path='/inbox'
+          element={
+            <AuthenticatedRoute>
+              <Inbox />
             </AuthenticatedRoute>
           }
         />

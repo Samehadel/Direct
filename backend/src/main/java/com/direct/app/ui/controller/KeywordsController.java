@@ -35,4 +35,15 @@ public class KeywordsController {
 				.status(HttpStatus.OK)
 				.body(keywordsDto);
 	}
+
+	@GetMapping("/subs")
+	public ResponseEntity retrieveKeywordsWithSubscriptions() throws Exception {
+
+		// Call the service
+		List<KeywordDto> keywordsDto = keywordService.getKeywordsWithSubscriptions();
+
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(keywordsDto);
+	}
 }

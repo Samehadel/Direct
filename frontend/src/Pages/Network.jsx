@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Network(props) {
     const [connections, setConnections] = useState([]);
-    const [showDropdown, setShowDropdown] = useState(false);
+    const [showDropdown, setShowDropdown] = useState({ id: 0, show: false });
 
     useEffect(() => {
         ConnectionsServiceAPIs.retrieveNetwork()
@@ -47,8 +47,8 @@ function Network(props) {
                                 </div>
                                 <div className="right">
                                     <button className='message'>Message</button>
-                                    <button className='options' onClick={() => { setShowDropdown(!showDropdown) }}></button>
-                                    {showDropdown && <ul className='dropdown'>
+                                    <button className='options' onClick={() => { setShowDropdown({ id: conn.id, show: !showDropdown.show }) }}></button>
+                                    {(showDropdown.id === conn.id && showDropdown.show) && <ul className='dropdown'>
                                         <li onClick={() => handleRemoveConnection(conn.id)}>Remove Connection</li>
                                     </ul>}
                                 </div>

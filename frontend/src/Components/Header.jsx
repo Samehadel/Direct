@@ -76,8 +76,15 @@ function Header() {
             )}
             {showControllers && (
               <li>
-                <a className='nav-link scrollto' href='/directs'>
-                  Directs
+                <a className='nav-link scrollto' href='/publish'>
+                  Publish
+                </a>
+              </li>
+            )}
+            {showControllers && (
+              <li>
+                <a className='nav-link scrollto' href='/inbox'>
+                  Inbox
                 </a>
               </li>
             )}

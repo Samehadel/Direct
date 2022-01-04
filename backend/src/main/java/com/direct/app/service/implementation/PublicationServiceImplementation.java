@@ -34,10 +34,13 @@ public class PublicationServiceImplementation implements IPublicationsService {
 	private IUserService userService;
 
 	@Override
-	public List<PublicationResponseModel> retrievePublications(long userId) {
+	public List<PublicationResponseModel> retrievePublications() throws Exception {
 
 		List<PublicationResponseModel> publications = new ArrayList<>();
-		
+
+		// Get user's id from security context holder
+		long userId = userService.retrieveUserId();
+
 		//Repository use
 		List<PublicationEntity> publicationEntities = publicationRepo.findByRecieverId(userId);
 		
@@ -46,7 +49,8 @@ public class PublicationServiceImplementation implements IPublicationsService {
 			
 			//Copy relevant attributes
 			BeanUtils.copyProperties(entity, model);
-			
+			model.setSenderId(entity.getSender().getId());
+
 			//Append publications
 			publications.add(model);
 		}

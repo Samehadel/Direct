@@ -1,0 +1,55 @@
+.inbox-wrapper {
+  padding-top: 100px;
+}
+
+.inbox-wrapper .container {
+  position: relative;
+}
+
+.inbox-wrapper .container h3 {
+  padding-top: 20px;
+}
+
+.inbox-wrapper .container .success,
+.inbox-wrapper .container .failure {
+  width: 290px;
+  text-align: center;
+  color: white;
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 0 0 3px 3px;
+}
+
+.inbox-wrapper .container .success {
+  background-color: #39db80;
+}
+
+.inbox-wrapper .container .failure {
+  background-color: #fc100dd6;
+}
+
+.inbox-wrapper .col {
+  display: flex;
+}
+
+.inbox-wrapper .left {
+  flex-basis: 50%;
+}
+.inbox-wrapper .left form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inbox-wrapper .left .in {
+  border: 1px solid #777;
+}
+
+.inbox-wrapper .left form .desc {
+  height: 300px !important;
+}
+.inbox-wrapper .right {
+  flex-basis: 50%;
+}

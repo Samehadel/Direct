@@ -53,19 +53,19 @@ function Signin() {
         <form onSubmit={handleSubmit(formSubmit)}>
           <input
             type='text'
-            className='fadeIn second'
+            className='fadeIn second in'
             placeholder='Email'
             {...register('username')}
           />
           <p>{errors.username?.message}</p>
           <input
             type='password'
-            className='fadeIn second'
+            className='fadeIn second in'
             placeholder='Password'
             {...register('password')}
           />
           <p>{errors.password?.message}</p>
-          <input type='submit' className='fadeIn fourth' value='Login' />
+          <input type='submit' className='fadeIn fourth sub' value='Login' />
         </form>
         {error && <div className='error'>{errorMessage}</div>}
         <div>

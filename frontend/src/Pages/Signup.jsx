@@ -53,40 +53,40 @@ function Signup() {
         <form onSubmit={handleSubmit(formSubmit)}>
           <input
             type='text'
-            className='fadeIn second'
+            className='fadeIn second in'
             placeholder='First Name'
             {...register('firstName')}
           />
           <p>{errors.firstName?.message}</p>
           <input
             type='text'
-            className='fadeIn second'
+            className='fadeIn second in'
             placeholder='Last Name'
             {...register('lastName')}
           />
           <p>{errors.lastName?.message}</p>
           <input
             type='text'
-            className='fadeIn second'
+            className='fadeIn second in'
             placeholder='Email'
             {...register('username')}
           />
           <p>{errors.username?.message}</p>
           <input
             type='password'
-            className='fadeIn second'
+            className='fadeIn second in'
             placeholder='Password'
             {...register('password')}
           />
           <p>{errors.password?.message}</p>
           <input
             type='password'
-            className='fadeIn second'
+            className='fadeIn second in'
             placeholder='Confirm Password'
             {...register('confirmPassword')}
           />
           <p>{errors.confirmPassword?.message}</p>
-          <input type='submit' className='fadeIn fourth' value='Sign Up' />
+          <input type='submit' className='fadeIn fourth sub' value='Sign Up' />
         </form>
         {sucess && <div className='sucess'>Signed Up successfully <Link to='/sign-in'>Login</Link></div>}
         {error && <div className='error'>{errorMessage}</div>}

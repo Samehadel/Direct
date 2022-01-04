@@ -1,12 +1,16 @@
 import axios from 'axios';
 
 class KeywordsService {
-  getAllKeywords() {
+  getAllKeywords(check) {
     axios.defaults.headers.common = {
       Authorization: sessionStorage.getItem('Authorization'),
     };
-    return axios.get('http://localhost:8082/keywords');
+
+    return check ? axios.get('http://localhost:8082/keywords/subs') : 
+                   axios.get('http://localhost:8082/keywords');
   }
+
+  
 
   subscribe(keywordId) {
     axios.defaults.headers.common = {
