@@ -1,0 +1,64 @@
+img,
+h2,
+h5 {
+  margin: 0;
+}
+
+.inbox-wrapper {
+  padding-top: 100px;
+}
+
+.inbox-wrapper .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px 10px;
+}
+
+.inbox-wrapper .message-card {
+  background-color: white;
+  padding: 15px;
+  max-width: 600px;
+  border-radius: 10px;
+}
+
+.inbox-wrapper .container h2 {
+  padding: 10px 0;
+}
+.inbox-wrapper .container img {
+  height: 60px;
+  width: 60px;
+  border-radius: 30px;
+}
+
+.inbox-wrapper .message-card .info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.inbox-wrapper .message-card .info div {
+  margin-left: 10px;
+}
+
+.inbox-wrapper .message-card .info div p:first-child {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.inbox-wrapper .message-card .info div p:nth-child(2) {
+  font-size: 14px;
+  color: #777;
+}
+
+.inbox-wrapper .message-card .message {
+  max-width: 600px;
+}
+.inbox-wrapper .message-card .message .content {
+  margin-bottom: 20px;
+  white-space: pre-wrap;
+}
+
+.inbox-wrapper .message-card .message .content p,
+.inbox-wrapper .message-card .message .link a {
+  padding: 10px;
+}

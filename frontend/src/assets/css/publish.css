@@ -1,17 +1,17 @@
-.inbox-wrapper {
+.publish-wrapper {
   padding-top: 100px;
 }
 
-.inbox-wrapper .container {
+.publish-wrapper .container {
   position: relative;
 }
 
-.inbox-wrapper .container h3 {
+.publish-wrapper .container h3 {
   padding-top: 20px;
 }
 
-.inbox-wrapper .container .success,
-.inbox-wrapper .container .failure {
+.publish-wrapper .container .success,
+.publish-wrapper .container .failure {
   width: 290px;
   text-align: center;
   color: white;
@@ -22,34 +22,34 @@
   border-radius: 0 0 3px 3px;
 }
 
-.inbox-wrapper .container .success {
+.publish-wrapper .container .success {
   background-color: #39db80;
 }
 
-.inbox-wrapper .container .failure {
+.publish-wrapper .container .failure {
   background-color: #fc100dd6;
 }
 
-.inbox-wrapper .col {
+.publish-wrapper .col {
   display: flex;
 }
 
-.inbox-wrapper .left {
+.publish-wrapper .left {
   flex-basis: 50%;
 }
-.inbox-wrapper .left form {
+.publish-wrapper .left form {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.inbox-wrapper .left .in {
+.publish-wrapper .left .in {
   border: 1px solid #777;
 }
 
-.inbox-wrapper .left form .desc {
+.publish-wrapper .left form .desc {
   height: 300px !important;
 }
-.inbox-wrapper .right {
+.publish-wrapper .right {
   flex-basis: 50%;
 }

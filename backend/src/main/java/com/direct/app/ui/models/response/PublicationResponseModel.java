@@ -4,6 +4,8 @@ public class PublicationResponseModel {
 	
 	private long id;
 	private long senderId;
+	private String senderFirstName;
+	private String senderLastName;
 	private String content;
 	private String link;
 	
@@ -23,6 +25,22 @@ public class PublicationResponseModel {
 
 	public void setSenderId(long senderId) {
 		this.senderId = senderId;
+	}
+
+	public String getSenderFirstName() {
+		return senderFirstName;
+	}
+
+	public void setSenderFirstName(String senderFirstName) {
+		this.senderFirstName = senderFirstName;
+	}
+
+	public String getSenderLastName() {
+		return senderLastName;
+	}
+
+	public void setSenderLastName(String senderLastName) {
+		this.senderLastName = senderLastName;
 	}
 
 	public String getContent() {

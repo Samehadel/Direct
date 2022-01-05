@@ -21,56 +21,58 @@ import com.direct.app.ui.models.response.PublicationResponseModel;
 @Service
 public class PublicationServiceImplementation implements IPublicationsService {
 
-	@Autowired 
-	private PublicationsRepository publicationRepo;
-	
-	@Autowired
-	private ConnectionRepository connectionRepo;
+    @Autowired
+    private PublicationsRepository publicationRepo;
 
-	@Autowired
-	private PublishPostsUtil publishPostsUtil;
+    @Autowired
+    private ConnectionRepository connectionRepo;
 
-	@Autowired
-	private IUserService userService;
+    @Autowired
+    private PublishPostsUtil publishPostsUtil;
 
-	@Override
-	public List<PublicationResponseModel> retrievePublications() throws Exception {
+    @Autowired
+    private IUserService userService;
 
-		List<PublicationResponseModel> publications = new ArrayList<>();
+    @Override
+    public List<PublicationResponseModel> retrievePublications() throws Exception {
 
-		// Get user's id from security context holder
-		long userId = userService.retrieveUserId();
+        List<PublicationResponseModel> publications = new ArrayList<>();
 
-		//Repository use
-		List<PublicationEntity> publicationEntities = publicationRepo.findByRecieverId(userId);
-		
-		for(PublicationEntity entity: publicationEntities) {
-			PublicationResponseModel model = new PublicationResponseModel();
-			
-			//Copy relevant attributes
-			BeanUtils.copyProperties(entity, model);
-			model.setSenderId(entity.getSender().getId());
+        // Get user's id from security context holder
+        long userId = userService.retrieveUserId();
 
-			//Append publications
-			publications.add(model);
-		}
-		
-		return publications;
-	}
+        //Repository use
+        List<PublicationEntity> publicationEntities = publicationRepo.findByRecieverId(userId);
 
-	@Override
-	public void publish(PublicationRequestModel publication) throws Exception {
-		PublicationDto publicationDto = new PublicationDto();
+        for (PublicationEntity entity : publicationEntities) {
+            PublicationResponseModel model = new PublicationResponseModel();
 
-		// Retrieve User Id
-		long senderId = userService.retrieveUserId();
+            //Copy relevant attributes
+            BeanUtils.copyProperties(entity, model);
+            model.setSenderId(entity.getSender().getId());
+            model.setSenderFirstName(entity.getSender().getFirstName());
+            model.setSenderLastName(entity.getSender().getLastName());
 
-		// Copy Properties from model to DTO
-		BeanUtils.copyProperties(publication, publicationDto);
-		publicationDto.setSenderId(senderId);
+            //Append publications
+            publications.add(model);
+        }
 
-		// Delegate the whole function to the utility class "PublishPostsUtil"
-		publishPostsUtil.publish(publicationDto);
-	}
+        return publications;
+    }
+
+    @Override
+    public void publish(PublicationRequestModel publication) throws Exception {
+        PublicationDto publicationDto = new PublicationDto();
+
+        // Retrieve User Id
+        long senderId = userService.retrieveUserId();
+
+        // Copy Properties from model to DTO
+        BeanUtils.copyProperties(publication, publicationDto);
+        publicationDto.setSenderId(senderId);
+
+        // Delegate the whole function to the utility class "PublishPostsUtil"
+        publishPostsUtil.publish(publicationDto);
+    }
 
 }

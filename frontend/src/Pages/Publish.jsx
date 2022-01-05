@@ -121,7 +121,7 @@ function Publish() {
 
     // Rendering
     return (
-        <section className='inbox-wrapper'>
+        <section className='publish-wrapper'>
 
             <div className="container">
                 <h3>Publish a job post to your network</h3>
