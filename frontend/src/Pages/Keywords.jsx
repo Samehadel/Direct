@@ -15,7 +15,7 @@ function Keywords() {
 
     // APIs calls 
     useEffect(() => {
-        KeywordsService.getAllKeywords()
+        KeywordsService.getAllKeywords(true)
             .then(res => {
                 let data = res.data;
                 console.log("data: ", data);

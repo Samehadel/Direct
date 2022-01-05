@@ -22,7 +22,7 @@ public class PublicationEntity {
 	@SequenceGenerator(name = "publications_generator", sequenceName = "publications_sequence", allocationSize = 1)
 	private long id;
 
-	@Column(name = "content", nullable = true, length = 500)
+	@Column(name = "content", nullable = true)
 	private String content;
 	
 	@Column(name = "link", nullable = true)

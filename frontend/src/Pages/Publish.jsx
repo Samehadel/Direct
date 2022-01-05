@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 
 // Form Schema Definition
 const schema = Yup.object({
-    jobDescription: Yup.string(),
+    jobDescription: Yup.string().min(0).max(2000, "Job desciption must not exceed 2000 characters"),
     jobLink: Yup.string().required('Link is required')
 }).required();
 
@@ -136,6 +136,7 @@ function Publish() {
                                 rows="100"
                                 className='in desc'
                                 {...register('jobDescription')}></textarea>
+                            <p>{errors.jobDescription?.message}</p>
                             <input
                                 type="textarea"
                                 placeholder='Job Link'

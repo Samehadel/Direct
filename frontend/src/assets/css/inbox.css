@@ -25,6 +25,7 @@ h5 {
   padding: 10px 0;
 }
 .inbox-wrapper .container img {
+  cursor: pointer;
   height: 60px;
   width: 60px;
   border-radius: 30px;
@@ -41,8 +42,13 @@ h5 {
 }
 
 .inbox-wrapper .message-card .info div p:first-child {
+  cursor: pointer;
   font-size: 16px;
   font-weight: 600;
+}
+
+.inbox-wrapper .message-card .info div p:first-child:hover {
+  text-decoration: underline;
 }
 
 .inbox-wrapper .message-card .info div p:nth-child(2) {
@@ -61,4 +67,6 @@ h5 {
 .inbox-wrapper .message-card .message .content p,
 .inbox-wrapper .message-card .message .link a {
   padding: 10px;
+  overflow-wrap: anywhere;
+  font-size: 16px;
 }
