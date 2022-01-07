@@ -8,6 +8,7 @@ public class PublicationResponseModel {
 	private String senderLastName;
 	private String content;
 	private String link;
+	private boolean isRead;
 	
 	public PublicationResponseModel(){}
 
@@ -58,6 +59,12 @@ public class PublicationResponseModel {
 	public void setLink(String link) {
 		this.link = link;
 	}
-	
-	
+
+	public boolean isRead() {
+		return isRead;
+	}
+
+	public void setRead(boolean read) {
+		isRead = read;
+	}
 }

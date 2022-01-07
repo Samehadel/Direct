@@ -1,9 +1,6 @@
 package com.direct.app.service.implementation;
 
-import com.direct.app.io.entities.UserAuthorityEntity;
-import com.direct.app.io.entities.UserDetailsEntity;
-import com.direct.app.io.entities.UserEntity;
-import com.direct.app.io.entities.UserRole;
+import com.direct.app.io.entities.*;
 import com.direct.app.repositery.UserAuthorityRepository;
 import com.direct.app.repositery.UserDetailsRepository;
 import com.direct.app.repositery.UserRepository;
@@ -54,6 +51,7 @@ public class UserServiceImplementation implements IUserService {
         UserEntity user = new UserEntity();
         UserAuthorityEntity authorities = new UserAuthorityEntity(UserRole.ROLE_USER.name());
         UserDetailsEntity userDetails = new UserDetailsEntity();
+        UserImageEntity userImage = new UserImageEntity();
 
         // Copy Values From DTO To User Entity
         BeanUtils.copyProperties(userDto, user);
@@ -65,6 +63,8 @@ public class UserServiceImplementation implements IUserService {
         user.setUserDetails(userDetails);
         userDetails.setUser(user);
 
+        userDetails.setUserImage(userImage);
+        userImage.setUserDetails(userDetails);
 
         // Encrypt User Password - Then -> Generate Random User Id
         user.setEncryptedPassword(encoder.encode(userDto.getPassword()));

@@ -64,7 +64,7 @@ public class UserEntity implements Serializable {
 	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL) // 4- with 'requests'
 	private List<RequestEntity> sentRequests;
 
-	@OneToMany(mappedBy = "reciever", cascade = CascadeType.ALL) // 5- with 'requests'
+	@OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL) // 5- with 'requests'
 	private List<RequestEntity> receivedRequests;
 
 	@OneToMany(mappedBy = "firstUser", cascade = CascadeType.ALL) // 6- with 'connections'
@@ -77,7 +77,7 @@ public class UserEntity implements Serializable {
 	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL) // 8- with 'publications'
 	private List<PublicationEntity> sentPublications;
 
-	@OneToMany(mappedBy = "reciever", cascade = CascadeType.ALL) // 9- with 'publications'
+	@OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL) // 9- with 'publications'
 	private List<PublicationEntity> receivedPublications;
 	
 	
@@ -233,8 +233,8 @@ public class UserEntity implements Serializable {
 		sentRequests.add(request);
 	}
 
-	// Add recieved request to the user
-	public void addRecievedRequest(RequestEntity request) {
+	// Add received request to the user
+	public void addReceivedRequest(RequestEntity request) {
 		if (receivedRequests == null)
 			receivedRequests = new ArrayList<>();
 

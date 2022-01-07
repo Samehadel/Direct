@@ -76,7 +76,7 @@ public class PublishPostsUtilImplementation extends PublishPostsUtil {
 
                         // Prepare publication
                         PublicationEntity publication = new PublicationEntity();
-                        publication.setReciever(receiver);
+                        publication.setReceiver(receiver);
                         publication.setSender(sender);
 
                         // Assign Relationships

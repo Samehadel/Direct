@@ -16,5 +16,14 @@ class PublicationsAPIs {
     };
     return axios.get(this.baseUrl);
   }
+
+  markPublicationAsRead(publicationId, isRead) {
+    axios.defaults.headers.common = {
+      Authorization: sessionStorage.getItem('Authorization'),
+    };
+    return !isRead
+      ? axios.put(this.baseUrl + `/status/read/${publicationId}`)
+      : axios.put(this.baseUrl + `/status/unread/${publicationId}`);
+  }
 }
 export default new PublicationsAPIs();

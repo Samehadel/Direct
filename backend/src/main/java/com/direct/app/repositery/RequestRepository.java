@@ -13,9 +13,9 @@ public interface RequestRepository extends CrudRepository<RequestEntity, Long>{
 	@Query(value = "SELECT * FROM requests req WHERE req.sender_id =:userId", nativeQuery = true)
 	List<RequestEntity> findSenderByUserId(long userId);
 
-	@Query(value = "SELECT * FROM requests req WHERE req.reciever_id =:userId", nativeQuery = true)
+	@Query(value = "SELECT * FROM requests req WHERE req.receiver_id =:userId", nativeQuery = true)
 	List<RequestEntity> findReceiverByUserId(long userId);
 
-	@Query(value = "SELECT * FROM requests req WHERE req.sender_id =:userId OR req.reciever_id =:userId", nativeQuery = true)
+	@Query(value = "SELECT * FROM requests req WHERE req.sender_id =:userId OR req.receiver_id =:userId", nativeQuery = true)
 	List<RequestEntity> findRequestByUserId(long userId);
 }

@@ -8,16 +8,13 @@ import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.IConnectionRequestService;
 import com.direct.app.service.IUserService;
 import com.direct.app.shared.dto.RequestDto;
-import com.direct.app.ui.models.response.ProfileResponseModel;
 import com.direct.app.ui.models.response.RequestsResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ConnectionRequestServiceImplementation implements IConnectionRequestService {
@@ -46,10 +43,10 @@ public class ConnectionRequestServiceImplementation implements IConnectionReques
 		
 		// Assign relationships
 		sender.addSentRequest(newRequest);
-		receiver.addRecievedRequest(newRequest);
+		receiver.addReceivedRequest(newRequest);
 		
 		newRequest.setSender(sender);
-		newRequest.setReciever(receiver);
+		newRequest.setReceiver(receiver);
 		
 		// Save the request
 		RequestEntity backRequest = requestRepo.save(newRequest);
@@ -73,7 +70,7 @@ public class ConnectionRequestServiceImplementation implements IConnectionReques
 		
 		//Get the associated users
 		UserEntity sender = userService.retrieveUser(request.getSender().getId());
-		UserEntity receiver = userService.retrieveUser(request.getReciever().getId());
+		UserEntity receiver = userService.retrieveUser(request.getReceiver().getId());
 		
 		connection.setFirstUser(sender);
 		connection.setSecondUser(receiver);

@@ -3,6 +3,7 @@ import PublicationsAPIs from '../assets/service/PublicationsAPIs';
 import image from '../assets/img/team/team-3.jpg';
 import '../assets/css/inbox.css';
 import { Link } from 'react-router-dom';
+import { ReactComponent as MarkAsReadSVG } from '../assets/img/icons/envelope-open-regular.svg';
 
 function Inbox(props) {
 
@@ -11,13 +12,35 @@ function Inbox(props) {
     useEffect(() => {
         PublicationsAPIs.accessInboxPublications()
             .then(res => {
-                console.log(res.data[0].link);
+                console.log(res.data);
                 setMessages(res.data);
             })
             .catch(err => {
                 console.log(err);
             })
     }, []);
+
+    // Mark message as read
+    const handleMarkAsRead = (publicationId) => {
+        console.log(publicationId);
+
+        const publication = messages.find(m => m.id === publicationId);
+
+
+        PublicationsAPIs.markPublicationAsRead(publicationId, publication.read)
+            .then(res => {
+                console.log(res);
+
+                const newMessages = messages.map(m => {
+                    if (m.id === publicationId) {
+                        m.read = !m.read
+                    }
+
+                    return m;
+                })
+                setMessages(newMessages);
+            })
+    }
 
     return (
         <section className='inbox-wrapper'>
@@ -26,13 +49,18 @@ function Inbox(props) {
                 <h2>Inbox</h2>
                 <div className="grid">
                     {messages.map(m =>
-                        <div className="message-card" key={m.id}>
+                        <div className="message-card" key={m.id} style={{ backgroundColor: !m.read ? "#e4ebe6" : 'white' }}>
                             <div className="info">
                                 <img src={image} alt="" />
                                 <div>
                                     <p>{m.senderFirstName.concat(" ", m.senderLastName)}</p>
                                     <p>Software Engineer - Demo</p>
                                 </div>
+                                <MarkAsReadSVG
+                                    title={m.read ? 'mark as unread' : 'mark as read'}
+                                    className='mark-read'
+                                    style={{ color: !m.read ? ' #1034a6' : '#777' }}
+                                    onClick={() => handleMarkAsRead(m.id)} />
                             </div>
                             <div className="message">
                                 <div className="content">

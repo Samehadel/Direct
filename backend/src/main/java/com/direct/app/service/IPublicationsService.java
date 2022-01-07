@@ -9,5 +9,5 @@ public interface IPublicationsService {
 
 	public List<PublicationResponseModel> retrievePublications() throws Exception;
 	public void publish(PublicationRequestModel publication) throws Exception;
-	
+	public boolean markPublicationAsRead (long publicationId, boolean isRead);
 }

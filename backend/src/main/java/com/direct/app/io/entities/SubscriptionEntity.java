@@ -1,15 +1,6 @@
 package com.direct.app.io.entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "subscriptions")
@@ -26,12 +17,12 @@ public class SubscriptionEntity {
 
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH }, fetch = FetchType.EAGER)
-	@JoinColumn(name = "keyword_id")
+	@JoinColumn(name = "keyword_id", foreignKey = @ForeignKey(name = "fk_subscriptions_keyword_id"))
 	private KeywordEntity keyword;
 
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_subscriptions_user_id"))
 	private UserEntity user;
 
 	// Default Constructor

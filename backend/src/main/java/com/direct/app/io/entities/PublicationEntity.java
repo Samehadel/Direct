@@ -1,15 +1,6 @@
 package com.direct.app.io.entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "publications")
@@ -28,17 +19,19 @@ public class PublicationEntity {
 	@Column(name = "link", nullable = true)
 	private String link;
 	
-	
+	@Column(name = "is_read", nullable = false)
+	private boolean isRead = false;
+
 	//Relationships
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, 
 			CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "sender_id")
+	@JoinColumn(name = "sender_id", foreignKey = @ForeignKey(name = "fk_publications_sender_id"))
 	private UserEntity sender; 
 	
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, 
 			CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "reciever_id")
-	private UserEntity reciever; 
+	@JoinColumn(name = "receiver_id", foreignKey = @ForeignKey(name = "fk_publications_receiver_id"))
+	private UserEntity receiver;
 
 
 	//Default Constructor
@@ -76,6 +69,13 @@ public class PublicationEntity {
 		this.link = link;
 	}
 
+	public boolean isRead() {
+		return isRead;
+	}
+
+	public void setRead(boolean read) {
+		isRead = read;
+	}
 
 	public UserEntity getSender() {
 		return sender;
@@ -87,12 +87,12 @@ public class PublicationEntity {
 	}
 
 
-	public UserEntity getReciever() {
-		return reciever;
+	public UserEntity getReceiver() {
+		return receiver;
 	}
 
 
-	public void setReciever(UserEntity reciever) {
-		this.reciever = reciever;
+	public void setReceiver(UserEntity receiver) {
+		this.receiver = receiver;
 	}	
 }

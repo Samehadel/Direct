@@ -1,14 +1,6 @@
 package com.direct.app.io.entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "requests")
@@ -26,13 +18,13 @@ public class RequestEntity {
 
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, 
 							CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "sender_id")
+	@JoinColumn(name = "sender_id", foreignKey = @ForeignKey(name = "fk_requests_sender_id"))
 	private UserEntity sender;
 
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, 
 			CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "reciever_id")
-	private UserEntity reciever;
+	@JoinColumn(name = "receiver_id", foreignKey = @ForeignKey(name = "fk_requests_receiver_id"))
+	private UserEntity receiver;
 
 	
 	
@@ -58,11 +50,11 @@ public class RequestEntity {
 		this.sender = sender;
 	}
 
-	public UserEntity getReciever() {
-		return reciever;
+	public UserEntity getReceiver() {
+		return receiver;
 	}
 
-	public void setReciever(UserEntity reciever) {
-		this.reciever = reciever;
+	public void setReceiver(UserEntity receiver) {
+		this.receiver = receiver;
 	}
 }

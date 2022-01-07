@@ -9,7 +9,6 @@ import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.ui.models.request.PublicationRequestModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import com.direct.app.io.entities.PublicationEntity;
@@ -17,6 +16,8 @@ import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.service.IPublicationsService;
 import com.direct.app.shared.dto.PublicationDto;
 import com.direct.app.ui.models.response.PublicationResponseModel;
+
+import javax.transaction.Transactional;
 
 @Service
 public class PublicationServiceImplementation implements IPublicationsService {
@@ -42,7 +43,7 @@ public class PublicationServiceImplementation implements IPublicationsService {
         long userId = userService.retrieveUserId();
 
         //Repository use
-        List<PublicationEntity> publicationEntities = publicationRepo.findByRecieverId(userId);
+        List<PublicationEntity> publicationEntities = publicationRepo.findByReceiverId(userId);
 
         for (PublicationEntity entity : publicationEntities) {
             PublicationResponseModel model = new PublicationResponseModel();
@@ -73,6 +74,19 @@ public class PublicationServiceImplementation implements IPublicationsService {
 
         // Delegate the whole function to the utility class "PublishPostsUtil"
         publishPostsUtil.publish(publicationDto);
+    }
+
+    @Transactional
+    @Override
+    public boolean markPublicationAsRead(long publicationId, boolean isRead) {
+        int modifiedEntities = 0;
+
+        if (isRead)
+            modifiedEntities = publicationRepo.markPublicationAsRead(publicationId);
+        else
+            modifiedEntities = publicationRepo.markPublicationAsUnRead(publicationId);
+
+            return modifiedEntities == 1 ? true : false;
     }
 
 }

@@ -1,14 +1,6 @@
 package com.direct.app.io.entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "connections")
@@ -25,11 +17,11 @@ public class ConnectionEntity {
 	// Relationships
 	
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "first_user_id")
+	@JoinColumn(name = "first_user_id", foreignKey = @ForeignKey(name = "fk_connections_first_user_id"))
 	private UserEntity firstUser;
 
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "second_user_id")
+	@JoinColumn(name = "second_user_id", foreignKey = @ForeignKey(name = "fk_connections_second_user_id"))
 	private UserEntity secondUser;
 
 	// Constructors

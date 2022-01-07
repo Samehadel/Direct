@@ -94,8 +94,8 @@ public class ProfilesServiceUtils {
 		for(int i = 0; i < userRequests.size(); i++) {
 			RequestEntity req = userRequests.get(i);
 			
-			if(req.getReciever().getId() != id)
-				excludedUsers.add(req.getReciever());
+			if(req.getReceiver().getId() != id)
+				excludedUsers.add(req.getReceiver());
 			else
 				excludedUsers.add(req.getSender());
 		}

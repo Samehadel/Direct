@@ -1,15 +1,6 @@
 package com.direct.app.io.entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 @Entity
@@ -35,12 +26,14 @@ public class UserDetailsEntity {
 	@Column(name = "professional_title", nullable = true, length = 50)
 	private String professionalTitle;
 	
-	
 	//Relationships
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_details_user_id"), referencedColumnName = "id")
 	private UserEntity user;
+
+	@OneToOne(mappedBy = "userDetails", cascade = CascadeType.ALL)
+	private UserImageEntity userImage;
 
 	//Default Constructor
 	public UserDetailsEntity() {}
@@ -94,5 +87,13 @@ public class UserDetailsEntity {
 
 	public void setUser(UserEntity user) {
 		this.user = user;
+	}
+
+	public UserImageEntity getUserImage() {
+		return userImage;
+	}
+
+	public void setUserImage(UserImageEntity userImage) {
+		this.userImage = userImage;
 	}
 }
