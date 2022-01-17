@@ -17,7 +17,7 @@ public interface SubscriptionRepository extends CrudRepository<SubscriptionEntit
 	
 	public List<SubscriptionEntity> findAllByUserId(long id);
 	
-	@Query(value = "SELECT * FROM subscriptions subs WHERE subs.keyword_id in :keywords AND subs.user_id != :userId", nativeQuery = true)
+	@Query(value = "SELECT * FROM subscriptions subs WHERE subs.keyword_id in (:keywords) AND subs.user_id != :userId", nativeQuery = true)
 	public List<SubscriptionEntity> findSimilarSubscriptions(List<Integer> keywords, long userId);
 
 	@Query(value = "DELETE FROM subscriptions subs WHERE subs.user_id=:userId and keyword_id=:keywordId", nativeQuery = true)

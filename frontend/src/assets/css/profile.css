@@ -1,0 +1,40 @@
+form {
+  padding: 0;
+}
+
+.proflie-wrapper {
+  padding-top: 100px;
+}
+
+.proflie-wrapper .container-xl {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  border-radius: 7px;
+  padding: 20px;
+}
+
+.profile-imag img {
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
+}
+
+.upload-image {
+  display: none;
+}
+
+.proflie-wrapper .info {
+  padding: 10px;
+  text-align: center;
+}
+
+.proflie-wrapper .info p:first-child {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.proflie-wrapper .info p:nth-child(2) {
+  font-size: 13px;
+}

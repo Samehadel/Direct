@@ -3,7 +3,7 @@ import ConnectionsServiceAPIs from './../assets/service/ConnectionsServiceAPIs';
 import SuggestionsServiceAPIs from './../assets/service/SuggestionsServiceAPIs';
 import RequestsServiceAPIs from './../assets/service/RequestsServiceAPIs';
 import '../assets/css/connections.css';
-import image from '../assets/img/team/team-3.jpg';
+import noImage from '../assets/img/no-image2.png';
 import { useNavigate } from 'react-router-dom';
 
 function Connections(props) {
@@ -46,8 +46,9 @@ function Connections(props) {
                 <div className='grid-2'>
                     {profiles.map(p =>
                         <div className='card' key={p.id}>
-                            <img className='personal-img' src={image} alt="pic" />
+                            <img className='personal-img' src={p.imageData === null ? noImage : 'data:' + p.imageFormat + ';base64,' + p.imageData} alt="pic" />
                             <p>{p.firstName + " " + p.lastName}</p>
+                            <p className='title'>{p.professionalTitle === null ? null : p.professionalTitle}</p>
                             <button className='connect' onClick={() => sendConnectionRequest(p.id)}>Connect</button>
                         </div>
                     )}

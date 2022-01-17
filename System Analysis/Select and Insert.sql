@@ -10,8 +10,10 @@ Select * from requests;
 Select * from publications;
 Select * from connections;
 
+SELECT count(*) FROM users_images WHERE user_details_id =2; 
 select * from information_schema.table_constraints where CONSTRAINT_SCHEMA='find_me_job_db' and table_name="user_details";
 
+update user_details set professional_title='Software Engineer' where id=1;
 
 insert into keywords (id, description) values (1, 'Java');
 insert into keywords (id, description) values (2, 'Spring');

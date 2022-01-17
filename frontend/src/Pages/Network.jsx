@@ -3,6 +3,7 @@ import image from '../assets/img/team/team-3.jpg';
 import ConnectionsServiceAPIs from '../assets/service/ConnectionsServiceAPIs';
 import '../assets/css/network.css';
 import { useNavigate } from 'react-router-dom';
+import noImage from '../assets/img/no-image.png';
 
 function Network(props) {
     const [connections, setConnections] = useState([]);
@@ -39,10 +40,10 @@ function Network(props) {
                         connections.map(conn =>
                             <div className="conn-card" key={conn.id}>
                                 <div className="left">
-                                    <img src={image} alt="" />
+                                    <img src={conn.imageData === null ? noImage : 'data:' + conn.imageFormat + ';base64,' + conn.imageData} alt="" />
                                     <div>
                                         <p className='name'>{conn.firstName.concat(' ', conn.lastName)}</p>
-                                        <p className='title'>Software Engineer - Temp</p>
+                                        <p className='title'>{conn.professionalTitle === null ? null : conn.professionalTitle}</p>
                                     </div>
                                 </div>
                                 <div className="right">

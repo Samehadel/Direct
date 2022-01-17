@@ -6,6 +6,7 @@ import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.service.INetworkService;
 import com.direct.app.service.IUserService;
 import com.direct.app.ui.models.response.ProfileResponseModel;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,10 +41,12 @@ public class NetworkServiceImplementation implements INetworkService {
             }else{
                 user = conn.getSecondUser();
             }
+            ProfileResponseModel responseModel = new ProfileResponseModel();
+            BeanUtils.copyProperties(user, responseModel);
+            BeanUtils.copyProperties(user.getUserDetails(), responseModel);
+            BeanUtils.copyProperties(user.getUserDetails().getUserImage(), responseModel);
 
-            responseModels.add(new ProfileResponseModel(conn.getId(),
-                    user.getFirstName(),
-                    user.getLastName()));
+            responseModels.add(responseModel);
         }
 
         return responseModels;

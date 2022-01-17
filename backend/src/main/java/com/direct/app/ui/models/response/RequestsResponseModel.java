@@ -1,17 +1,11 @@
 package com.direct.app.ui.models.response;
 
 public class RequestsResponseModel {
-    long id;
-    private String firstName;
-    private String lastName;
+
+    private long id;
+    private SenderDetails senderDetails = new SenderDetails();
 
     public RequestsResponseModel() {
-    }
-
-    public RequestsResponseModel(long id, String firstName, String lastName) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     public long getId() {
@@ -22,19 +16,11 @@ public class RequestsResponseModel {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public SenderDetails getSenderDetails() {
+        return senderDetails;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setSenderDetails(SenderDetails senderDetails) {
+        this.senderDetails = senderDetails;
     }
 }

@@ -1,7 +1,6 @@
 package com.direct.app.ui.models.request;
 
 public class ProfileDetailsRequestModel {
-
 	
 	private String phone;
 	private String bio;

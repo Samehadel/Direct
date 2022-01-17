@@ -88,6 +88,13 @@ function Header() {
                 </a>
               </li>
             )}
+            {showControllers && (
+              <li>
+                <a className='nav-link scrollto' href='/profile'>
+                  Profile
+                </a>
+              </li>
+            )}
             {showLanding && (
               <li>
                 <a className='getstarted scrollto' href='/sign-in'>

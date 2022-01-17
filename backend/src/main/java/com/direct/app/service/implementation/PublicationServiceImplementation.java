@@ -9,6 +9,7 @@ import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.ui.models.request.PublicationRequestModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import com.direct.app.io.entities.PublicationEntity;
@@ -49,10 +50,11 @@ public class PublicationServiceImplementation implements IPublicationsService {
             PublicationResponseModel model = new PublicationResponseModel();
 
             //Copy relevant attributes
-            BeanUtils.copyProperties(entity, model);
             model.setSenderId(entity.getSender().getId());
-            model.setSenderFirstName(entity.getSender().getFirstName());
-            model.setSenderLastName(entity.getSender().getLastName());
+
+            BeanUtils.copyProperties(entity, model);
+            BeanUtils.copyProperties(entity.getSender(), model.getSenderDetails());
+            BeanUtils.copyProperties(entity.getSender().getUserDetails().getUserImage(), model.getSenderDetails());
 
             //Append publications
             publications.add(model);

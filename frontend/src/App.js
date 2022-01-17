@@ -15,6 +15,7 @@ import Keywords from './Pages/Keywords';
 import Network from './Pages/Network';
 import Publish from './Pages/Publish';
 import Inbox from './Pages/Inbox';
+import Profile from './Pages/Profile';
 
 function App() {
   return (
@@ -69,6 +70,14 @@ function App() {
           element={
             <AuthenticatedRoute>
               <Inbox />
+            </AuthenticatedRoute>
+          }
+        />
+        <Route
+          path='/profile'
+          element={
+            <AuthenticatedRoute>
+              <Profile />
             </AuthenticatedRoute>
           }
         />

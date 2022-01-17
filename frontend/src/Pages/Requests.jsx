@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import image from '../assets/img/team/team-3.jpg';
 import RequestsServiceAPIs from '../assets/service/RequestsServiceAPIs';
 import '../assets/css/connections.css';
 import { useNavigate } from 'react-router-dom';
+import noImage from '../assets/img/no-image2.png';
 
 function Requests(props) {
 
@@ -54,8 +54,11 @@ function Requests(props) {
                 <div className='requests grid-2'>
                     {requests.map(req =>
                         <div className='card' key={req.id}>
-                            <img className='personal-img' src={image} alt="pic" />
-                            <p>{req.firstName + " " + req.lastName}</p>
+                            <img className='personal-img' src={req.senderDetails.imageData === null ? noImage : 'data:' + req.senderDetails.imageFormat + ';base64,' + req.senderDetails.imageData} alt="pic" />
+                            <div className="info">
+                                <p>{req.senderDetails.firstName + " " + req.senderDetails.lastName}</p>
+                                <p className='title'>{req.professionalTitle === null ? null : req.professionalTitle}</p>
+                            </div>
                             <button className='accept' onClick={() => accept(req.id)}>Accept</button>
                             <button className='ignore' onClick={() => ignore(req.id)}>Ignore</button>
                         </div>

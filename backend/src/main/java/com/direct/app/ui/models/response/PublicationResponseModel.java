@@ -4,8 +4,7 @@ public class PublicationResponseModel {
 	
 	private long id;
 	private long senderId;
-	private String senderFirstName;
-	private String senderLastName;
+	private SenderDetails senderDetails;
 	private String content;
 	private String link;
 	private boolean isRead;
@@ -28,20 +27,12 @@ public class PublicationResponseModel {
 		this.senderId = senderId;
 	}
 
-	public String getSenderFirstName() {
-		return senderFirstName;
+	public SenderDetails getSenderDetails() {
+		return senderDetails;
 	}
 
-	public void setSenderFirstName(String senderFirstName) {
-		this.senderFirstName = senderFirstName;
-	}
-
-	public String getSenderLastName() {
-		return senderLastName;
-	}
-
-	public void setSenderLastName(String senderLastName) {
-		this.senderLastName = senderLastName;
+	public void setSenderDetails(SenderDetails senderDetails) {
+		this.senderDetails = senderDetails;
 	}
 
 	public String getContent() {

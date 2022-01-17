@@ -9,6 +9,7 @@ import com.direct.app.service.IConnectionRequestService;
 import com.direct.app.service.IUserService;
 import com.direct.app.shared.dto.RequestDto;
 import com.direct.app.ui.models.response.RequestsResponseModel;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -105,9 +106,14 @@ public class ConnectionRequestServiceImplementation implements IConnectionReques
 		List<RequestsResponseModel> responseModels = new ArrayList<>();
 
 		for(RequestEntity req: requests){
-			responseModels.add(new RequestsResponseModel(req.getId(),
-					req.getSender().getFirstName(),
-					req.getSender().getLastName()));
+			RequestsResponseModel responseModel = new RequestsResponseModel();
+
+			// Copy properties to responseModel
+			BeanUtils.copyProperties(req.getSender(), responseModel.getSenderDetails());
+			BeanUtils.copyProperties(req.getSender().getUserDetails(), responseModel.getSenderDetails());
+			BeanUtils.copyProperties(req.getSender().getUserDetails().getUserImage(), responseModel.getSenderDetails());
+
+			responseModels.add(responseModel);
 		}
 
 		return responseModels;

@@ -44,6 +44,7 @@ delete from requests;
 delete from publications;
 delete from connections;
 
+delete from users_images where id=4;
 # Alter
 ALTER TABLE requests DROP FOREIGN KEY fk_requests_user_id_reciever;
 

@@ -53,7 +53,17 @@
   font-weight: 500;
   color: black;
   text-align: center;
-  min-height: 50px;
+  min-height: 20px;
+}
+
+.secondary-wrapper .title {
+  color: #666666;
+  font-size: 13px;
+  margin-left: 2px;
+}
+
+.secondary-wrapper .info {
+  margin-bottom: 20px;
 }
 
 .connect {
@@ -64,7 +74,7 @@
   background-color: transparent;
   padding: 5px;
   border-radius: 20px;
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
 .accept {
