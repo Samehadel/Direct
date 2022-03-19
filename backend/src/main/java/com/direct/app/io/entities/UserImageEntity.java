@@ -1,8 +1,13 @@
 package com.direct.app.io.entities;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity(name = "users_images")
+@Data
+@NoArgsConstructor
 public class UserImageEntity {
 
     @Id
@@ -21,39 +26,4 @@ public class UserImageEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_details_id", foreignKey = @ForeignKey(name = "fk_users_images_user_details_id"))
     private UserDetailsEntity userDetails;
-
-    public UserImageEntity() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public byte[] getImageData() {
-        return imageData;
-    }
-
-    public void setImageData(byte[] imageData) {
-        this.imageData = imageData;
-    }
-
-    public String getImageFormat() {
-        return imageFormat;
-    }
-
-    public void setImageFormat(String imageFormat) {
-        this.imageFormat = imageFormat;
-    }
-
-    public UserDetailsEntity getUserDetails() {
-        return userDetails;
-    }
-
-    public void setUserDetails(UserDetailsEntity userDetails) {
-        this.userDetails = userDetails;
-    }
 }

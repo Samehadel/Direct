@@ -1,5 +1,8 @@
 package com.direct.app.io.entities;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "keywords")
 public class KeywordEntity {
 
@@ -22,52 +27,17 @@ public class KeywordEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "keywords_generator")
 	@SequenceGenerator(name = "keywords_generator", sequenceName = "keywords_sequence", allocationSize = 1)
-	private int id;
+	private Integer id;
 
 	@Column(name = "description", nullable = false, length = 30)
 	private String description;
-
-
 	
 	//Relationships
 	
 	@OneToMany(mappedBy = "keyword", cascade = CascadeType.ALL)
 	private List<SubscriptionEntity> subscriptions; 
 	
-	//Default Constructor
-	public KeywordEntity() {}
 
-	
-	
-	//Setters & Getters
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public List<SubscriptionEntity> getSubscriptions() {
-		return subscriptions;
-	}
-
-	public void setSubscriptions(List<SubscriptionEntity> subscriptions) {
-		this.subscriptions = subscriptions;
-	}
-	
-	
-	
-	
 	//Add subscriptions to the keyword
 	public void addSubscription(SubscriptionEntity sub) {
 		if(subscriptions == null)

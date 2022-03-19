@@ -1,9 +1,14 @@
 package com.direct.app.io.entities;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "user_details")
 public class UserDetailsEntity {
 
@@ -12,7 +17,7 @@ public class UserDetailsEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "details_generator")
 	@SequenceGenerator(name = "details_generator", sequenceName = "details_sequence", allocationSize = 1)
-	private long id;
+	private Long id;
 	
 	@Column(name = "phone", nullable = true, length = 14)
 	private String phone;
@@ -34,66 +39,4 @@ public class UserDetailsEntity {
 
 	@OneToOne(mappedBy = "userDetails", cascade = CascadeType.ALL)
 	private UserImageEntity userImage;
-
-	//Default Constructor
-	public UserDetailsEntity() {}
-
-	
-	//Setters & Getters
-	
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getMajorField() {
-		return majorField;
-	}
-
-	public void setMajorField(String majorField) {
-		this.majorField = majorField;
-	}
-
-	public String getBio() {
-		return bio;
-	}
-
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
-
-	public String getProfessionalTitle() {
-		return professionalTitle;
-	}
-
-	public void setProfessionalTitle(String professionalTitle) {
-		this.professionalTitle = professionalTitle;
-	}
-
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(UserEntity user) {
-		this.user = user;
-	}
-
-	public UserImageEntity getUserImage() {
-		return userImage;
-	}
-
-	public void setUserImage(UserImageEntity userImage) {
-		this.userImage = userImage;
-	}
 }
