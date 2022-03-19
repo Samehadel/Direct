@@ -1,5 +1,9 @@
 package com.direct.app.io.entities;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +23,8 @@ import javax.persistence.Table;
 
 	
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "users")
 public class UserEntity implements Serializable {
 
@@ -29,7 +35,8 @@ public class UserEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
 	@SequenceGenerator(name = "user_generator", sequenceName = "users_sequence", allocationSize = 1)
-	private long id;
+	@EqualsAndHashCode.Include
+	private Long id;
 
 	@Column(name = "first_name", nullable = false, length = 50)
 	private String firstName;
@@ -37,6 +44,7 @@ public class UserEntity implements Serializable {
 	@Column(name = "last_name", nullable = false, length = 50)
 	private String lastName;
 
+	@EqualsAndHashCode.Include
 	@Column(name = "username", nullable = false, length = 150)
 	private String userName;
 
@@ -79,143 +87,6 @@ public class UserEntity implements Serializable {
 
 	@OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL) // 9- with 'publications'
 	private List<PublicationEntity> receivedPublications;
-	
-	
-	// Default Constructor
-	public UserEntity() {}
-
-	// Setters & Getters
-
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getEncryptedPassword() {
-		return encryptedPassword;
-	}
-
-	public void setEncryptedPassword(String encryptedPassword) {
-		this.encryptedPassword = encryptedPassword;
-	}
-
-	public boolean isEmailVerificationStatus() {
-		return emailVerificationStatus;
-	}
-
-	public void setEmailVerificationStatus(boolean emailVerificationStatus) {
-		this.emailVerificationStatus = emailVerificationStatus;
-	}
-
-	public String getVirtualUserId() {
-		return virtualUserId;
-	}
-
-	public void setVirtualUserId(String virtualUserId) {
-		this.virtualUserId = virtualUserId;
-	}
-
-	public UserAuthorityEntity getAuthority() {
-		return authority;
-	}
-
-	public void setAuthority(UserAuthorityEntity authority) {
-		this.authority = authority;
-	}
-
-	public UserDetailsEntity getUserDetails() {
-		return userDetails;
-	}
-
-	public void setUserDetails(UserDetailsEntity userDetails) {
-		this.userDetails = userDetails;
-	}
-
-	public List<SubscriptionEntity> getSubscriptions() {
-		return subscriptions;
-	}
-
-	public void setSubscriptions(List<SubscriptionEntity> subscriptions) {
-		this.subscriptions = subscriptions;
-	}
-
-	public List<RequestEntity> getSentRequests() {
-		return sentRequests;
-	}
-
-	public void setSentRequests(List<RequestEntity> sentRequests) {
-		this.sentRequests = sentRequests;
-	}
-
-	public List<RequestEntity> getReceivedRequests() {
-		return receivedRequests;
-	}
-
-	public void setReceivedRequests(List<RequestEntity> receivedRequests) {
-		this.receivedRequests = receivedRequests;
-	}
-
-	public List<ConnectionEntity> getSentConnections() {
-		return sentConnections;
-	}
-
-	public void setSentConnections(List<ConnectionEntity> sentConnections) {
-		this.sentConnections = sentConnections;
-	}
-
-	public List<ConnectionEntity> getReceivedConnections() {
-		return receivedConnections;
-	}
-
-	public void setReceivedConnections(List<ConnectionEntity> receivedConnections) {
-		this.receivedConnections = receivedConnections;
-	}
-
-	public List<PublicationEntity> getSentPublications() {
-		return sentPublications;
-	}
-
-	public void setSentPublications(List<PublicationEntity> sentPublications) {
-		this.sentPublications = sentPublications;
-	}
-
-	public List<PublicationEntity> getReceivedPublications() {
-		return receivedPublications;
-	}
-
-	public void setReceivedPublications(List<PublicationEntity> receivedPublications) {
-		this.receivedPublications = receivedPublications;
-	}
-	
-	
 	
 	// Add subscription to the user
 	public void addSubscription(SubscriptionEntity sub) {
@@ -266,25 +137,10 @@ public class UserEntity implements Serializable {
 	}
 
 	// Add received connection to the user
-	public void addRecievedPublication(PublicationEntity publication) {
+	public void addReceivedPublication(PublicationEntity publication) {
 		if (receivedPublications == null)
 			receivedPublications = new ArrayList<>();
 
 		receivedPublications.add(publication);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		UserEntity that = (UserEntity) o;
-
-		return  id == that.id &&
-				userName.equals(that.userName);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, userName);
 	}
 }

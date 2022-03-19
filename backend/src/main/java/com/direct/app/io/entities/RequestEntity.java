@@ -1,8 +1,13 @@
 package com.direct.app.io.entities;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "requests")
 public class RequestEntity {
 
@@ -11,7 +16,7 @@ public class RequestEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "requests_generator")
 	@SequenceGenerator(name = "requests_generator", sequenceName = "requests_sequence", allocationSize = 1)
-	private long id;
+	private Long id;
 
 	
 	// Relationships
@@ -26,35 +31,4 @@ public class RequestEntity {
 	@JoinColumn(name = "receiver_id", foreignKey = @ForeignKey(name = "fk_requests_receiver_id"))
 	private UserEntity receiver;
 
-	
-	
-	// Default Constructor
-	public RequestEntity() {}
-
-	
-	// Setters & Getters
-	
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public UserEntity getSender() {
-		return sender;
-	}
-
-	public void setSender(UserEntity sender) {
-		this.sender = sender;
-	}
-
-	public UserEntity getReceiver() {
-		return receiver;
-	}
-
-	public void setReceiver(UserEntity receiver) {
-		this.receiver = receiver;
-	}
 }
