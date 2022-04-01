@@ -1,8 +1,7 @@
 package com.direct.app.ui.controller;
 
-import com.direct.app.service.IPublicationsService;
-import com.direct.app.ui.models.request.PublicationRequestModel;
-import com.direct.app.ui.models.response.PublicationResponseModel;
+import com.direct.app.service.PublicationsService;
+import com.direct.app.shared.dto.PublicationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +15,11 @@ import java.util.List;
 public class PublicationsController {
 
     @Autowired
-    IPublicationsService publicationService;
+    PublicationsService publicationService;
 
 
     @PostMapping("/publish")
-    public ResponseEntity publishJobPost(@RequestBody PublicationRequestModel publication) throws Exception {
+    public ResponseEntity publishJobPost(@RequestBody PublicationDto publication) throws Exception {
 
         publicationService.publish(publication);
 
@@ -32,7 +31,7 @@ public class PublicationsController {
     @GetMapping
     public ResponseEntity accessInboxPublications() throws Exception {
         //Use of service
-        List<PublicationResponseModel> publications = publicationService.retrievePublications();
+        List<PublicationDto> publications = publicationService.retrievePublications();
 
         return ResponseEntity
                 .status(HttpStatus.OK)

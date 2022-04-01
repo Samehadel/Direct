@@ -1,28 +1,22 @@
 package com.direct.app.shared.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class KeywordDto {
 
-	private int id;
+	private Long subscriptionId;
+	private Integer keywordId;
+	private Long userId;
+	private String keywordDescription;
 	private boolean subscribed;
-	private String description;
-
-	public int getId() {
-		return id;
+	public KeywordDto(Integer keywordId, Long userId) {
+		this.keywordId = keywordId;
+		this.userId = userId;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public boolean isSubscribed() {
-		return subscribed;
-	}
-	public void setSubscribed(boolean subscribed) {
-		this.subscribed = subscribed;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
 }

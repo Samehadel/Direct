@@ -1,16 +1,13 @@
 package com.direct.app.ui.controller;
 
-import com.direct.app.service.ISubscriptionService;
-import com.direct.app.service.IUserService;
-import com.direct.app.shared.dto.SubscriptionDto;
-import com.direct.app.ui.models.request.SubscriptionRequestModel;
-import com.direct.app.ui.models.response.SubscriptionResponseModel;
+import com.direct.app.service.SubscriptionService;
+import com.direct.app.service.UserService;
+import com.direct.app.shared.dto.KeywordDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,22 +19,17 @@ import java.util.List;
 public class SubscriptionsController {
 
     @Autowired
-    private IUserService userService;
+    private UserService userService;
 
     @Autowired
-    private ISubscriptionService subscriptionService;
-
-    private Authentication auth;
+    private SubscriptionService subscriptionService;
 
     @PostMapping("/subscribe")
-    public ResponseEntity subscribe(@RequestBody SubscriptionRequestModel subscriptionBody) throws Exception {
+    public ResponseEntity subscribe(@RequestBody KeywordDto keywordDto) throws Exception {
 
-        // Extract user's info from ContextHolder and get user's id from DB
-        auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        long userId = userService.retrieveUserId();
+        Long userId = userService.retrieveUserId();
 
-        boolean check = subscriptionService.createSubscription(userId, subscriptionBody.getKeywordId());
+        boolean check = subscriptionService.createSubscription(userId, keywordDto.getKeywordId());
 
         return check ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -48,25 +40,23 @@ public class SubscriptionsController {
     public ResponseEntity accessSubscriptions() throws Exception {
 
         // Extract user's info from ContextHolder and get user's id from DB
-        auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
         long userId = userService.retrieveUserId();
 
-        List<SubscriptionResponseModel> subscriptions = new ArrayList<>();
-        List<SubscriptionDto> subscriptionsDto = subscriptionService.getSubscriptions(userId);
+        List<KeywordDto> keywordsSubscriptions = new ArrayList<>();
+        List<KeywordDto> subscriptionsDto = subscriptionService.getSubscriptions(userId);
 
-        for (SubscriptionDto dto : subscriptionsDto) {
-            SubscriptionResponseModel responseModel = new SubscriptionResponseModel();
+        for (KeywordDto dto : subscriptionsDto) {
+            KeywordDto responseDto = new KeywordDto();
 
             // Copy values from DTO to response model
-            BeanUtils.copyProperties(dto, responseModel);
+            BeanUtils.copyProperties(dto, responseDto);
 
-            subscriptions.add(responseModel);
+            keywordsSubscriptions.add(responseDto);
         }
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(subscriptions);
+                .body(keywordsSubscriptions);
     }
 
     @DeleteMapping("/drop/{subscriptionId}")

@@ -1,27 +1,22 @@
 package com.direct.app.service.implementation;
 
+import com.direct.app.io.entities.PublicationEntity;
+import com.direct.app.repositery.ConnectionRepository;
+import com.direct.app.repositery.PublicationsRepository;
+import com.direct.app.service.PublicationsService;
+import com.direct.app.service.UserService;
+import com.direct.app.service.util.publication_service_utils.PublishPostsUtil;
+import com.direct.app.shared.dto.PublicationDto;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.direct.app.service.IUserService;
-import com.direct.app.service.util.publication_service_utils.PublishPostsUtil;
-import com.direct.app.repositery.PublicationsRepository;
-import com.direct.app.ui.models.request.PublicationRequestModel;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Service;
-
-import com.direct.app.io.entities.PublicationEntity;
-import com.direct.app.repositery.ConnectionRepository;
-import com.direct.app.service.IPublicationsService;
-import com.direct.app.shared.dto.PublicationDto;
-import com.direct.app.ui.models.response.PublicationResponseModel;
-
-import javax.transaction.Transactional;
-
 @Service
-public class PublicationServiceImplementation implements IPublicationsService {
+public class PublicationServiceImplementation implements PublicationsService {
 
     @Autowired
     private PublicationsRepository publicationRepo;
@@ -33,12 +28,12 @@ public class PublicationServiceImplementation implements IPublicationsService {
     private PublishPostsUtil publishPostsUtil;
 
     @Autowired
-    private IUserService userService;
+    private UserService userService;
 
     @Override
-    public List<PublicationResponseModel> retrievePublications() throws Exception {
+    public List<PublicationDto> retrievePublications() throws Exception {
 
-        List<PublicationResponseModel> publications = new ArrayList<>();
+        List<PublicationDto> publications = new ArrayList<>();
 
         // Get user's id from security context holder
         long userId = userService.retrieveUserId();
@@ -47,7 +42,7 @@ public class PublicationServiceImplementation implements IPublicationsService {
         List<PublicationEntity> publicationEntities = publicationRepo.findByReceiverId(userId);
 
         for (PublicationEntity entity : publicationEntities) {
-            PublicationResponseModel model = new PublicationResponseModel();
+            PublicationDto model = new PublicationDto();
 
             //Copy relevant attributes
             model.setSenderId(entity.getSender().getId());
@@ -64,8 +59,8 @@ public class PublicationServiceImplementation implements IPublicationsService {
     }
 
     @Override
-    public void publish(PublicationRequestModel publication) throws Exception {
-        PublicationDto publicationDto = new PublicationDto();
+    public void publish(PublicationDto publication) throws Exception {
+        com.direct.app.shared.dto.PublicationDto publicationDto = new com.direct.app.shared.dto.PublicationDto();
 
         // Retrieve User Id
         long senderId = userService.retrieveUserId();

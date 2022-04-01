@@ -1,16 +1,18 @@
 package com.direct.app.service.implementation;
 
+import com.direct.app.exceptions.ErrorCode;
+import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.RequestEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
-import com.direct.app.service.IConnectionRequestService;
-import com.direct.app.service.IUserService;
-import com.direct.app.shared.dto.RequestDto;
-import com.direct.app.ui.models.response.RequestsResponseModel;
+import com.direct.app.service.ConnectionRequestService;
+import com.direct.app.service.UserService;
+import com.direct.app.shared.dto.ConnectionRequestDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ConnectionRequestServiceImplementation implements IConnectionRequestService {
+public class ConnectionRequestServiceImplementation implements ConnectionRequestService {
 
 	@Autowired
-	IUserService userService; 
+	UserService userService;
 	
 	@Autowired
 	RequestRepository requestRepo; 
@@ -30,33 +32,45 @@ public class ConnectionRequestServiceImplementation implements IConnectionReques
 	ConnectionRepository connectionRepo;
 	
 	@Override
-	public RequestDto createConnectionRequest(long receiverId) throws Exception {
+	public ConnectionRequestDto createConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception {
 
-		// Get username from security context
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
+		validateSender(connectionRequestDto.getSenderId());
 		RequestEntity newRequest = new RequestEntity();
-		RequestDto requestDto = new RequestDto();
 
 		// Retrieve the two users from database
-		UserEntity sender = userService.retrieveUser(username);
-		UserEntity receiver = userService.retrieveUser(receiverId);
-		
-		// Assign relationships
-		sender.addSentRequest(newRequest);
-		receiver.addReceivedRequest(newRequest);
-		
-		newRequest.setSender(sender);
-		newRequest.setReceiver(receiver);
-		
+		UserEntity sender = userService.retrieveUser(connectionRequestDto.getSenderId());
+		UserEntity receiver = userService.retrieveUser(connectionRequestDto.getReceiverId());
+
+		assignConnectionRequestSender(sender, newRequest);
+		assignConnectionRequestReceiver(receiver, newRequest);
+
 		// Save the request
-		RequestEntity backRequest = requestRepo.save(newRequest);
+		requestRepo.save(newRequest);
 		
 		// Copy the properties to DTO
-		requestDto.setId(backRequest.getId());
-		requestDto.setSenderId(sender.getId());
+		connectionRequestDto.setId(newRequest.getId());
+		connectionRequestDto.setSenderId(sender.getId());
 		
-		return requestDto;
+		return connectionRequestDto;
+	}
+
+	public void validateSender(Long senderId) throws Exception{
+		// Get username from security context
+		Long currentUserId = userService.retrieveUserId();
+
+		if(currentUserId != senderId)
+			throw  new RuntimeBusinessException(HttpStatus.NOT_ACCEPTABLE, ErrorCode.U$0003, senderId);
+
+	}
+
+	private void assignConnectionRequestSender(UserEntity sender, RequestEntity newRequest){
+		sender.addSentRequest(newRequest);
+		newRequest.setSender(sender);
+	}
+
+	private void assignConnectionRequestReceiver(UserEntity receiver, RequestEntity newRequest){
+		receiver.addReceivedRequest(newRequest);
+		newRequest.setReceiver(receiver);
 	}
 
 	@Override
@@ -95,7 +109,7 @@ public class ConnectionRequestServiceImplementation implements IConnectionReques
 	}
 
 	@Override
-	public List<RequestsResponseModel> retrieveConnectionsRequests() throws Exception {
+	public List<ConnectionRequestDto> retrieveConnectionsRequests() throws Exception {
 
 		// Extract User's id from security context
 		long userId = userService.retrieveUserId();
@@ -103,20 +117,20 @@ public class ConnectionRequestServiceImplementation implements IConnectionReques
 		// Call service to retrieve user's connections requests
 		List<RequestEntity> requests = requestRepo.findReceiverByUserId(userId);
 
-		List<RequestsResponseModel> responseModels = new ArrayList<>();
+		List<ConnectionRequestDto> requestDtos = new ArrayList<>();
 
 		for(RequestEntity req: requests){
-			RequestsResponseModel responseModel = new RequestsResponseModel();
+			ConnectionRequestDto responseModel = new ConnectionRequestDto();
 
 			// Copy properties to responseModel
 			BeanUtils.copyProperties(req.getSender(), responseModel.getSenderDetails());
 			BeanUtils.copyProperties(req.getSender().getUserDetails(), responseModel.getSenderDetails());
 			BeanUtils.copyProperties(req.getSender().getUserDetails().getUserImage(), responseModel.getSenderDetails());
 
-			responseModels.add(responseModel);
+			requestDtos.add(responseModel);
 		}
 
-		return responseModels;
+		return requestDtos;
 	}
 
 }

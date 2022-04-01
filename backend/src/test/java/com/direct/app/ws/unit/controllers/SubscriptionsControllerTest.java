@@ -1,9 +1,9 @@
 package com.direct.app.ws.unit.controllers;
 
-import com.direct.app.service.ISubscriptionService;
-import com.direct.app.shared.dto.SubscriptionDto;
+import com.direct.app.service.SubscriptionService;
+import com.direct.app.service.UserService;
+import com.direct.app.shared.dto.KeywordDto;
 import com.direct.app.ui.controller.SubscriptionsController;
-import com.direct.app.ui.models.request.SubscriptionRequestModel;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,17 +15,19 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 public class SubscriptionsControllerTest {
 
     @Mock
-    private ISubscriptionService subscriptionService;
+    private SubscriptionService subscriptionService;
 
     @InjectMocks
     private SubscriptionsController subscriptionsController;
+
+    @Mock
+    private UserService userService;
 
     @Before
     public void init(){
@@ -36,12 +38,12 @@ public class SubscriptionsControllerTest {
 
     @Test
     public void subscribe_happy_path_test() throws Exception {
-        SubscriptionRequestModel subscriptionRequestModel = new SubscriptionRequestModel(1l, 1);
+        KeywordDto keywordDto = new KeywordDto(1, 1L);
 
         // Mocking Stage 1
         when(subscriptionService.createSubscription(anyLong(), anyInt())).thenReturn(true);
 
-        ResponseEntity responseEntity = subscriptionsController.subscribe(subscriptionRequestModel);
+        ResponseEntity responseEntity = subscriptionsController.subscribe(keywordDto);
 
         // Assertion Stage 1
         Assert.assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
@@ -50,7 +52,7 @@ public class SubscriptionsControllerTest {
         // Mocking Stage 2
         when(subscriptionService.createSubscription(anyLong(), anyInt())).thenReturn(false);
 
-        responseEntity = subscriptionsController.subscribe(subscriptionRequestModel);
+        responseEntity = subscriptionsController.subscribe(keywordDto);
 
         // Assertion Stage 2
         Assert.assertEquals(responseEntity.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -60,7 +62,8 @@ public class SubscriptionsControllerTest {
     public void accessSubscriptions_happy_path() throws Exception {
 
         // Mocking Stage
-        when(subscriptionService.getSubscriptions(anyLong())).thenReturn(new ArrayList<SubscriptionDto>());
+        when(subscriptionService.getSubscriptions(anyLong())).thenReturn(new ArrayList<KeywordDto>());
+        when(userService.retrieveUserId()).thenReturn(1L);
 
         ResponseEntity responseEntity = subscriptionsController.accessSubscriptions();
 

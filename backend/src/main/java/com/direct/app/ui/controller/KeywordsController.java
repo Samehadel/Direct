@@ -1,6 +1,6 @@
 package com.direct.app.ui.controller;
 
-import com.direct.app.service.IKeywordService;
+import com.direct.app.service.KeywordService;
 import com.direct.app.shared.dto.KeywordDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import java.util.List;
 public class KeywordsController {
 
 	@Autowired
-	IKeywordService keywordService;
+    KeywordService keywordService;
 	
 	@PostMapping("/create")
 	public ResponseEntity createNewKeyword(@RequestBody String description) {

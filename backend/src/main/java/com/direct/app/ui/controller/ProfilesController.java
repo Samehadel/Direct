@@ -2,12 +2,11 @@ package com.direct.app.ui.controller;
 
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.service.IProfilesService;
-import com.direct.app.ui.models.request.ProfileDetailsRequestModel;
-import com.direct.app.ui.models.response.ProfileResponseModel;
+import com.direct.app.service.ProfilesService;
+import com.direct.app.shared.dto.ProfileDetailsDto;
+import com.direct.app.shared.dto.ProfileDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,7 @@ import java.util.List;
 public class ProfilesController {
 
 	@Autowired
-	private IProfilesService profilesService;
+	private ProfilesService profilesService;
 
 
 	/**
@@ -33,7 +32,7 @@ public class ProfilesController {
 	public ResponseEntity displayProfiles() throws Exception {
 
 		// Use of the service
-		List<ProfileResponseModel> users = profilesService.retrieveSimilarUsers();
+		List<ProfileDto> users = profilesService.retrieveSimilarUsers();
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -41,7 +40,7 @@ public class ProfilesController {
 	}
 	
 	@PutMapping("/details")
-	public void editAccountInfo(@RequestBody ProfileDetailsRequestModel profileDetails){
+	public void editAccountInfo(@RequestBody ProfileDetailsDto profileDetails){
 		
 	}
 
@@ -61,7 +60,7 @@ public class ProfilesController {
 	@GetMapping("/details")
 	public ResponseEntity getAccountImage() throws Exception {
 
-	    ProfileResponseModel responseModel = new ProfileResponseModel();
+	    ProfileDto responseModel = new ProfileDto();
 
 	    // Service call
 		UserEntity userEntity = profilesService.getAccountDetails();

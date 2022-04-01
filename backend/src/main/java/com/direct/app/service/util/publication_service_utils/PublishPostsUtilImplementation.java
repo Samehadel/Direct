@@ -80,7 +80,7 @@ public class PublishPostsUtilImplementation extends PublishPostsUtil {
                         publication.setSender(sender);
 
                         // Assign Relationships
-                        receiver.addRecievedPublication(publication);
+                        receiver.addReceivedPublication(publication);
                         receiver.addSentPublication(publication);
 
                         BeanUtils.copyProperties(publicationDto, publication);

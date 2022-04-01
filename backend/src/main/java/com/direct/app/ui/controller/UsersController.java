@@ -1,10 +1,9 @@
 package com.direct.app.ui.controller;
 
+import com.direct.app.io.entities.UserEntity;
 import com.direct.app.security.SecurityConstants;
-import com.direct.app.service.IUserService;
+import com.direct.app.service.UserService;
 import com.direct.app.shared.dto.UserDto;
-import com.direct.app.ui.models.request.SignupRequestModel;
-import com.direct.app.ui.models.response.UserResponseModel;
 import com.direct.app.utils.JwtUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +17,26 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
 
 	@Autowired
-	IUserService userService;
+    UserService userService;
 
 	@Autowired
 	JwtUtils jwtUtils;
 	
 	
 	@PostMapping("/signup")
-	public ResponseEntity<UserResponseModel> createUser
-            (@RequestBody SignupRequestModel userDetails) throws Exception {
+	public ResponseEntity<UserDto> createUser
+            (@RequestBody UserDto userDetails) throws Exception {
 
 		// Initialize required objects
-		UserResponseModel returnObj = new UserResponseModel();
+		UserDto returnObj = new UserDto();
 		UserDto userDto = new UserDto();
 
 		// Copy values From request body to the dto object
 		BeanUtils.copyProperties(userDetails, userDto);
 
 		// Use the user service
-		UserDto createdUserEntity = userService.createUser(userDto);
+		UserEntity createdUserEntity = userService.createUser(userDto);
+
 
 		if(createdUserEntity == null)
 			return ResponseEntity.status(500)
@@ -48,8 +48,7 @@ public class UsersController {
         // Add JWT and virtualUserId then return the response entity
 		ResponseEntity response = ResponseEntity.status(HttpStatus.OK)
                 .header(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX +
-                        jwtUtils.getJWT(userDetails.getUserName(), userDetails.getPassword()))
-                .header("virtualUserId", createdUserEntity.getVirtualUserId())
+                        jwtUtils.getJWT(userDetails.getUsername(), userDetails.getPassword()))
                 .body(returnObj);
 
 		return response;

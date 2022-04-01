@@ -2,6 +2,8 @@ package com.direct.app.ws.integration;
 
 import com.direct.app.repositery.UserRepository;
 import com.direct.app.ui.controller.SubscriptionsController;
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,5 +27,8 @@ public class SubscriptionControllerIntegrationTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-
+    @Test
+    public void test(){
+        Assert.assertEquals(0, 0);
+    }
 }

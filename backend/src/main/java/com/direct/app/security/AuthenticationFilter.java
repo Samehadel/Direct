@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.direct.app.ui.models.request.LoginRequestModel;
+import com.direct.app.shared.dto.UserDto;
 import com.direct.app.utils.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,8 +34,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 			HttpServletResponse response) throws AuthenticationException {
 		
 		try {
-			LoginRequestModel creds = new ObjectMapper()
-											.readValue(request.getInputStream(), LoginRequestModel.class);
+			UserDto creds = new ObjectMapper()
+											.readValue(request.getInputStream(), UserDto.class);
 			
 			
 			return authManager.authenticate(

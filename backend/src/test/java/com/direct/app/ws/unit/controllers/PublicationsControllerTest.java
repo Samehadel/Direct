@@ -1,8 +1,8 @@
 package com.direct.app.ws.unit.controllers;
 
-import com.direct.app.service.IPublicationsService;
+import com.direct.app.service.PublicationsService;
 import com.direct.app.ui.controller.PublicationsController;
-import com.direct.app.ui.models.request.PublicationRequestModel;
+import com.direct.app.shared.dto.PublicationDto;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 public class PublicationsControllerTest {
 
     @Mock
-    private IPublicationsService publicationsService;
+    private PublicationsService publicationsService;
 
     @InjectMocks
     private PublicationsController publicationsController;
@@ -30,7 +30,7 @@ public class PublicationsControllerTest {
     @Test
     public void publishJobPost_happy_path_test() throws Exception {
 
-        ResponseEntity responseEntity = publicationsController.publishJobPost(new PublicationRequestModel());
+        ResponseEntity responseEntity = publicationsController.publishJobPost(new PublicationDto());
 
         // Assertion Stage
         Assert.assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);

@@ -1,7 +1,7 @@
 package com.direct.app.ui.controller;
 
-import com.direct.app.service.INetworkService;
-import com.direct.app.ui.models.response.ProfileResponseModel;
+import com.direct.app.service.NetworkService;
+import com.direct.app.shared.dto.ProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.Set;
 public class ConnectionsController {
 
 	@Autowired
-    private INetworkService networkService;
+    private NetworkService networkService;
 
 	/**
 	 	* This endpoint used by users to access their network
@@ -23,7 +23,7 @@ public class ConnectionsController {
 	@GetMapping
 	public ResponseEntity accessNetwork() throws Exception {
 
-		Set<ProfileResponseModel> responseModels = networkService.retrieveNetwork();
+		Set<ProfileDto> responseModels = networkService.retrieveNetwork();
 
 		return ResponseEntity
 				.status(HttpStatus.OK)

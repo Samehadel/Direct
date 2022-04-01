@@ -1,13 +1,12 @@
 package com.direct.app.service;
 
-import com.direct.app.ui.models.request.PublicationRequestModel;
-import com.direct.app.ui.models.response.PublicationResponseModel;
+import com.direct.app.shared.dto.PublicationDto;
 
 import java.util.List;
 
-public interface IPublicationsService {
+public interface PublicationsService {
 
-	public List<PublicationResponseModel> retrievePublications() throws Exception;
-	public void publish(PublicationRequestModel publication) throws Exception;
+	public List<PublicationDto> retrievePublications() throws Exception;
+	public void publish(PublicationDto publication) throws Exception;
 	public boolean markPublicationAsRead (long publicationId, boolean isRead);
 }

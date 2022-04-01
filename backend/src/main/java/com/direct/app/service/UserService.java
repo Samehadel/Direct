@@ -5,13 +5,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.direct.app.io.entities.UserEntity;
 
-public interface IUserService extends UserDetailsService {
+public interface UserService extends UserDetailsService {
 
-	public UserDto createUser(UserDto userDto) throws Exception;
+	public UserEntity createUser(UserDto userDto) throws Exception;
 	
 	public UserEntity retrieveUser(String username) throws Exception;
 
-	public long retrieveUserId() throws Exception;
+	public Long retrieveUserId() throws Exception;
 
 	public UserEntity retrieveUser(long id) throws Exception;
 
