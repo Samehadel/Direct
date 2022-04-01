@@ -1,48 +1,46 @@
 package com.direct.app.service.implementation;
 
-import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.io.entities.UserImageEntity;
 import com.direct.app.repositery.UserImageRepository;
-import com.direct.app.service.IProfilesService;
-import com.direct.app.service.ISubscriptionService;
-import com.direct.app.service.IUserService;
+import com.direct.app.service.ProfilesService;
+import com.direct.app.service.SubscriptionService;
+import com.direct.app.service.UserService;
 import com.direct.app.service.util.user_service_utils.ProfilesServiceUtils;
-import com.direct.app.ui.models.request.ProfileDetailsRequestModel;
-import com.direct.app.ui.models.response.ProfileResponseModel;
+import com.direct.app.shared.dto.ProfileDetailsDto;
+import com.direct.app.shared.dto.ProfileDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class ProfilesServiceImplementation implements IProfilesService {
+public class ProfilesServiceImplementation implements ProfilesService {
 
 	@Autowired
-	private ISubscriptionService subscriptionsService;
+	private SubscriptionService subscriptionsService;
 
 	@Autowired
 	private UserImageRepository userImageRepository;
 
 	@Autowired 
-	private IUserService userService;
+	private UserService userService;
 	
 	@Autowired
     private ProfilesServiceUtils profilesServiceUtils;
 
 
 	@Override
-	public List<ProfileResponseModel> retrieveSimilarUsers() throws Exception {
+	public List<ProfileDto> retrieveSimilarUsers() throws Exception {
 
 		// Final users for return
-		List<ProfileResponseModel> userModels = new ArrayList<>();
+		List<ProfileDto> userModels = new ArrayList<>();
 
 		// Extract username from security context
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -52,7 +50,7 @@ public class ProfilesServiceImplementation implements IProfilesService {
 		Set<UserEntity> similarUsers = profilesServiceUtils.retrieveUsersBySubscriptions(user.getSubscriptions(), user.getId());
 		
 		for(UserEntity u: similarUsers) {
-			ProfileResponseModel model = new ProfileResponseModel();
+			ProfileDto model = new ProfileDto();
 			
 			//Copy related values to Dto
 			BeanUtils.copyProperties(u, model);
@@ -65,7 +63,7 @@ public class ProfilesServiceImplementation implements IProfilesService {
 	}
 
 	@Override
-	public boolean editAccountDetails(ProfileDetailsRequestModel detailsModel) {
+	public boolean editAccountDetails(ProfileDetailsDto detailsModel) {
 
 
 		return false;

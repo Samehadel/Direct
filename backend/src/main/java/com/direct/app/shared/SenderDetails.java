@@ -1,4 +1,4 @@
-package com.direct.app.ui.models.response;
+package com.direct.app.shared;
 
 public class SenderDetails {
 

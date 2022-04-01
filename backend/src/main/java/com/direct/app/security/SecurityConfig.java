@@ -1,6 +1,6 @@
 package com.direct.app.security;
 
-import com.direct.app.service.IUserService;
+import com.direct.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	DataSource dataSource;
 
 	@Autowired
-	private IUserService userDetailsService;
+	private UserService userDetailsService;
 
 	@Autowired
 	private BCryptPasswordEncoder encoder;

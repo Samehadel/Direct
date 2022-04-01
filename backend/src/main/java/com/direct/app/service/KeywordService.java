@@ -5,7 +5,7 @@ import java.util.List;
 import com.direct.app.io.entities.KeywordEntity;
 import com.direct.app.shared.dto.KeywordDto;
 
-public interface IKeywordService {
+public interface KeywordService {
 
 	public boolean addKeyword(String keyword);
 	

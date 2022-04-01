@@ -1,18 +1,17 @@
 package com.direct.app.service;
 
-import com.direct.app.shared.dto.RequestDto;
-import com.direct.app.ui.models.response.RequestsResponseModel;
+import com.direct.app.shared.dto.ConnectionRequestDto;
 
 import java.util.List;
 
-public interface IConnectionRequestService {
+public interface ConnectionRequestService {
 	
-	public RequestDto createConnectionRequest(long receiverId) throws Exception;
+	public ConnectionRequestDto createConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception;
 	
 	public boolean acceptConnectionRequest(long id);
 	
 	public void rejectConnectionRequest(long id);
 
-	public List<RequestsResponseModel> retrieveConnectionsRequests() throws Exception;
+	public List<ConnectionRequestDto> retrieveConnectionsRequests() throws Exception;
 
 }

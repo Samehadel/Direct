@@ -1,9 +1,8 @@
 package com.direct.app.ws.integration;
 
 import com.direct.app.security.SecurityConstants;
+import com.direct.app.shared.dto.UserDto;
 import com.direct.app.ui.controller.UsersController;
-import com.direct.app.ui.models.request.SignupRequestModel;
-import com.direct.app.ui.models.response.UserResponseModel;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,17 +29,21 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void create_user_test_happy_path() throws Exception {
-        SignupRequestModel signupRequestModel = new SignupRequestModel("Sameh", "Adel", "email", "pass");
+        UserDto userDto = new UserDto(
+                null,
+                "Sameh",
+                "Adel",
+                "email",
+                "pass");
 
-        ResponseEntity<UserResponseModel> responseEntity = testRestTemplate.postForEntity("/users/signup", signupRequestModel, UserResponseModel.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/users/signup", userDto, UserDto.class);
 
         Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         Assert.assertNotNull(responseEntity.getHeaders().get(SecurityConstants.HEADER_STRING));
-        Assert.assertNotNull(responseEntity.getHeaders().get("virtualUserId"));
 
-        Assert.assertEquals(responseEntity.getBody().getFirstName(), signupRequestModel.getFirstName());
-        Assert.assertEquals(responseEntity.getBody().getLastName(), signupRequestModel.getLastName());
-        Assert.assertEquals(responseEntity.getBody().getUserName(), signupRequestModel.getUserName());
+        Assert.assertEquals(responseEntity.getBody().getFirstName(), userDto.getFirstName());
+        Assert.assertEquals(responseEntity.getBody().getLastName(), userDto.getLastName());
+        Assert.assertEquals(responseEntity.getBody().getUsername(), userDto.getUsername());
     }
 
     @Test
@@ -49,17 +52,26 @@ public class UserControllerIntegrationTest {
 
         signupUser(username); // To make the user already exist
 
-        SignupRequestModel signupRequestModel = new SignupRequestModel("fName", "lName", username, "pass");
+        UserDto userDto = new UserDto(
+                null,
+                "fName",
+                "lName", username,
+                "pass");
 
-        ResponseEntity<UserResponseModel> responseEntity = testRestTemplate.postForEntity("/users/signup", signupRequestModel, UserResponseModel.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/users/signup", userDto, UserDto.class);
 
         Assert.assertNotEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
     }
 
     private void signupUser(String username){
-        SignupRequestModel signupRequestModel = new SignupRequestModel("fName", "lName", username, "pass");
+        UserDto userDto = new UserDto(
+                null,
+                "fName",
+                "lName",
+                username,
+                "pass");
 
-        ResponseEntity<UserResponseModel> responseEntity = testRestTemplate.postForEntity("/users/signup", signupRequestModel, UserResponseModel.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/users/signup", userDto, UserDto.class);
     }
 }

@@ -1,29 +1,19 @@
 package com.direct.app.io.entities;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 	
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "users")
 public class UserEntity implements Serializable {
@@ -46,7 +36,7 @@ public class UserEntity implements Serializable {
 
 	@EqualsAndHashCode.Include
 	@Column(name = "username", nullable = false, length = 150)
-	private String userName;
+	private String username;
 
 	@Column(name = "encrypted_password", nullable = false, length = 500)
 	private String encryptedPassword;

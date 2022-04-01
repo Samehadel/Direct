@@ -1,9 +1,7 @@
 package com.direct.app.ui.controller;
 
-import com.direct.app.service.IConnectionRequestService;
-import com.direct.app.shared.dto.RequestDto;
-import com.direct.app.ui.models.request.ConnectionRequestModel;
-import com.direct.app.ui.models.response.RequestsResponseModel;
+import com.direct.app.service.ConnectionRequestService;
+import com.direct.app.shared.dto.ConnectionRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +15,18 @@ import java.util.List;
 public class RequestsController {
 
     @Autowired
-    private IConnectionRequestService requestService;
+    private ConnectionRequestService requestService;
 
-    /**
+     /**
      * This endpoint is used to send a connection request from one user to another
-     * @param connectionRequest is the connection request model to hold the sender id and the receiver id
+     * @param connectionRequestDto is the connection request model to hold the sender id and the receiver id
      * @return a connection response model that holds the request information e.g. id
      */
     @PostMapping("/send")
-    public ResponseEntity sendConnectionRequest(@RequestBody ConnectionRequestModel connectionRequest) throws Exception {
+    public ResponseEntity sendConnectionRequest(@RequestBody ConnectionRequestDto connectionRequestDto) throws Exception {
 
         // Use the service to create a connection request
-        RequestDto serviceBackDto = requestService.createConnectionRequest(connectionRequest.getReceiverId());
+        ConnectionRequestDto serviceBackDto = requestService.createConnectionRequest(connectionRequestDto);
 
         return serviceBackDto.getId() == 0 ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build() :
                 ResponseEntity.status(HttpStatus.OK).build();
@@ -41,7 +39,7 @@ public class RequestsController {
     @GetMapping
     public ResponseEntity accessConnectionsRequest() throws Exception {
 
-        List<RequestsResponseModel> requests = requestService.retrieveConnectionsRequests();
+        List<ConnectionRequestDto> requests = requestService.retrieveConnectionsRequests();
 
         return ResponseEntity
                 .status(HttpStatus.OK)

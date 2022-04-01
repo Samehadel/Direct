@@ -1,15 +1,17 @@
 package com.direct.app.service.implementation;
 
+import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.*;
 import com.direct.app.repositery.UserAuthorityRepository;
 import com.direct.app.repositery.UserDetailsRepository;
 import com.direct.app.repositery.UserRepository;
-import com.direct.app.service.IUserService;
+import com.direct.app.service.UserService;
 import com.direct.app.shared.Utils;
 import com.direct.app.shared.dto.UserDto;
-import com.direct.app.ui.models.request.ErrorMessages;
+import com.direct.app.exceptions.ErrorCode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -20,8 +22,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+import static com.direct.app.exceptions.ErrorCode.U$0001;
+import static com.direct.app.exceptions.ErrorCode.U$0002;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
+
 @Service
-public class UserServiceImplementation implements IUserService {
+public class UserServiceImplementation implements UserService {
 
     @Autowired
     UserRepository userRepo;
@@ -39,11 +45,11 @@ public class UserServiceImplementation implements IUserService {
     Utils utils;
 
     @Override
-    public UserDto createUser(UserDto userDto) throws Exception {
+    public UserEntity createUser(UserDto userDto) throws Exception {
 
         // Check If Email Already Exist
-        if (userRepo.findByUserName(userDto.getUserName()) != null)
-            return null;
+        if (userRepo.findByUsername(userDto.getUsername()).isPresent())
+            throw new RuntimeBusinessException(NOT_ACCEPTABLE, U$0001, userDto.getUsername());
 
         // Prepare Required objects
         UserDto returnDto = new UserDto();
@@ -78,21 +84,20 @@ public class UserServiceImplementation implements IUserService {
         // Copy Values From Result Entity to The Return Object
         BeanUtils.copyProperties(user, returnDto);
 
-        return returnDto;
+        return user;
     }
 
     @Override
     public UserEntity retrieveUser(String username) throws Exception {
-        UserEntity userEntity = userRepo.findByUserName(username);
-
-        if (userEntity == null)
-            throw new Exception(ErrorMessages.USER_NOT_FOUND.getErrorMessage());
+        UserEntity userEntity =
+                userRepo.findByUsername(username)
+                        .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0001, username));
 
         return userEntity;
     }
 
     @Override
-    public long retrieveUserId() throws Exception {
+    public Long retrieveUserId() throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
@@ -102,10 +107,9 @@ public class UserServiceImplementation implements IUserService {
 
     @Override
     public UserEntity retrieveUser(long id) throws Exception {
-        UserEntity userEntity = userRepo.findById(id);
-
-        if (userEntity == null)
-            throw new Exception(ErrorMessages.USER_NOT_FOUND.getErrorMessage());
+        UserEntity userEntity =
+                userRepo.findById(id)
+                        .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0002, id));
 
         return userEntity;
     }
@@ -123,13 +127,13 @@ public class UserServiceImplementation implements IUserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userName) {
-        UserEntity user = userRepo.findByUserName(userName);
+    public UserDetails loadUserByUsername(String username) {
+        UserEntity user =
+                userRepo.findByUsername(username)
+                        .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0002, username));
 
-        if (user != null)
-            return new User(user.getUserName(), user.getEncryptedPassword(), new ArrayList<>());
-        else
-            throw new UsernameNotFoundException(userName);
+        return new User(user.getUsername(), user.getEncryptedPassword(), new ArrayList<>());
+
     }
 
 

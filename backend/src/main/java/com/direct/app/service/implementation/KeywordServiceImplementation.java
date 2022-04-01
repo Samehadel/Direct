@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.direct.app.service.ISubscriptionService;
-import com.direct.app.service.IUserService;
-import com.direct.app.shared.dto.SubscriptionDto;
+import com.direct.app.service.SubscriptionService;
+import com.direct.app.service.UserService;
 import com.direct.app.repositery.KeywordRepository;
 import com.direct.app.shared.dto.KeywordDto;
 import org.springframework.beans.BeanUtils;
@@ -14,19 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.direct.app.io.entities.KeywordEntity;
-import com.direct.app.service.IKeywordService;
+import com.direct.app.service.KeywordService;
 
 @Service
-public class KeywordServiceImplementation implements IKeywordService {
+public class KeywordServiceImplementation implements KeywordService {
 
 	@Autowired
     KeywordRepository keywordRepo;
 	
 	@Autowired
-	private IUserService userService;
+	private UserService userService;
 
 	@Autowired
-	private ISubscriptionService subscriptionService;
+	private SubscriptionService subscriptionService;
 	
 	@Override
 	public boolean addKeyword(String keyword) {
@@ -80,18 +79,18 @@ public class KeywordServiceImplementation implements IKeywordService {
 		return keywords;
 	}
 
-	private List<KeywordDto> assignSubscriptions(List<KeywordDto>keywords, long userId){
+	private List<KeywordDto> assignSubscriptions(List<KeywordDto>keywordDtos, long userId){
 		// Another service call
-		List<SubscriptionDto> subscriptions = subscriptionService.getSubscriptions(userId);
+		List<KeywordDto> subscriptions = subscriptionService.getSubscriptions(userId);
 
-		for(KeywordDto dto: keywords){
-			for(SubscriptionDto sub: subscriptions){
-				if(sub.getKeywordId() == dto.getId())
+		for(KeywordDto dto: keywordDtos){
+			for(KeywordDto sub: subscriptions){
+				if(sub.getKeywordId() == dto.getKeywordId())
 					dto.setSubscribed(true);
 			}
 		}
 
-		return keywords;
+		return keywordDtos;
 	}
 
 }

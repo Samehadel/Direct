@@ -2,18 +2,27 @@ package com.direct.app.shared.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class UserDto {
-	private Long id;
+public class ProfileDto {
+
+	private long id;
 	private String firstName;
 	private String lastName;
-	private String username;
-	private String password;
+	private String phone;
+	private String majorField;
+	private String bio;
+	private String professionalTitle;
+	private byte [] imageData;
+	private String imageFormat;
+
+	public ProfileDto(long id, String firstName, String lastName) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
 }
