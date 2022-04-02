@@ -17,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
@@ -94,7 +93,7 @@ public class UserServiceTest {
         when(userRepo.findById(anyLong())).thenReturn(Optional.of(createUserEntity(userDto)));
 
         UserEntity user = userService.retrieveUser("username");
-        UserEntity backUserEntity = userService.retrieveUser(userDto.getId());
+        UserEntity backUserEntity = userService.retrieveUserById(userDto.getId());
 
         // Assertion Stage
         Assert.assertNotNull(user);
@@ -116,7 +115,7 @@ public class UserServiceTest {
         }
 
         try {
-            UserEntity backUserEntity = userService.retrieveUser(1L);
+            UserEntity backUserEntity = userService.retrieveUserById(1L);
             Assert.assertEquals(0, 1);
         }catch (Exception ex){
             Assert.assertEquals(0, 0);

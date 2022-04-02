@@ -33,7 +33,7 @@ public class SubscriptionServiceImplementation implements SubscriptionService {
     public boolean createSubscription(Long userId, Integer keywordId) throws Exception {
 
         //Retrieve user
-        UserEntity user = userService.retrieveUser(userId);
+        UserEntity user = userService.retrieveUserById(userId);
 
         //Retrieve keyword
         KeywordEntity keyword = keywordService.getKeywordById(keywordId);
@@ -101,7 +101,7 @@ public class SubscriptionServiceImplementation implements SubscriptionService {
     public void dropSubscription(int keywordId) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        long userId = userService.retrieveUserId();
+        long userId = userService.getCurrentUserId();
 
         subscriptionRepo.deleteSubscribedKeyword(userId, keywordId);
     }

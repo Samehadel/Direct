@@ -5,17 +5,19 @@ import java.util.List;
 import com.direct.app.io.entities.RequestEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 public interface RequestRepository extends CrudRepository<RequestEntity, Long>{
 
-	public RequestEntity findById(long id);
-	
-	@Query(value = "SELECT * FROM requests req WHERE req.sender_id =:userId", nativeQuery = true)
-	List<RequestEntity> findSenderByUserId(long userId);
+	@Query(value = 	"SELECT req FROM RequestEntity req " +
+					"WHERE req.sender.id =:user_id")
+	List<RequestEntity> findSenderByUserId(@Param("user_id") long userId);
 
-	@Query(value = "SELECT * FROM requests req WHERE req.receiver_id =:userId", nativeQuery = true)
-	List<RequestEntity> findReceiverByUserId(long userId);
+	@Query(value = 	"SELECT req FROM RequestEntity req " +
+					"WHERE req.receiver.id =:user_id")
+	List<RequestEntity> findReceiverByUserId(@Param("user_id") Long userId);
 
-	@Query(value = "SELECT * FROM requests req WHERE req.sender_id =:userId OR req.receiver_id =:userId", nativeQuery = true)
-	List<RequestEntity> findRequestByUserId(long userId);
+	@Query(value = 	"SELECT req FROM RequestEntity req " +
+					"WHERE req.sender.id =:user_id OR req.receiver.id =:user_id")
+	List<RequestEntity> findRequestByUserId(@Param("user_id") Long userId);
 }

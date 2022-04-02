@@ -8,15 +8,12 @@ import com.direct.app.repositery.UserRepository;
 import com.direct.app.service.UserService;
 import com.direct.app.shared.Utils;
 import com.direct.app.shared.dto.UserDto;
-import com.direct.app.exceptions.ErrorCode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -97,7 +94,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public Long retrieveUserId() throws Exception {
+    public Long getCurrentUserId() throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
@@ -106,7 +103,7 @@ public class UserServiceImplementation implements UserService {
 
 
     @Override
-    public UserEntity retrieveUser(long id) throws Exception {
+    public UserEntity retrieveUserById(long id) throws Exception {
         UserEntity userEntity =
                 userRepo.findById(id)
                         .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0002, id));

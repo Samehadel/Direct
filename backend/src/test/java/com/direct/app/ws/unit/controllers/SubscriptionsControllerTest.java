@@ -63,7 +63,7 @@ public class SubscriptionsControllerTest {
 
         // Mocking Stage
         when(subscriptionService.getSubscriptions(anyLong())).thenReturn(new ArrayList<KeywordDto>());
-        when(userService.retrieveUserId()).thenReturn(1L);
+        when(userService.getCurrentUserId()).thenReturn(1L);
 
         ResponseEntity responseEntity = subscriptionsController.accessSubscriptions();
 

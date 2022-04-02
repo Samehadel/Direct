@@ -51,7 +51,7 @@ public class RequestsController {
      * @param requestId is the connection request id
      */
     @PutMapping("/accept/{requestId}")
-    public ResponseEntity acceptConnectionRequest(@PathVariable long requestId) {
+    public ResponseEntity acceptConnectionRequest(@PathVariable long requestId) throws Exception {
 
         boolean check = requestService.acceptConnectionRequest(requestId);
 

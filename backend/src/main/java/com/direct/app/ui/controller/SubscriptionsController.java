@@ -7,7 +7,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class SubscriptionsController {
     @PostMapping("/subscribe")
     public ResponseEntity subscribe(@RequestBody KeywordDto keywordDto) throws Exception {
 
-        Long userId = userService.retrieveUserId();
+        Long userId = userService.getCurrentUserId();
 
         boolean check = subscriptionService.createSubscription(userId, keywordDto.getKeywordId());
 
@@ -40,7 +39,7 @@ public class SubscriptionsController {
     public ResponseEntity accessSubscriptions() throws Exception {
 
         // Extract user's info from ContextHolder and get user's id from DB
-        long userId = userService.retrieveUserId();
+        long userId = userService.getCurrentUserId();
 
         List<KeywordDto> keywordsSubscriptions = new ArrayList<>();
         List<KeywordDto> subscriptionsDto = subscriptionService.getSubscriptions(userId);
