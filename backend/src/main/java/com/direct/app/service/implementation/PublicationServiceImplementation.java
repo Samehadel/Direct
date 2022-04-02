@@ -33,20 +33,25 @@ public class PublicationServiceImplementation implements PublicationsService {
     @Override
     public List<PublicationDto> retrievePublications() throws Exception {
 
-        List<PublicationDto> publications = new ArrayList<>();
 
         // Get user's id from security context holder
-        long userId = userService.retrieveUserId();
+        long userId = userService.getCurrentUserId();
 
         //Repository use
         List<PublicationEntity> publicationEntities = publicationRepo.findByReceiverId(userId);
 
+        List<PublicationDto> publications = generatePublicationDtos(publicationEntities);
+
+        return publications;
+    }
+
+    private List<PublicationDto> generatePublicationDtos(List<PublicationEntity> publicationEntities){
+        List<PublicationDto> publications = new ArrayList<>();
         for (PublicationEntity entity : publicationEntities) {
             PublicationDto model = new PublicationDto();
 
             //Copy relevant attributes
             model.setSenderId(entity.getSender().getId());
-
             BeanUtils.copyProperties(entity, model);
             BeanUtils.copyProperties(entity.getSender(), model.getSenderDetails());
             BeanUtils.copyProperties(entity.getSender().getUserDetails().getUserImage(), model.getSenderDetails());
@@ -60,10 +65,10 @@ public class PublicationServiceImplementation implements PublicationsService {
 
     @Override
     public void publish(PublicationDto publication) throws Exception {
-        com.direct.app.shared.dto.PublicationDto publicationDto = new com.direct.app.shared.dto.PublicationDto();
+        PublicationDto publicationDto = new com.direct.app.shared.dto.PublicationDto();
 
         // Retrieve User Id
-        long senderId = userService.retrieveUserId();
+        long senderId = userService.getCurrentUserId();
 
         // Copy Properties from model to DTO
         BeanUtils.copyProperties(publication, publicationDto);

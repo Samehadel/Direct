@@ -25,7 +25,7 @@ public class NetworkServiceImplementation implements NetworkService {
 
     @Override
     public Set<ProfileDto> retrieveNetwork() throws Exception {
-        long userId = userService.retrieveUserId();
+        long userId = userService.getCurrentUserId();
 
         // Get user's connections from DB
         List<ConnectionEntity> connections = connectionRepo.findByUserId(userId);

@@ -72,8 +72,8 @@ public class ProfilesServiceImplementation implements ProfilesService {
 	@Override
 	public boolean editAccountImage(MultipartFile image) throws Exception {
 
-		final long userId = userService.retrieveUserId();
-		final UserEntity user = userService.retrieveUser(userId);
+		final long userId = userService.getCurrentUserId();
+		final UserEntity user = userService.retrieveUserById(userId);
 
 		UserImageEntity imageEntity = new UserImageEntity();
 
@@ -98,8 +98,8 @@ public class ProfilesServiceImplementation implements ProfilesService {
 	@Override
 	public UserEntity getAccountDetails() throws Exception {
 
-		final long userId = userService.retrieveUserId();
-		return userService.retrieveUser(userId);
+		final long userId = userService.getCurrentUserId();
+		return userService.retrieveUserById(userId);
 
 	}
 

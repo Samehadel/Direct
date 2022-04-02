@@ -72,7 +72,7 @@ public class KeywordServiceImplementation implements KeywordService {
 
 	@Override
 	public List<KeywordDto> getKeywordsWithSubscriptions() throws Exception {
-		long userId = userService.retrieveUserId();
+		long userId = userService.getCurrentUserId();
 		List<KeywordDto> keywords = getKeywords();
 		assignSubscriptions(keywords, userId);
 

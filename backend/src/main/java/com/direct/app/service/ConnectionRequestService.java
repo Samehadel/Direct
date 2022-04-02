@@ -8,7 +8,7 @@ public interface ConnectionRequestService {
 	
 	public ConnectionRequestDto createConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception;
 	
-	public boolean acceptConnectionRequest(long id);
+	public boolean acceptConnectionRequest(long id) throws Exception;
 	
 	public void rejectConnectionRequest(long id);
 
