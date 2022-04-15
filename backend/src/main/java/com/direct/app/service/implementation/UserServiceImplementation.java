@@ -19,8 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
-import static com.direct.app.exceptions.ErrorCode.U$0001;
-import static com.direct.app.exceptions.ErrorCode.U$0002;
+import static com.direct.app.exceptions.ErrorCode.*;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
@@ -90,7 +89,7 @@ public class UserServiceImplementation implements UserService {
     public UserEntity retrieveUser(String username) throws Exception {
         UserEntity userEntity =
                 userRepo.findByUsername(username)
-                        .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0001, username));
+                        .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0006, username));
 
         return userEntity;
     }
@@ -103,33 +102,24 @@ public class UserServiceImplementation implements UserService {
         return userRepo.getUserId(username);
     }
 
-
     @Override
     public UserEntity retrieveUserById(long id) throws Exception {
         UserEntity userEntity =
                 userRepo.findById(id)
                         .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0002, id));
-
         return userEntity;
     }
 
-
     @Override
-    public UserDto updateUser(UserEntity user) {
-
-        UserDto userDto = new UserDto();
-        UserEntity backUser = userRepo.save(user);
-
-        BeanUtils.copyProperties(backUser, userDto);
-
-        return userDto;
+    public void updateUser(UserEntity user) {
+        userRepo.save(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) {
         UserEntity user =
                 userRepo.findByUsername(username)
-                        .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0002, username));
+                        .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0006, username));
 
         return new User(user.getUsername(), user.getEncryptedPassword(), new ArrayList<>());
 
