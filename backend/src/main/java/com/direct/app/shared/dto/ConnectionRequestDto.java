@@ -15,7 +15,7 @@ public class ConnectionRequestDto {
     private Long id;
     private Long senderId;
     private Long receiverId;
-    private SenderDetails senderDetails;
+    private SenderDetails senderDetails = new SenderDetails();
 
     public ConnectionRequestDto(Long senderId, Long receiverId) {
         this.senderId = senderId;

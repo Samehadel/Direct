@@ -24,120 +24,128 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 @Service
 public class ConnectionRequestServiceImplementation implements ConnectionRequestService {
 
-	@Autowired
-	UserService userService;
-	
-	@Autowired
-	RequestRepository connectionRequestsRepo;
-	
-	@Autowired
-	ConnectionRepository connectionRepo;
-	
-	@Override
-	public ConnectionRequestDto createConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception {
+    @Autowired
+    UserService userService;
 
-		validateSender(connectionRequestDto.getSenderId());
-		RequestEntity newRequest = new RequestEntity();
+    @Autowired
+    RequestRepository connectionRequestsRepo;
 
-		// Retrieve the two users from database
-		UserEntity sender = userService.retrieveUserById(connectionRequestDto.getSenderId());
-		UserEntity receiver = userService.retrieveUserById(connectionRequestDto.getReceiverId());
+    @Autowired
+    ConnectionRepository connectionRepo;
 
-		assignConnectionRequestSender(sender, newRequest);
-		assignConnectionRequestReceiver(receiver, newRequest);
+    @Override
+    public ConnectionRequestDto createConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception {
 
-		// Save the request
-		connectionRequestsRepo.save(newRequest);
-		
-		// Copy the properties to DTO
-		connectionRequestDto.setId(newRequest.getId());
-		
-		return connectionRequestDto;
-	}
+        validateCurrentUserIsSender(connectionRequestDto.getSenderId());
+        RequestEntity newRequest = new RequestEntity();
 
-	private void validateSender(Long senderId) throws Exception{
-		// Get username from security context
-		Long currentUserId = userService.getCurrentUserId();
+        // Retrieve the two users from database
+        UserEntity sender = userService.retrieveUserById(connectionRequestDto.getSenderId());
+        UserEntity receiver = userService.retrieveUserById(connectionRequestDto.getReceiverId());
 
-		if(currentUserId != senderId)
-			throw  new RuntimeBusinessException(NOT_ACCEPTABLE, ErrorCode.U$0003, senderId);
+        assignConnectionRequestSender(sender, newRequest);
+        assignConnectionRequestReceiver(receiver, newRequest);
 
-	}
+        // Save the request
+        connectionRequestsRepo.save(newRequest);
 
-	private void assignConnectionRequestSender(UserEntity sender, RequestEntity newRequest){
-		sender.addSentRequest(newRequest);
-		newRequest.setSender(sender);
-	}
+        // Copy the properties to DTO
+        connectionRequestDto.setId(newRequest.getId());
 
-	private void assignConnectionRequestReceiver(UserEntity receiver, RequestEntity newRequest){
-		receiver.addReceivedRequest(newRequest);
-		newRequest.setReceiver(receiver);
-	}
+        return connectionRequestDto;
+    }
 
-	@Override
-	public boolean acceptConnectionRequest(long connectionRequestId) throws Exception{
+    private void validateCurrentUserIsSender(Long senderId) throws Exception {
+        // Get username from security context
+        Long currentUserId = userService.getCurrentUserId();
 
-		//Prepare connection object
-		ConnectionEntity connection = new ConnectionEntity();
-		
-		//Get the request
-		RequestEntity request = connectionRequestsRepo
-				.findById(connectionRequestId)
-				.orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0004, connectionRequestId));
+        if (currentUserId != senderId)
+            throw new RuntimeBusinessException(NOT_ACCEPTABLE, ErrorCode.U$0003, senderId);
 
-		checkCurrentUserIsReceiver(request);
+    }
 
-		//Get the associated users
-		UserEntity sender = userService.retrieveUserById(request.getSender().getId());
-		UserEntity receiver = userService.retrieveUserById(request.getReceiver().getId());
-		
-		connection.setFirstUser(sender);
-		connection.setSecondUser(receiver);
-		
-		// Delete the request from the request table
-		connectionRequestsRepo.delete(request);
-		
-		// Save the connection in connections table
-		connectionRepo.save(connection);
-		
+    private void assignConnectionRequestSender(UserEntity sender, RequestEntity newRequest) {
+        sender.addSentRequest(newRequest);
+        newRequest.setSender(sender);
+    }
 
-		return true;
-	}
+    private void assignConnectionRequestReceiver(UserEntity receiver, RequestEntity newRequest) {
+        receiver.addReceivedRequest(newRequest);
+        newRequest.setReceiver(receiver);
+    }
 
-	private void checkCurrentUserIsReceiver(RequestEntity request) throws Exception {
-		Long currentUserId = userService.getCurrentUserId();
-		if(request.getReceiver().getId() != currentUserId)
-			throw new RuntimeBusinessException(NOT_ACCEPTABLE, U$0005, request.getId(), currentUserId);
-	}
+    @Override
+    public boolean acceptConnectionRequest(long connectionRequestId) throws Exception {
+        ConnectionEntity connection = new ConnectionEntity();
 
-	@Override
-	public void rejectConnectionRequest(long id) {
-		connectionRequestsRepo.deleteById(id);
-	}
+        RequestEntity request = validateCurrentUserIsReceiver(connectionRequestId);
 
-	@Override
-	public List<ConnectionRequestDto> retrieveConnectionsRequests() throws Exception {
+        setConnectionUsers(connection, request);
 
-		// Extract User's id from security context
-		long userId = userService.getCurrentUserId();
+        // Delete the request from the request table
+        connectionRequestsRepo.delete(request);
 
-		// Call service to retrieve user's connections requests
-		List<RequestEntity> requests = connectionRequestsRepo.findReceiverByUserId(userId);
+        // Save the connection in connections table
+        connectionRepo.save(connection);
 
-		List<ConnectionRequestDto> requestDtos = new ArrayList<>();
 
-		for(RequestEntity req: requests){
-			ConnectionRequestDto responseModel = new ConnectionRequestDto();
+        return true;
+    }
 
-			// Copy properties to responseModel
-			BeanUtils.copyProperties(req.getSender(), responseModel.getSenderDetails());
-			BeanUtils.copyProperties(req.getSender().getUserDetails(), responseModel.getSenderDetails());
-			BeanUtils.copyProperties(req.getSender().getUserDetails().getUserImage(), responseModel.getSenderDetails());
+    private void setConnectionUsers(ConnectionEntity connection, RequestEntity request) throws Exception {
+        UserEntity sender = userService.retrieveUserById(request.getSender().getId());
+        UserEntity receiver = userService.retrieveUserById(request.getReceiver().getId());
 
-			requestDtos.add(responseModel);
-		}
+        connection.setFirstUser(sender);
+        connection.setSecondUser(receiver);
+    }
+    private RequestEntity validateCurrentUserIsReceiver(Long connectionRequestId) throws Exception {
+        Long currentUserId = userService.getCurrentUserId();
+        RequestEntity request =
+                connectionRequestsRepo
+                        .findById(connectionRequestId)
+                        .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0004, connectionRequestId));
 
-		return requestDtos;
-	}
+        if (request.getReceiver().getId() != currentUserId)
+            throw new RuntimeBusinessException(NOT_ACCEPTABLE, U$0005, request.getId(), currentUserId);
 
+        return request;
+    }
+
+    @Override
+    public boolean rejectConnectionRequest(long connectionRequestId) throws Exception {
+        validateCurrentUserIsReceiver(connectionRequestId);
+        connectionRequestsRepo.deleteById(connectionRequestId);
+        return true;
+    }
+
+    @Override
+    public List<ConnectionRequestDto> retrieveConnectionRequests() throws Exception {
+
+        long userId = userService.getCurrentUserId();
+
+        List<RequestEntity> requests = connectionRequestsRepo.findRequestsByReceiverId(userId);
+
+        return getRequestDTOs(requests);
+    }
+
+    private List<ConnectionRequestDto> getRequestDTOs(List<RequestEntity> requests){
+        List<ConnectionRequestDto> requestDTOs = new ArrayList<>();
+
+        requests.forEach(req -> requestDTOs.add(convertRequestEntityToDto(req)));
+
+        return requestDTOs;
+    }
+
+    private ConnectionRequestDto convertRequestEntityToDto(RequestEntity req){
+        ConnectionRequestDto requestDto = new ConnectionRequestDto();
+        BeanUtils.copyProperties(req.getSender(), requestDto.getSenderDetails());
+        BeanUtils.copyProperties(req.getSender().getUserDetails(), requestDto.getSenderDetails());
+        BeanUtils.copyProperties(req.getSender().getUserDetails().getUserImage(), requestDto.getSenderDetails());
+
+        requestDto.setId(req.getId());
+        requestDto.setReceiverId(req.getReceiver().getId());
+        requestDto.setSenderId(req.getSender().getId());
+        return requestDto;
+    }
 }

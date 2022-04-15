@@ -1,5 +1,6 @@
 package com.direct.app.io.entities;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "user_details")
 public class UserDetailsEntity {
 
@@ -40,5 +42,5 @@ public class UserDetailsEntity {
 	private UserEntity user;
 
 	@OneToOne(mappedBy = "userDetails", cascade = CascadeType.ALL)
-	private UserImageEntity userImage;
+	private UserImageEntity userImage = new UserImageEntity();
 }

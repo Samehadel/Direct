@@ -52,7 +52,7 @@ public class UserServiceTest {
 
     @Test
     public void createUser_happy_path_test() throws Exception {
-        UserDto userDto = createDto();
+        UserDto userDto = createUserDTO();
 
         // Mocking Stage 1
         when(userRepo.findByUsername(anyString())).thenReturn(null);
@@ -70,7 +70,7 @@ public class UserServiceTest {
 
     @Test
     public void createUser_unhappy_path_test() throws Exception {
-        UserDto userDto = createDto();
+        UserDto userDto = createUserDTO();
 
         // Mocking Stage
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.of(new UserEntity())); // Mocking an exist username
@@ -86,7 +86,7 @@ public class UserServiceTest {
 
     @Test
     public void retrieveUser_happy_path_test() throws Exception {
-        UserDto userDto = createDto();
+        UserDto userDto = createUserDTO();
 
         // Mocking Stage
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.of(createUserEntity(userDto)));
@@ -122,7 +122,7 @@ public class UserServiceTest {
         }
     }
 
-    private UserDto createDto() {
+    private UserDto createUserDTO() {
         UserDto dto = new UserDto();
 
         dto.setId(1l);

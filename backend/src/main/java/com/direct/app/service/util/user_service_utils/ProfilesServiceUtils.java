@@ -88,7 +88,7 @@ public class ProfilesServiceUtils {
 	
 	private Set<UserEntity> excludeRequestedProfiles(Set<UserEntity> users, long id){
 		
-		List<RequestEntity> userRequests = requestRepo.findRequestByUserId(id);
+		List<RequestEntity> userRequests = requestRepo.findRequestsBySenderOrReceiverId(id);
 		List<UserEntity> excludedUsers = new ArrayList<UserEntity>();
 		
 		for(int i = 0; i < userRequests.size(); i++) {
