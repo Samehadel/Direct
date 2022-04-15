@@ -55,7 +55,7 @@ public class UserServiceTest {
         UserDto userDto = createUserDTO();
 
         // Mocking Stage 1
-        when(userRepo.findByUsername(anyString())).thenReturn(null);
+        when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
         when(userRepo.save(any())).thenReturn(createUserEntity(userDto));
         when(encoder.encode(anyString())).thenReturn("encryptedPassword");
         when(utils.generateUserId(anyInt())).thenReturn("0123456789");
