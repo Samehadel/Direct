@@ -42,11 +42,13 @@ public class UserServiceImplementation implements UserService {
     Utils utils;
 
     @Override
-    public UserEntity createUser(UserDto userDto) throws Exception {
+    public UserEntity createUser(UserDto userDTO) throws Exception {
 
         // Check If Email Already Exist
-        if (userRepo.findByUsername(userDto.getUsername()).isPresent())
-            throw new RuntimeBusinessException(NOT_ACCEPTABLE, U$0001, userDto.getUsername());
+        userRepo.findByUsername(userDTO.getUsername())
+                    .ifPresent(userEntity -> {
+                        throw new RuntimeBusinessException(NOT_ACCEPTABLE, U$0001, userDTO.getUsername());
+                    });
 
         // Prepare Required objects
         UserDto returnDto = new UserDto();
@@ -57,7 +59,7 @@ public class UserServiceImplementation implements UserService {
         UserImageEntity userImage = new UserImageEntity();
 
         // Copy Values From DTO To User Entity
-        BeanUtils.copyProperties(userDto, user);
+        BeanUtils.copyProperties(userDTO, user);
 
         // Relationship Exchange
         user.setAuthority(authorities);
@@ -70,7 +72,7 @@ public class UserServiceImplementation implements UserService {
         userImage.setUserDetails(userDetails);
 
         // Encrypt User Password - Then -> Generate Random User Id
-        user.setEncryptedPassword(encoder.encode(userDto.getPassword()));
+        user.setEncryptedPassword(encoder.encode(userDTO.getPassword()));
         user.setVirtualUserId(utils.generateUserId(10));
 
         // Use Repository To Save The User And Its Role
