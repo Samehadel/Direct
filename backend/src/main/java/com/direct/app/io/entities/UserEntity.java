@@ -1,5 +1,6 @@
 package com.direct.app.io.entities;
 
+import com.direct.app.shared.dto.UserDto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -136,5 +137,16 @@ public class UserEntity implements Serializable {
 			receivedPublications = new ArrayList<>();
 
 		receivedPublications.add(publication);
+	}
+
+	public UserDto generateUserDTOFromEntity(){
+		UserDto userDto = new UserDto();
+
+		userDto.setId(this.id);
+		userDto.setUsername(this.username);
+		userDto.setFirstName(this.firstName);
+		userDto.setLastName(this.lastName);
+
+		return userDto;
 	}
 }
