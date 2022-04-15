@@ -24,8 +24,5 @@ public class ExceptionBody {
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(this);
-        //char dQuote = '"';
-
-        //return "{" + dQuote + "errorMessage" + dQuote+ ":" + errorMessage + ", errorCode:" + errorCode + "}";
     }
 }

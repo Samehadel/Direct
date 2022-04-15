@@ -18,8 +18,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.direct.app.exceptions.ErrorCode.*;
+import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
@@ -41,48 +43,42 @@ public class UserServiceImplementation implements UserService {
     Utils utils;
 
     @Override
-    public UserEntity createUser(UserDto userDTO) throws Exception {
+    public UserEntity createUser(UserEntity userEntity) throws Exception {
+        checkIfUsernameExists(userEntity.getUsername());
 
-        // Check If Email Already Exist
-        userRepo.findByUsername(userDTO.getUsername())
-                    .ifPresent(userEntity -> {
-                        throw new RuntimeBusinessException(NOT_ACCEPTABLE, U$0001, userDTO.getUsername());
-                    });
-
-        // Prepare Required objects
-        UserDto returnDto = new UserDto();
-
-        UserEntity user = new UserEntity();
         UserAuthorityEntity authorities = new UserAuthorityEntity(UserRole.ROLE_USER.name());
         UserDetailsEntity userDetails = new UserDetailsEntity();
         UserImageEntity userImage = new UserImageEntity();
 
-        // Copy Values From DTO To User Entity
-        BeanUtils.copyProperties(userDTO, user);
 
         // Relationship Exchange
-        user.setAuthority(authorities);
-        authorities.setUser(user);
+        userEntity.setAuthority(authorities);
+        authorities.setUser(userEntity);
 
-        user.setUserDetails(userDetails);
-        userDetails.setUser(user);
+        userEntity.setUserDetails(userDetails);
+        userDetails.setUser(userEntity);
 
         userDetails.setUserImage(userImage);
         userImage.setUserDetails(userDetails);
 
-        // Encrypt User Password - Then -> Generate Random User Id
-        user.setEncryptedPassword(encoder.encode(userDTO.getPassword()));
-        user.setVirtualUserId(utils.generateUserId(10));
+        userEntity.setVirtualUserId(utils.generateUserId(10));
 
         // Use Repository To Save The User And Its Role
-        userRepo.save(user);
+        userRepo.save(userEntity);
         authRepo.save(authorities);
         detailsRepo.save(userDetails);
 
-        // Copy Values From Result Entity to The Return Object
-        BeanUtils.copyProperties(user, returnDto);
+        return userEntity;
+    }
 
-        return user;
+    private void checkIfUsernameExists(String username){
+        ofNullable(username)
+                .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0007));
+
+        userRepo.findByUsername(username)
+                .ifPresent(e -> {
+                    throw new RuntimeBusinessException(NOT_ACCEPTABLE, U$0001, username);
+                });
     }
 
     @Override

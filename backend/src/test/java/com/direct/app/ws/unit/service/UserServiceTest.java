@@ -1,6 +1,7 @@
 package com.direct.app.ws.unit.service;
 
-import com.direct.app.SpringApplicationContext;
+import com.direct.app.exceptions.ErrorCode;
+import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.io.entities.UserRole;
@@ -11,6 +12,7 @@ import com.direct.app.service.UserService;
 import com.direct.app.service.implementation.UserServiceImplementation;
 import com.direct.app.shared.Utils;
 import com.direct.app.shared.dto.UserDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -29,19 +31,22 @@ import static org.mockito.Mockito.when;
 
 public class UserServiceTest {
     @Mock
-    UserRepository userRepo;
+    private UserRepository userRepo;
 
     @Mock
-    UserAuthorityRepository authRepo;
+    private UserAuthorityRepository authRepo;
 
     @Mock
-    UserDetailsRepository detailsRepo;
+    private UserDetailsRepository detailsRepo;
 
     @Mock
-    BCryptPasswordEncoder encoder;
+    private BCryptPasswordEncoder encoder;
 
     @Mock
-    Utils utils;
+    private Utils utils;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @InjectMocks
     private UserService userService;
@@ -49,46 +54,64 @@ public class UserServiceTest {
     @Before
     public void init() {
         this.userService = new UserServiceImplementation();
-
+        mapper = new ObjectMapper();
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void createUser_happy_path() throws Exception {
-        UserDto userDto = createUserDTO();
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername("username");
 
         // Mocking Stage 1
         when(userRepo.findByUsername(anyString()))
                 .thenReturn(Optional.empty());
         when(userRepo.save(any()))
-                .thenReturn(userDto.generateUserEntityFromDTO());
-        when(encoder.encode(anyString()))
-                .thenReturn("encryptedPassword");
-        when(utils.generateUserId(anyInt()))
+                .thenReturn(userEntity);
+         when(utils.generateUserId(anyInt()))
                 .thenReturn("0123456789");
 
-        UserEntity user = userService.createUser(userDto);
+        UserEntity user = userService.createUser(userEntity);
 
-        assertEquals("encryptedPassword", user.getEncryptedPassword());
         assertEquals(10, user.getVirtualUserId().length());
         assertEquals(user.getAuthority().getRole(), UserRole.ROLE_USER.name());
+        assertNotNull(user.getUserDetails());
+        assertNotNull(user.getAuthority());
+        assertNotNull(user.getUserDetails().getUserImage());
     }
 
     @Test
     public void createUser_unhappy_path_username_already_exist() throws Exception {
-        UserDto userDto = createUserDTO();
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername("username");
 
-        // Mocking Stage
         when(userRepo.findByUsername(anyString()))
-                .thenReturn(Optional.of(new UserEntity())); // Mocking an exist username
+                .thenReturn(Optional.of(userEntity)); // Mocking an exist username
+
+
+        try {
+            userService.createUser(userEntity);
+            assertEquals(0, 1);
+        } catch (RuntimeBusinessException ex) {
+            ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
+            assertEquals(ErrorCode.U$0001, exceptionBody.getErrorCode());
+        }
+    }
+
+    @Test
+    public void createUser_unhappy_path_username_is_null() throws Exception {
+        UserEntity userEntity = new UserEntity();
+
+        when(userRepo.findByUsername(anyString()))
+                .thenReturn(Optional.of(userEntity)); // Mocking an exist username
 
         // Assertion Stage
         try {
-            userService.createUser(userDto);
+            userService.createUser(userEntity);
             assertEquals(0, 1);
         } catch (RuntimeBusinessException ex) {
-            System.out.println(ex.getReason());
-            assertEquals(1, 1);
+            ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
+            assertEquals(ErrorCode.U$0007, exceptionBody.getErrorCode());
         }
     }
 
@@ -130,22 +153,20 @@ public class UserServiceTest {
             userService.loadUserByUsername(anyString());
             assertEquals(1, 0);
         } catch (RuntimeBusinessException ex){
-            System.out.println(ex.getReason());
-            assertEquals(1, 1);
+            ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
+            assertEquals(ErrorCode.U$0006, exceptionBody.getErrorCode());
         }
     }
     @Test
     public void retrieveUser_unhappy_path_username_not_exist() throws Exception {
-        // Mocking Stage
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
 
-        // Assertion Stage
         try {
             userService.retrieveUser("username");
             assertEquals(0, 1);
         } catch (RuntimeBusinessException ex) {
-            System.out.println(ex.getReason());
-            assertEquals(0, 0);
+            ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
+            assertEquals(ErrorCode.U$0006, exceptionBody.getErrorCode());
         }
     }
 
@@ -170,8 +191,8 @@ public class UserServiceTest {
             UserEntity user = userService.retrieveUserById(anyLong());
             assertEquals(1, 0);
         }catch (RuntimeBusinessException ex){
-            System.out.println(ex.getReason());
-            assertEquals(1, 1);
+            ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
+            assertEquals(ErrorCode.U$0002, exceptionBody.getErrorCode());
         }
     }
 
