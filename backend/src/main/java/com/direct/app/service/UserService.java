@@ -7,7 +7,7 @@ import com.direct.app.io.entities.UserEntity;
 
 public interface UserService extends UserDetailsService {
 
-	public UserEntity createUser(UserDto userDto) throws Exception;
+	public UserEntity createUser(UserEntity userEntity) throws Exception;
 	
 	public UserEntity retrieveUser(String username) throws Exception;
 

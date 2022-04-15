@@ -25,31 +25,16 @@ public class UsersController {
 	
 	@PostMapping("/signup")
 	public ResponseEntity<UserDto> createUser
-            (@RequestBody UserDto userDetails) throws Exception {
+            (@RequestBody UserDto userDto) throws Exception {
 
-		// Initialize required objects
-		UserDto returnObj = new UserDto();
-		UserDto userDto = new UserDto();
+		UserEntity createdUserEntity = userService.createUser(userDto.generateUserEntityFromDTO());
 
-		// Copy values From request body to the dto object
-		BeanUtils.copyProperties(userDetails, userDto);
-
-		// Use the user service
-		UserEntity createdUserEntity = userService.createUser(userDto);
-
-
-		if(createdUserEntity == null)
-			return ResponseEntity.status(500)
-					.header("Message", "Email Already Exist")
-					.build();
-
-		BeanUtils.copyProperties(createdUserEntity, returnObj);
 
         // Add JWT and virtualUserId then return the response entity
 		ResponseEntity response = ResponseEntity.status(HttpStatus.OK)
                 .header(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX +
-                        jwtUtils.getJWT(userDetails.getUsername(), userDetails.getPassword()))
-                .body(returnObj);
+                        jwtUtils.getJWT(userDto.getUsername(), userDto.getPassword()))
+                .body(createdUserEntity.generateUserDTOFromEntity());
 
 		return response;
 	}

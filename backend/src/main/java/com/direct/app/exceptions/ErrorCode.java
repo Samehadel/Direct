@@ -10,7 +10,8 @@ public enum ErrorCode {
 	U$0003("Current user doesn't match with sender ID: [%d]!"),
 	U$0004("No connection requests with ID: [%d]!"),
 	U$0005("Connection request with ID: [%d] doesn't belong to user ID: [%d]!"),
-	U$0006("User with email: [%s] not exist!");
+	U$0006("User with email: [%s] not exist!"),
+	U$0007("Username can't be empty!");
 
 	@JsonValue
 	@Getter
