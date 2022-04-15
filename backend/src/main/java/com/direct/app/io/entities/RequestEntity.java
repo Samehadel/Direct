@@ -1,13 +1,17 @@
 package com.direct.app.io.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "requests")
 public class RequestEntity {
 
@@ -31,4 +35,7 @@ public class RequestEntity {
 	@JoinColumn(name = "receiver_id", foreignKey = @ForeignKey(name = "fk_requests_receiver_id"))
 	private UserEntity receiver;
 
+	public RequestEntity(Long id) {
+		this.id = id;
+	}
 }

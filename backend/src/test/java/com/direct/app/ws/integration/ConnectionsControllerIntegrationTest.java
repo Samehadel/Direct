@@ -151,11 +151,11 @@ public class ConnectionsControllerIntegrationTest {
         Assert.assertEquals(allRequests.size(), 4);
 
         // User_1 Must has Sent 3 Connection Requests
-        List<RequestEntity> requests = requestRepository.findSenderByUserId(userEntities.get(0).getId());
+        List<RequestEntity> requests = requestRepository.findRequestsBySenderId(userEntities.get(0).getId());
         Assert.assertEquals(3, requests.size());
 
         // User_4 Must Has Received 2 Connection Requests
-        requests = requestRepository.findReceiverByUserId(userEntities.get(3).getId());
+        requests = requestRepository.findRequestsByReceiverId(userEntities.get(3).getId());
         Assert.assertEquals(2, requests.size());
 
     }

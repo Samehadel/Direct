@@ -54,7 +54,7 @@ public class UserEntity implements Serializable {
 	private UserAuthorityEntity authority;
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL) // 2- with 'user_details'
-	private UserDetailsEntity userDetails;
+	private UserDetailsEntity userDetails = new UserDetailsEntity();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER) // 3- with 'subscriptions'
 	private List<SubscriptionEntity> subscriptions;
@@ -77,7 +77,11 @@ public class UserEntity implements Serializable {
 
 	@OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL) // 9- with 'publications'
 	private List<PublicationEntity> receivedPublications;
-	
+
+	public UserEntity(Long id) {
+		this.id = id;
+	}
+
 	// Add subscription to the user
 	public void addSubscription(SubscriptionEntity sub) {
 		if (subscriptions == null)

@@ -39,7 +39,7 @@ public class RequestsController {
     @GetMapping
     public ResponseEntity accessConnectionsRequest() throws Exception {
 
-        List<ConnectionRequestDto> requests = requestService.retrieveConnectionsRequests();
+        List<ConnectionRequestDto> requests = requestService.retrieveConnectionRequests();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -64,7 +64,7 @@ public class RequestsController {
      * @param requestId is the connection request id
      */
     @DeleteMapping("/reject/{requestId}")
-    public ResponseEntity rejectConnectionRequest(@PathVariable long requestId) {
+    public ResponseEntity rejectConnectionRequest(@PathVariable long requestId) throws Exception {
         requestService.rejectConnectionRequest(requestId);
 
         return ResponseEntity

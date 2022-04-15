@@ -10,8 +10,8 @@ public interface ConnectionRequestService {
 	
 	public boolean acceptConnectionRequest(long id) throws Exception;
 	
-	public void rejectConnectionRequest(long id);
+	public boolean rejectConnectionRequest(long connectionRequestId) throws Exception;
 
-	public List<ConnectionRequestDto> retrieveConnectionsRequests() throws Exception;
+	public List<ConnectionRequestDto> retrieveConnectionRequests() throws Exception;
 
 }

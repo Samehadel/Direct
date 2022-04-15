@@ -11,13 +11,13 @@ public interface RequestRepository extends CrudRepository<RequestEntity, Long>{
 
 	@Query(value = 	"SELECT req FROM RequestEntity req " +
 					"WHERE req.sender.id =:user_id")
-	List<RequestEntity> findSenderByUserId(@Param("user_id") long userId);
+	List<RequestEntity> findRequestsBySenderId(@Param("user_id") long userId);
 
 	@Query(value = 	"SELECT req FROM RequestEntity req " +
 					"WHERE req.receiver.id =:user_id")
-	List<RequestEntity> findReceiverByUserId(@Param("user_id") Long userId);
+	List<RequestEntity> findRequestsByReceiverId(@Param("user_id") Long userId);
 
 	@Query(value = 	"SELECT req FROM RequestEntity req " +
 					"WHERE req.sender.id =:user_id OR req.receiver.id =:user_id")
-	List<RequestEntity> findRequestByUserId(@Param("user_id") Long userId);
+	List<RequestEntity> findRequestsBySenderOrReceiverId(@Param("user_id") Long userId);
 }
