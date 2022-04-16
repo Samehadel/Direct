@@ -30,38 +30,39 @@ public class NetworkServiceImplementation implements NetworkService {
 
     @Override
     public Set<ProfileDto> retrieveNetwork() throws Exception {
-        long userId = userService.getCurrentUserId();
-
-        // Get user's connections from DB
+        Long userId = userService.getCurrentUserId();
         List<ConnectionEntity> connections = connectionRepo.findByUserId(userId);
+        Set<ProfileDto> profileDTOs = new HashSet<>();
 
-        // Initialize the set to hold the response data
-        Set<ProfileDto> responseModels = new HashSet<>();
-
-        // Convert each entity to the response model
         for(ConnectionEntity conn: connections){
-            UserEntity user;
-            if(conn.getFirstUser().getId() != userId){
-                user = conn.getFirstUser();
-            }else{
-                user = conn.getSecondUser();
-            }
-            ProfileDto responseModel = new ProfileDto();
-            BeanUtils.copyProperties(user, responseModel);
-            BeanUtils.copyProperties(user.getUserDetails(), responseModel);
-            BeanUtils.copyProperties(user.getUserDetails().getUserImage(), responseModel);
+            ProfileDto profileDTO = new ProfileDto();
+            UserEntity otherUser = getOtherUserInConnection(conn);
 
-            responseModels.add(responseModel);
+            BeanUtils.copyProperties(otherUser, profileDTO);
+            BeanUtils.copyProperties(otherUser.getUserDetails(), profileDTO);
+            BeanUtils.copyProperties(otherUser.getUserDetails().getUserImage(), profileDTO);
+
+            profileDTOs.add(profileDTO);
         }
+        return profileDTOs;
+    }
 
-        return responseModels;
+    private UserEntity getOtherUserInConnection(ConnectionEntity connection) throws Exception {
+        Long userId = userService.getCurrentUserId();
+
+        if(connection.getFirstUser().getId() != userId){
+            return connection.getFirstUser();
+        }else{
+            return connection.getSecondUser();
+        }
     }
 
     @Override
     public void removeConnection(Long connectionId) throws Exception {
         Long currentUserId = userService.getCurrentUserId();
 
-        ConnectionEntity connectionEntity = connectionRepo.findByConnectionIdAndUserId(connectionId, currentUserId)
+        ConnectionEntity connectionEntity =
+                connectionRepo.findByConnectionIdAndUserId(connectionId, currentUserId)
                 .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0008, connectionId, currentUserId));
 
         connectionRepo.delete(connectionEntity);
