@@ -22,16 +22,9 @@ public class ProfilesController {
 	@Autowired
 	private ProfilesService profilesService;
 
-
-	/**
-			* This endpoint is used to show similar profiles for a specific user.
-			* @return A list of similar profiles returned using a response model called ProfileResponseModel
-	 */
-
 	@GetMapping
-	public ResponseEntity displayProfiles() throws Exception {
+	public ResponseEntity displaySimilarProfilesForUser() throws Exception {
 
-		// Use of the service
 		List<ProfileDto> users = profilesService.retrieveSimilarUsers();
 
 		return ResponseEntity

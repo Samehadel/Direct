@@ -17,9 +17,6 @@ public class ConnectionsController {
 	@Autowired
     private NetworkService networkService;
 
-	/**
-	 	* This endpoint used by users to access their network
-	 */
 	@GetMapping
 	public ResponseEntity accessNetwork() throws Exception {
 
@@ -31,10 +28,6 @@ public class ConnectionsController {
 	}
 
 
-    /**
-     * This endpoint is used by users to remove a connection in their network
-     * @param connectionId is the connection id
-     */
 	@DeleteMapping("/remove/{connectionId}")
 	public ResponseEntity removeConnection(@PathVariable long connectionId){
 		boolean check = networkService.removeConnection(connectionId);
