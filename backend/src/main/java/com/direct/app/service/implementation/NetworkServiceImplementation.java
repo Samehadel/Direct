@@ -52,6 +52,8 @@ public class NetworkServiceImplementation implements NetworkService {
         return responseModels;
     }
 
+    // TODO: check userId matches with receiver or sender of the connection
+    // TODO: Remove boolean check and replace by exception
     @Override
     public boolean removeConnection(long connectionId) {
         int check = connectionRepo.removeConnection(connectionId);

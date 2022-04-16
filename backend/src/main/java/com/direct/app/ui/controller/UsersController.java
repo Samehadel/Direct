@@ -29,12 +29,11 @@ public class UsersController {
 
 		UserEntity createdUserEntity = userService.createUser(userDto.generateUserEntityFromDTO());
 
-
-        // Add JWT and virtualUserId then return the response entity
-		ResponseEntity response = ResponseEntity.status(HttpStatus.OK)
-                .header(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX +
-                        jwtUtils.getJWT(userDto.getUsername(), userDto.getPassword()))
-                .body(createdUserEntity.generateUserDTOFromEntity());
+		ResponseEntity response =
+				ResponseEntity.status(HttpStatus.OK)
+                	.header(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX +
+                        	jwtUtils.getJWT(userDto.getUsername(), userDto.getPassword()))
+                	.body(createdUserEntity.generateUserDTOFromEntity());
 
 		return response;
 	}

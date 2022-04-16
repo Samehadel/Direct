@@ -36,12 +36,14 @@ public class ProfilesServiceImplementation implements ProfilesService {
     private ProfilesServiceUtils profilesServiceUtils;
 
 
+	// TODO: make this function return list of entities instead of DTOs
 	@Override
 	public List<ProfileDto> retrieveSimilarUsers() throws Exception {
 
 		// Final users for return
 		List<ProfileDto> userModels = new ArrayList<>();
 
+		// TODO: use userService to get username instead
 		// Extract username from security context
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -52,7 +54,7 @@ public class ProfilesServiceImplementation implements ProfilesService {
 		for(UserEntity u: similarUsers) {
 			ProfileDto model = new ProfileDto();
 			
-			//Copy related values to Dto
+			//TODO: create UserEntity conversions util class and add UserEntity to ProfileDTO conversion
 			BeanUtils.copyProperties(u, model);
 			BeanUtils.copyProperties(u.getUserDetails(), model,"id");
 			BeanUtils.copyProperties(u.getUserDetails().getUserImage(), model, "id");
@@ -64,8 +66,6 @@ public class ProfilesServiceImplementation implements ProfilesService {
 
 	@Override
 	public boolean editAccountDetails(ProfileDetailsDto detailsModel) {
-
-
 		return false;
 	}
 
@@ -89,7 +89,6 @@ public class ProfilesServiceImplementation implements ProfilesService {
 		imageEntity.setUserDetails(user.getUserDetails());
 		user.getUserDetails().setUserImage(imageEntity);
 
-		// Save the image
 		userImageRepository.save(imageEntity);
 
 		return imageEntity.getId() > 0 ? true : false;

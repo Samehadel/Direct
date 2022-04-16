@@ -33,6 +33,7 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
     @Autowired
     ConnectionRepository connectionRepo;
 
+    //TODO: make service return connection request id
     @Override
     public ConnectionRequestDto createConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception {
 
