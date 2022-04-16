@@ -11,7 +11,8 @@ public enum ErrorCode {
 	U$0004("No connection requests with ID: [%d]!"),
 	U$0005("Connection request with ID: [%d] doesn't belong to user ID: [%d]!"),
 	U$0006("User with email: [%s] not exist!"),
-	U$0007("Username can't be empty!");
+	U$0007("Username can't be empty!"),
+	U$0008("Connection ID [%d] not exist with user ID [%d]!");
 
 	@JsonValue
 	@Getter

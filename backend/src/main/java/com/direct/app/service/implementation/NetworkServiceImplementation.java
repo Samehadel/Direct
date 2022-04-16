@@ -1,5 +1,6 @@
 package com.direct.app.service.implementation;
 
+import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.repositery.ConnectionRepository;
@@ -8,11 +9,15 @@ import com.direct.app.service.UserService;
 import com.direct.app.shared.dto.ProfileDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.direct.app.exceptions.ErrorCode.U$0008;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
 public class NetworkServiceImplementation implements NetworkService {
@@ -52,12 +57,13 @@ public class NetworkServiceImplementation implements NetworkService {
         return responseModels;
     }
 
-    // TODO: check userId matches with receiver or sender of the connection
-    // TODO: Remove boolean check and replace by exception
     @Override
-    public boolean removeConnection(long connectionId) {
-        int check = connectionRepo.removeConnection(connectionId);
+    public void removeConnection(Long connectionId) throws Exception {
+        Long currentUserId = userService.getCurrentUserId();
 
-        return check != 1 ? true : false;
+        ConnectionEntity connectionEntity = connectionRepo.findByConnectionIdAndUserId(connectionId, currentUserId)
+                .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0008, connectionId, currentUserId));
+
+        connectionRepo.delete(connectionEntity);
     }
 }

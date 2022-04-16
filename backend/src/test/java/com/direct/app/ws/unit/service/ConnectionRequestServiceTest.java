@@ -11,6 +11,7 @@ import com.direct.app.service.UserService;
 import com.direct.app.service.implementation.ConnectionRequestServiceImplementation;
 import com.direct.app.shared.dto.ConnectionRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -26,6 +27,7 @@ import java.util.Optional;
 import static com.direct.app.exceptions.ErrorCode.U$0003;
 import static com.direct.app.exceptions.ErrorCode.U$0005;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class ConnectionRequestServiceTest {
@@ -46,7 +48,7 @@ public class ConnectionRequestServiceTest {
     }
 
     @Test
-    public void createConnectionRequestTest() throws Exception {
+    public void sendConnectionRequestTest() throws Exception {
         Long senderId = 1L;
         Long receiverId = 2L;
 
@@ -57,12 +59,13 @@ public class ConnectionRequestServiceTest {
                 .thenReturn(new UserEntity(receiverId));
         when(userServiceMock.getCurrentUserId())
                 .thenReturn(senderId);
+        when(connectionRequestsRepoMock.save(any()))
+                .thenReturn(new RequestEntity(100L));
 
-        ConnectionRequestDto connectionRequestDto = connectionRequestService.createConnectionRequest(new ConnectionRequestDto(senderId, receiverId));
+        Long connectionRequestId = connectionRequestService.sendConnectionRequest(new ConnectionRequestDto(senderId, receiverId));
 
         // Assertion
-        assertEquals(1L, connectionRequestDto.getSenderId().longValue());
-        assertEquals(2L, connectionRequestDto.getReceiverId().longValue());
+        Assert.assertEquals(100L, connectionRequestId.longValue());
     }
 
     @Test
@@ -79,7 +82,7 @@ public class ConnectionRequestServiceTest {
                 .thenReturn(receiverId);
 
         try {
-            connectionRequestService.createConnectionRequest(new ConnectionRequestDto(senderId, receiverId));
+            connectionRequestService.sendConnectionRequest(new ConnectionRequestDto(senderId, receiverId));
             assertEquals(0, 1);
         } catch (RuntimeException ex) {
             ExceptionBody body = getExceptionBody(ex);

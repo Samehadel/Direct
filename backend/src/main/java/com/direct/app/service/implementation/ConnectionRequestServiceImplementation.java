@@ -33,27 +33,22 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
     @Autowired
     ConnectionRepository connectionRepo;
 
-    //TODO: make service return connection request id
     @Override
-    public ConnectionRequestDto createConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception {
+    public Long sendConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception {
 
         validateCurrentUserIsSender(connectionRequestDto.getSenderId());
         RequestEntity newRequest = new RequestEntity();
 
-        // Retrieve the two users from database
         UserEntity sender = userService.retrieveUserById(connectionRequestDto.getSenderId());
         UserEntity receiver = userService.retrieveUserById(connectionRequestDto.getReceiverId());
 
-        assignConnectionRequestSender(sender, newRequest);
-        assignConnectionRequestReceiver(receiver, newRequest);
+        newRequest.assignConnectionRequestSender(sender);
+        newRequest.assignConnectionRequestReceiver(receiver);
 
         // Save the request
-        connectionRequestsRepo.save(newRequest);
+        newRequest = connectionRequestsRepo.save(newRequest);
 
-        // Copy the properties to DTO
-        connectionRequestDto.setId(newRequest.getId());
-
-        return connectionRequestDto;
+        return newRequest.getId();
     }
 
     private void validateCurrentUserIsSender(Long senderId) throws Exception {
@@ -63,16 +58,6 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
         if (currentUserId != senderId)
             throw new RuntimeBusinessException(NOT_ACCEPTABLE, ErrorCode.U$0003, senderId);
 
-    }
-
-    private void assignConnectionRequestSender(UserEntity sender, RequestEntity newRequest) {
-        sender.addSentRequest(newRequest);
-        newRequest.setSender(sender);
-    }
-
-    private void assignConnectionRequestReceiver(UserEntity receiver, RequestEntity newRequest) {
-        receiver.addReceivedRequest(newRequest);
-        newRequest.setReceiver(receiver);
     }
 
     @Override

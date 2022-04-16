@@ -7,5 +7,5 @@ import java.util.Set;
 public interface NetworkService {
     public Set<ProfileDto> retrieveNetwork() throws Exception;
 
-    public boolean removeConnection(long connectionId);
+    public void removeConnection(Long connectionId) throws Exception;
 }

@@ -38,4 +38,13 @@ public class RequestEntity {
 	public RequestEntity(Long id) {
 		this.id = id;
 	}
+
+	public void assignConnectionRequestSender(UserEntity sender){
+		sender.addSentRequest(this);
+		this.setSender(sender);
+	}
+	public void assignConnectionRequestReceiver(UserEntity receiver) {
+		receiver.addReceivedRequest(this);
+		this.setReceiver(receiver);
+	}
 }
