@@ -5,6 +5,7 @@ import com.direct.app.io.entities.UserEntity;
 import com.direct.app.service.ProfilesService;
 import com.direct.app.shared.dto.ProfileDetailsDto;
 import com.direct.app.shared.dto.ProfileDto;
+import com.direct.app.utils.copy_factory.UserEntityCopyFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/profiles")
@@ -24,12 +27,17 @@ public class ProfilesController {
 
 	@GetMapping
 	public ResponseEntity displaySimilarProfilesForUser() throws Exception {
+		List<ProfileDto> profileDTOs = new ArrayList<>();
+		Set<UserEntity> similarUsers = profilesService.retrieveSimilarUsers();
 
-		List<ProfileDto> users = profilesService.retrieveSimilarUsers();
+		similarUsers.forEach(similarUser -> {
+			ProfileDto model = UserEntityCopyFactory.copyProfileDTOFromEntity(similarUser);
+			profileDTOs.add(model);
+		});
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(users);
+				.body(profileDTOs);
 	}
 	
 	@PutMapping("/details")
@@ -40,7 +48,7 @@ public class ProfilesController {
 	@PostMapping("/image")
 	public ResponseEntity editAccountImage(@RequestParam("image") MultipartFile image) throws Exception {
 
-		boolean check = profilesService.editAccountImage(image);
+		boolean check = profilesService.setAccountImage(image);
 
 		return check ? ResponseEntity
 							.status(HttpStatus.OK)

@@ -57,16 +57,17 @@ public class UserEntity implements Serializable {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL) // 2- with 'user_details'
 	private UserDetailsEntity userDetails = new UserDetailsEntity();
 
+	// TODO: replace eager with lazy
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER) // 3- with 'subscriptions'
 	private List<SubscriptionEntity> subscriptions;
 
-	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL) // 4- with 'requests'
+	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 4- with 'requests'
 	private List<RequestEntity> sentRequests;
 
-	@OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL) // 5- with 'requests'
+	@OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 5- with 'requests'
 	private List<RequestEntity> receivedRequests;
 
-	@OneToMany(mappedBy = "firstUser", cascade = CascadeType.ALL) // 6- with 'connections'
+	@OneToMany(mappedBy = "firstUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 6- with 'connections'
 	private List<ConnectionEntity> sentConnections;
 
 	@OneToMany(mappedBy = "secondUser", cascade = CascadeType.ALL) // 7- with 'connections'
