@@ -29,13 +29,11 @@ public class ConnectionsController {
 
 
 	@DeleteMapping("/remove/{connectionId}")
-	public ResponseEntity removeConnection(@PathVariable long connectionId){
-		boolean check = networkService.removeConnection(connectionId);
+	public ResponseEntity removeConnection(@PathVariable long connectionId) throws Exception {
+		networkService.removeConnection(connectionId);
 
-		return check ? ResponseEntity
+		return ResponseEntity
 						.status(HttpStatus.OK)
-						.build() : ResponseEntity
-									.status(HttpStatus.INTERNAL_SERVER_ERROR)
-									.build();
+						.build();
 	}
 }

@@ -1,6 +1,7 @@
 package com.direct.app.repositery;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,7 @@ import com.direct.app.io.entities.ConnectionEntity;
 import javax.transaction.Transactional;
 
 public interface ConnectionRepository extends CrudRepository<ConnectionEntity, Long> {
-
+	//TODO: convert native queries to JPQL
 
 	@Query( value = "SELECT * FROM connections conn WHERE conn.first_user_id =:userId",
 			nativeQuery = true)
@@ -29,4 +30,10 @@ public interface ConnectionRepository extends CrudRepository<ConnectionEntity, L
 	@Modifying
 	@Query(value = "DELETE FROM connections conn WHERE conn.id=:connectionId", nativeQuery = true)
 	int removeConnection(long connectionId);
+
+	@Query("SELECT conn FROM ConnectionEntity conn " +
+			"LEFT JOIN FETCH conn.firstUser firstUser " +
+			"LEFT JOIN FETCH conn.secondUser secondUser " +
+			"WHERE conn.id = :connectionId AND (firstUser.id = :userId OR secondUser.id = :userId)")
+	Optional<ConnectionEntity> findByConnectionIdAndUserId(Long connectionId, Long userId);
 }

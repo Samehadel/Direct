@@ -21,10 +21,11 @@ public class RequestsController {
     public ResponseEntity sendConnectionRequest(@RequestBody ConnectionRequestDto connectionRequestDto) throws Exception {
 
 
-        ConnectionRequestDto serviceBackDto = requestService.createConnectionRequest(connectionRequestDto);
+        Long connectionRequestId = requestService.sendConnectionRequest(connectionRequestDto);
 
-        return serviceBackDto.getId() == 0 ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build() :
-                ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(connectionRequestId);
     }
 
     @GetMapping
