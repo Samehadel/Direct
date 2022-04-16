@@ -99,6 +99,24 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
+    public String getCurrentUsername() throws Exception {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName();
+    }
+
+    @Override
+    public UserEntity getCurrentUserEntity() throws Exception {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        UserEntity userEntity =
+                userRepo.findByUsername(username)
+                        .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0006, username));
+
+        return userEntity;
+    }
+
+    @Override
     public UserEntity retrieveUserById(long id) throws Exception {
         UserEntity userEntity =
                 userRepo.findById(id)

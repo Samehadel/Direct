@@ -13,6 +13,10 @@ public interface UserService extends UserDetailsService {
 
 	public Long getCurrentUserId() throws Exception;
 
+	public String getCurrentUsername() throws Exception;
+
+	public UserEntity getCurrentUserEntity() throws Exception;
+
 	public UserEntity retrieveUserById(long id) throws Exception;
 
 	public void updateUser(UserEntity user);

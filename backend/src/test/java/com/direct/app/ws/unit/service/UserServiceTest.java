@@ -22,9 +22,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.Optional;
 
+import static com.direct.app.exceptions.ErrorCode.*;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -93,8 +96,7 @@ public class UserServiceTest {
             userService.createUser(userEntity);
             assertEquals(0, 1);
         } catch (RuntimeBusinessException ex) {
-            ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
-            assertEquals(ErrorCode.U$0001, exceptionBody.getErrorCode());
+            assertExceptionWithErrorCode(ex, U$0001);
         }
     }
 
@@ -110,8 +112,7 @@ public class UserServiceTest {
             userService.createUser(userEntity);
             assertEquals(0, 1);
         } catch (RuntimeBusinessException ex) {
-            ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
-            assertEquals(ErrorCode.U$0007, exceptionBody.getErrorCode());
+            assertExceptionWithErrorCode(ex, U$0007);
         }
     }
 
@@ -153,8 +154,7 @@ public class UserServiceTest {
             userService.loadUserByUsername(anyString());
             assertEquals(1, 0);
         } catch (RuntimeBusinessException ex){
-            ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
-            assertEquals(ErrorCode.U$0006, exceptionBody.getErrorCode());
+            assertExceptionWithErrorCode(ex, U$0006);
         }
     }
     @Test
@@ -165,8 +165,7 @@ public class UserServiceTest {
             userService.retrieveUser("username");
             assertEquals(0, 1);
         } catch (RuntimeBusinessException ex) {
-            ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
-            assertEquals(ErrorCode.U$0006, exceptionBody.getErrorCode());
+            assertExceptionWithErrorCode(ex, U$0006);
         }
     }
 
@@ -191,8 +190,7 @@ public class UserServiceTest {
             UserEntity user = userService.retrieveUserById(anyLong());
             assertEquals(1, 0);
         }catch (RuntimeBusinessException ex){
-            ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
-            assertEquals(ErrorCode.U$0002, exceptionBody.getErrorCode());
+            assertExceptionWithErrorCode(ex, U$0002);
         }
     }
 
@@ -256,6 +254,11 @@ public class UserServiceTest {
         dto.setPassword("password");
 
         return dto;
+    }
+
+    private void assertExceptionWithErrorCode(ResponseStatusException ex, ErrorCode errorCode) throws IOException {
+        ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
+        assertEquals(errorCode, exceptionBody.getErrorCode());
     }
 
     private UserEntity createUserEntity(UserDto dto) {
