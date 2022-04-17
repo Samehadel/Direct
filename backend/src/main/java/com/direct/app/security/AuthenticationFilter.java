@@ -67,8 +67,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
     	JwtUtils jwtUtils = new JwtUtils();
  
         String userName = ((User) auth.getPrincipal()).getUsername();  
-        
-        String token = jwtUtils.getJWT(userName);
+        String password = ((User) auth.getPrincipal()).getPassword();
+        String token = jwtUtils.getJWT(userName, password);
 
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
     }  
