@@ -52,10 +52,9 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
     }
 
     private void validateCurrentUserIsSender(Long senderId) throws Exception {
-        // Get username from security context
         Long currentUserId = userService.getCurrentUserId();
 
-        if (currentUserId != senderId)
+        if (!currentUserId.equals(senderId))
             throw new RuntimeBusinessException(NOT_ACCEPTABLE, ErrorCode.U$0003, senderId);
 
     }
