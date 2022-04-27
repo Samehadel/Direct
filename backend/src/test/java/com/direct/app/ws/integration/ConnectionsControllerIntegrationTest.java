@@ -6,9 +6,8 @@ import com.direct.app.io.entities.UserEntity;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
 import com.direct.app.repositery.UserRepository;
-import com.direct.app.security.SecurityConstants;
 import com.direct.app.shared.dto.ConnectionRequestDto;
-import com.direct.app.utils.JwtUtils;
+import com.direct.app.ws.integration.commons.TestCommons;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,16 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +32,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RunWith(SpringRunner.class)
 @TestPropertySource("/test.application.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(executionPhase= Sql.ExecutionPhase.BEFORE_TEST_METHOD,  scripts={"/sql/database_cleanup.sql"})
+@Sql(executionPhase= Sql.ExecutionPhase.AFTER_TEST_METHOD,  scripts={"/sql/database_cleanup.sql"})
 public class ConnectionsControllerIntegrationTest {
 
     @LocalServerPort
@@ -55,33 +51,22 @@ public class ConnectionsControllerIntegrationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private JwtUtils jwtUtils;
+    private TestCommons testCommons;
 
-    public HttpHeaders addHeader_AuthorizationToken(String token){
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(SecurityConstants.HEADER_STRING, token);
 
-        return headers;
-    }
-
-    private HttpEntity getHttpEntity(ConnectionRequestDto connectionRequestDto, String token){
-        HttpHeaders headers = addHeader_AuthorizationToken(token);
-
-        return new HttpEntity(connectionRequestDto, headers);
-    }
 
     @Test
-    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/sql/database_cleanup.sql", "/sql/insert_user_data.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/sql/Insert_User_Data.sql"})
     @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
     public void send_connection_request_authToken_and_sender_id_mismatch(){
         String[] usernames = {"username_1", "username_2", "username_3"};
-        Map<String, String> authTokens = generateUsersAuthTokens(usernames);
+        Map<String, String> authTokens = testCommons.generateUsersAuthTokens(usernames);
         List<UserEntity> userEntities = findUsers(usernames);
 
         ConnectionRequestDto connectionRequestDto = new ConnectionRequestDto(
                 userEntities.get(1).getId(),
                 userEntities.get(2).getId());
-        HttpEntity<?> request = getHttpEntity(connectionRequestDto, authTokens.get(usernames[0]));
+        HttpEntity<?> request = testCommons.getHttpEntity(connectionRequestDto, authTokens.get(usernames[0]));
 
         ResponseEntity<ConnectionRequestDto> response = testRestTemplate.postForEntity(
                 "/requests/send",
@@ -92,23 +77,18 @@ public class ConnectionsControllerIntegrationTest {
     }
 
     @Test
-    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
-    public void temp (){
-
-    }
-    @Test
-    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/sql/database_cleanup.sql", "/sql/insert_user_data.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/sql/Insert_User_Data.sql"})
     @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
     public void send_connection_request_happy_path() {
         String[] usernames = {"username_1", "username_2", "username_3", "username_4"};
-        Map<String, String> authTokens = generateUsersAuthTokens(usernames);
+        Map<String, String> authTokens = testCommons.generateUsersAuthTokens(usernames);
 
         List<UserEntity> userEntities = findUsers(usernames);
 
        ConnectionRequestDto connectionRequestDto = new ConnectionRequestDto(
                 userEntities.get(0).getId(),
                 userEntities.get(1).getId());
-        HttpEntity<?> request = getHttpEntity(connectionRequestDto, authTokens.get(usernames[0]));
+        HttpEntity<?> request = testCommons.getHttpEntity(connectionRequestDto, authTokens.get(usernames[0]));
 
         // Send Request To Create New Connection (User_1 --sends to--> User_2)
         ResponseEntity<Object> response = testRestTemplate.postForEntity(
@@ -121,7 +101,7 @@ public class ConnectionsControllerIntegrationTest {
         connectionRequestDto = new ConnectionRequestDto(
                 userEntities.get(0).getId(),
                 userEntities.get(2).getId());
-        request = getHttpEntity(connectionRequestDto, authTokens.get(usernames[0]));
+        request = testCommons.getHttpEntity(connectionRequestDto, authTokens.get(usernames[0]));
 
         // Send Request To Create New Connection (User_1 --sends to--> User_3)
         response = testRestTemplate.postForEntity(
@@ -136,7 +116,7 @@ public class ConnectionsControllerIntegrationTest {
         connectionRequestDto = new ConnectionRequestDto(
                 userEntities.get(0).getId(),
                 userEntities.get(3).getId());
-        request = getHttpEntity(connectionRequestDto, authTokens.get(usernames[0]));
+        request = testCommons.getHttpEntity(connectionRequestDto, authTokens.get(usernames[0]));
 
         // Send Request To Create New Connection (User_1 --sends to--> User_4)
         response = testRestTemplate.postForEntity(
@@ -151,7 +131,7 @@ public class ConnectionsControllerIntegrationTest {
         connectionRequestDto = new ConnectionRequestDto(
                 userEntities.get(1).getId(),
                 userEntities.get(3).getId());
-        request = getHttpEntity(connectionRequestDto, authTokens.get(usernames[1]));
+        request = testCommons.getHttpEntity(connectionRequestDto, authTokens.get(usernames[1]));
 
         // Send Request To Create New Connection (User_2 --sends to--> User_4)
         response = testRestTemplate.postForEntity("/requests/send",
@@ -173,28 +153,6 @@ public class ConnectionsControllerIntegrationTest {
 
     }
 
-    private Map<String, String> generateUsersAuthTokens(String[] usernames) {
-        Map<String, String> usersPasswords = getUsersPasswords();
-        Map<String, String> authTokens = new HashMap<>();
-
-        for (String username : usernames) {
-            String token = jwtUtils.getJWT(username, usersPasswords.get(username));
-            token = SecurityConstants.TOKEN_PREFIX + token;
-            authTokens.put(username, token);
-        }
-        return authTokens;
-    }
-
-    private Map<String, String> getUsersPasswords(){
-        Map<String, String> usersPasswords = new HashMap<>();
-
-        usersPasswords.put("username_1", "password_1");
-        usersPasswords.put("username_2", "password_2");
-        usersPasswords.put("username_3", "password_3");
-        usersPasswords.put("username_4", "password_4");
-
-        return usersPasswords;
-    }
     private List<UserEntity> findUsers(String[] usernames) {
         List<UserEntity> users = new ArrayList<>();
 

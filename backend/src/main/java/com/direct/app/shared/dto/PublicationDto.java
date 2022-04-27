@@ -12,12 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class PublicationDto {
-	private long id;
-	private long senderId;
+	private Long id;
+	private Long senderId;
 	private SenderDetails senderDetails;
 	private String content;
 	private String link;
-	private boolean isRead;
+	private Boolean isRead;
 	private List<Integer> keywords;
 
 }

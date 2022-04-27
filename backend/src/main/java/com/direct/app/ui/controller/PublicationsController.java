@@ -30,7 +30,6 @@ public class PublicationsController {
 
     @GetMapping
     public ResponseEntity accessInboxPublications() throws Exception {
-        //Use of service
         List<PublicationDto> publications = publicationService.retrievePublications();
 
         return ResponseEntity
