@@ -33,7 +33,10 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @TestPropertySource("/test.application.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/sql/Insert_User_Data.sql", "/sql/Insert_Publications_Data.sql"})
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+		scripts = {	"/sql/database_cleanup.sql",
+					"/sql/Insert_User_Data.sql",
+					"/sql/Insert_Publications_Data.sql"})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
 public class PublicationsControllerTest {
 
