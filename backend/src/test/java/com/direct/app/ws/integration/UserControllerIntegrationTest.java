@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = { "/sql/database_cleanup.sql",
                     "/sql/Insert_User_Data.sql",
-                    "/sql/Insert_Publications_Data.sql"})
+				"/sql/publications/Publications_Test_Data_1.sql"})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
 
 public class UserControllerIntegrationTest {

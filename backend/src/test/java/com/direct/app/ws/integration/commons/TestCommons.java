@@ -58,6 +58,16 @@ public class TestCommons {
 		return authTokens;
 	}
 
+	public String generateUserAuthToken(String username) {
+		Map<String, String> usersPasswords = getUsersPasswords();
+		String userPassword = usersPasswords.get(username);
+		String token = jwtUtils.getJWT(username, userPassword);
+
+		token = SecurityConstants.TOKEN_PREFIX + token;
+
+		return token;
+	}
+
 	private Map<String, String> getUsersPasswords(){
 		Map<String, String> usersPasswords = new HashMap<>();
 
