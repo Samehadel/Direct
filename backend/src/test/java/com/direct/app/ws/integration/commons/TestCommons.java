@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Optional.ofNullable;
+
 @Component
 public class TestCommons {
 	@Autowired
@@ -25,7 +27,8 @@ public class TestCommons {
 		return new HttpEntity(connectionRequestDto, headers);
 	}
 
-	public HttpEntity getHttpEntity(String body, String token){
+	public HttpEntity getHttpEntity(String body, String username){
+		String token = generateUserAuthToken(username);
 		HttpHeaders headers = addHeader_AuthorizationToken(token);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		return new HttpEntity(body, headers);
@@ -38,31 +41,23 @@ public class TestCommons {
 		return headers;
 	}
 
-	public JSONObject json() {
-		return new JSONObject();
-	}
-
-	public JSONArray jsonArray() {
-		return new JSONArray();
-	}
-
 	public Map<String, String> generateUsersAuthTokens(String[] usernames) {
-		Map<String, String> usersPasswords = getUsersPasswords();
 		Map<String, String> authTokens = new HashMap<>();
 
 		for (String username : usernames) {
-			String token = jwtUtils.getJWT(username, usersPasswords.get(username));
-			token = SecurityConstants.TOKEN_PREFIX + token;
+			String token = generateUserAuthToken(username);
 			authTokens.put(username, token);
 		}
 		return authTokens;
 	}
 
-	public String generateUserAuthToken(String username) {
+	private String generateUserAuthToken(String username) {
 		Map<String, String> usersPasswords = getUsersPasswords();
-		String userPassword = usersPasswords.get(username);
-		String token = jwtUtils.getJWT(username, userPassword);
-
+		String userPassword = ofNullable(usersPasswords.get(username))
+								.orElse(null);
+		String token = ofNullable(userPassword)
+							.map(pass -> jwtUtils.getJWT(username, pass))
+							.orElse("$2a$10$cwa.NIMgxz5RXjo5BuNdA.9eew4ldS6VlC.64ZEb8KvviKOfslHQq");
 		token = SecurityConstants.TOKEN_PREFIX + token;
 
 		return token;

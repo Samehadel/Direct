@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class PublicationDto {
 	private Long id;
@@ -20,4 +19,7 @@ public class PublicationDto {
 	private Boolean isRead;
 	private List<Integer> keywords;
 
+	public PublicationDto() {
+		this.senderDetails = new SenderDetails();
+	}
 }

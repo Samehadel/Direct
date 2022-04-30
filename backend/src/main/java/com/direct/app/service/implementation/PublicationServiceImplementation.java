@@ -1,6 +1,8 @@
 package com.direct.app.service.implementation;
 
 import com.direct.app.io.entities.PublicationEntity;
+import com.direct.app.io.entities.UserDetailsEntity;
+import com.direct.app.io.entities.UserEntity;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.service.PublicationsService;
@@ -32,35 +34,43 @@ public class PublicationServiceImplementation implements PublicationsService {
 
     @Override
     public List<PublicationDto> retrievePublications() throws Exception {
+        Long userId = userService.getCurrentUserId();
 
-
-        // Get user's id from security context holder
-        long userId = userService.getCurrentUserId();
-
-        //Repository use
         List<PublicationEntity> publicationEntities = publicationRepo.findByReceiverId(userId);
 
-        List<PublicationDto> publications = generatePublicationDtos(publicationEntities);
+        List<PublicationDto> publications = generatePublicationDTOs(publicationEntities);
 
         return publications;
     }
 
-    private List<PublicationDto> generatePublicationDtos(List<PublicationEntity> publicationEntities){
+    private List<PublicationDto> generatePublicationDTOs(List<PublicationEntity> publicationEntities){
         List<PublicationDto> publications = new ArrayList<>();
-        for (PublicationEntity entity : publicationEntities) {
-            PublicationDto model = new PublicationDto();
 
-            //Copy relevant attributes
-            model.setSenderId(entity.getSender().getId());
-            BeanUtils.copyProperties(entity, model);
-            BeanUtils.copyProperties(entity.getSender(), model.getSenderDetails());
-            BeanUtils.copyProperties(entity.getSender().getUserDetails().getUserImage(), model.getSenderDetails());
-
-            //Append publications
-            publications.add(model);
-        }
+        publicationEntities.forEach(entity -> {
+            PublicationDto publicationDto = convertPublicationEntityToDTO(entity);
+            publications.add(publicationDto);
+        });
 
         return publications;
+    }
+
+    private PublicationDto convertPublicationEntityToDTO(PublicationEntity publicationEntity){
+        PublicationDto publicationDto = new PublicationDto();
+        UserEntity sender = publicationEntity.getSender();
+        UserDetailsEntity senderDetails = sender.getUserDetails();
+
+
+        publicationDto.setId(publicationEntity.getId());
+        publicationDto.setSenderId(sender.getId());
+        publicationDto.setContent(publicationEntity.getContent());
+        publicationDto.setLink(publicationEntity.getLink());
+        publicationDto.setIsRead(publicationEntity.isRead());
+
+        publicationDto.getSenderDetails().setFirstName(sender.getFirstName());
+        publicationDto.getSenderDetails().setLastName(sender.getLastName());
+        publicationDto.getSenderDetails().setProfessionalTitle(senderDetails.getProfessionalTitle());
+
+        return publicationDto;
     }
 
     @Override
@@ -78,6 +88,7 @@ public class PublicationServiceImplementation implements PublicationsService {
         publishPostsUtil.publish(publicationDto);
     }
 
+    //TODO: Check if current user allowed to modify publication
     @Transactional
     @Override
     public boolean markPublicationAsRead(long publicationId, boolean isRead) {
