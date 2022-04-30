@@ -1,5 +1,7 @@
 package com.direct.app.ws.integration;
 
+import com.direct.app.exceptions.ErrorCode;
+import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.shared.dto.PublicationDto;
@@ -21,8 +23,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
 import java.util.*;
 
+import static com.direct.app.exceptions.ErrorCode.U$0009;
+import static com.direct.app.exceptions.ErrorCode.U$0010;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpMethod.*;
@@ -190,12 +195,42 @@ public class PublicationsControllerTest {
 						"/sql/Insert_User_Data.sql",
 						"/sql/publications/Publications_Test_Data_3.sql"})
 	@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
-	public void markPublicationAsRead_happy_path_incompatible_user(){
+	public void markPublicationAsRead_unhappy_path_incompatible_user() throws IOException {
 		Long publicationId = 2000L;
 		String username = "username_2";
 
 		markPublicationAsReadRequest(publicationId, username);
+		assertUserIncompatibility();
+	}
+
+	private void assertUserIncompatibility() throws IOException {
 		assertEquals(NOT_ACCEPTABLE, this.response.getStatusCode());
+		assertEquals(U$0010, getResponseErrorCode());
+	}
+
+	@Test
+	@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+			scripts = {	"/sql/database_cleanup.sql",
+					"/sql/Insert_User_Data.sql",
+					"/sql/publications/Publications_Test_Data_3.sql"})
+	@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
+	public void markPublicationAsRead_unhappy_path_publication_not_exist() throws IOException {
+		Long publicationId = 8000L;
+		String username = "username_1";
+
+		markPublicationAsReadRequest(publicationId, username);
+		assertPublicationNotFound();
+	}
+
+	private void assertPublicationNotFound() throws IOException {
+		assertEquals(NOT_ACCEPTABLE, this.response.getStatusCode());
+		assertEquals(U$0009, getResponseErrorCode());
+	}
+
+	private ErrorCode getResponseErrorCode() throws IOException {
+		HashMap responseBody = (HashMap) this.response.getBody();
+		String message = (String) responseBody.get("message");
+		return mapper.readValue(message, ExceptionBody.class).getErrorCode();
 	}
 
 	@Test

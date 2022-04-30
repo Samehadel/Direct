@@ -8,5 +8,5 @@ public interface PublicationsService {
 
 	public List<PublicationDto> retrievePublications() throws Exception;
 	public void publish(PublicationDto publication) throws Exception;
-	public boolean markPublicationAsRead (long publicationId, boolean isRead);
+	public void markPublicationAsRead (Long publicationId, boolean isRead) throws Exception;
 }

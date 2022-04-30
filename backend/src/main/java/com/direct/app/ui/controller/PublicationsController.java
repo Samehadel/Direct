@@ -38,29 +38,19 @@ public class PublicationsController {
     }
 
     @PutMapping("/status/read")
-    public ResponseEntity markPublicationAsRead(@RequestParam("id") long publicationId) {
+    public ResponseEntity markPublicationAsRead(@RequestParam("id") long publicationId) throws Exception {
+        publicationService.markPublicationAsRead(publicationId, true);
 
-        // Service Call
-        boolean check = publicationService.markPublicationAsRead(publicationId, true);
-
-        return check ? ResponseEntity
-                            .status(HttpStatus.OK)
-                            .build() :
-                       ResponseEntity
-                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .build();
+        return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .build();
     }
     @PutMapping("/status/unread")
-    public ResponseEntity markPublicationAsUnRead(@RequestParam("id") long publicationId) {
+    public ResponseEntity markPublicationAsUnRead(@RequestParam("id") long publicationId) throws Exception {
+        publicationService.markPublicationAsRead(publicationId, false);
 
-        // Service Call
-        boolean check = publicationService.markPublicationAsRead(publicationId, false);
-
-        return check ? ResponseEntity
-                            .status(HttpStatus.OK)
-                            .build() :
-                       ResponseEntity
-                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .build();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 }
