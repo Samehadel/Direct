@@ -37,8 +37,8 @@ public class PublicationsController {
                 .body(publications);
     }
 
-    @PutMapping("/status/read/{publicationId}")
-    public ResponseEntity markPublicationAsRead(@PathVariable long publicationId) {
+    @PutMapping("/status/read")
+    public ResponseEntity markPublicationAsRead(@RequestParam("id") long publicationId) {
 
         // Service Call
         boolean check = publicationService.markPublicationAsRead(publicationId, true);
@@ -50,8 +50,8 @@ public class PublicationsController {
                             .status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .build();
     }
-    @PutMapping("/status/unread/{publicationId}")
-    public ResponseEntity markPublicationAsUnRead(@PathVariable long publicationId) {
+    @PutMapping("/status/unread")
+    public ResponseEntity markPublicationAsUnRead(@RequestParam("id") long publicationId) {
 
         // Service Call
         boolean check = publicationService.markPublicationAsRead(publicationId, false);
