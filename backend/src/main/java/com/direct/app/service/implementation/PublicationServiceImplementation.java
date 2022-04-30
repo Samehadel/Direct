@@ -96,12 +96,17 @@ public class PublicationServiceImplementation implements PublicationsService {
 	
 	@Transactional
 	@Override
-	public void markPublicationAsRead(Long publicationId, boolean isRead) throws Exception {
+	public void markPublicationAsRead(Long publicationId) throws Exception {
 		validatePublication(publicationId);
-		if (isRead)
-			publicationRepo.markPublicationAsRead(publicationId);
-		else
-			publicationRepo.markPublicationAsUnRead(publicationId);
+		publicationRepo.markPublicationAsRead(publicationId);
+
+	}
+
+	@Transactional
+	@Override
+	public void markPublicationAsUnRead(Long publicationId) throws Exception {
+		validatePublication(publicationId);
+        publicationRepo.markPublicationAsUnRead(publicationId);
 
 	}
 

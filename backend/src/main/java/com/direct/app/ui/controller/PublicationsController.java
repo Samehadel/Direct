@@ -39,15 +39,16 @@ public class PublicationsController {
 
     @PutMapping("/status/read")
     public ResponseEntity markPublicationAsRead(@RequestParam("id") long publicationId) throws Exception {
-        publicationService.markPublicationAsRead(publicationId, true);
+        publicationService.markPublicationAsRead(publicationId);
 
         return ResponseEntity
                     .status(HttpStatus.OK)
                     .build();
     }
+
     @PutMapping("/status/unread")
     public ResponseEntity markPublicationAsUnRead(@RequestParam("id") long publicationId) throws Exception {
-        publicationService.markPublicationAsRead(publicationId, false);
+        publicationService.markPublicationAsUnRead(publicationId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
