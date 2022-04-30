@@ -60,6 +60,7 @@ public class PublicationServiceImplementation implements PublicationsService {
 		return publications;
 	}
 
+	//TODO: move apply OCP to converters
 	private PublicationDto convertPublicationEntityToDTO(PublicationEntity publicationEntity) {
 		PublicationDto publicationDto = new PublicationDto();
 		UserEntity sender = publicationEntity.getSender();

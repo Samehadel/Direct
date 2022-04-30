@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Set;
 
 public interface ProfilesService {
-
+	//TODO: remove unused func
 	public Set<UserEntity> retrieveSimilarUsers() throws Exception;
 	public boolean editAccountDetails(ProfileDetailsDto detailsModel);
 	public boolean setAccountImage(MultipartFile image) throws Exception;

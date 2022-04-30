@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface UserImageRepository extends CrudRepository<UserImageEntity, Long> {
 
+    //TODO: change it to findByUserId
     //@Query(name = "SELECT * FROM users_images WHERE user_details_id=:userDetails", nativeQuery = true)
     public Optional<UserImageEntity> findByUserDetails(UserDetailsEntity userDetails);
 }

@@ -43,12 +43,15 @@ public class ProfilesServiceImplementation implements ProfilesService {
 		return false;
 	}
 
+	//TODO: remove boolean return
+	//TODO: apply SRP
 	@Override
 	public boolean setAccountImage(MultipartFile image) throws Exception {
 		final UserEntity user = userService.getCurrentUserEntity();
 
 		UserImageEntity imageEntity = new UserImageEntity();
 
+		//TODO: use ofNullable
 		Optional<UserImageEntity> optionalImageEntity = userImageRepository.findByUserDetails(user.getUserDetails());
 
 		if (optionalImageEntity.isPresent())

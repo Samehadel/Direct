@@ -25,6 +25,7 @@ public class ProfilesController {
 	@Autowired
 	private ProfilesService profilesService;
 
+	// TODO: change name
 	@GetMapping
 	public ResponseEntity displaySimilarProfilesForUser() throws Exception {
 		List<ProfileDto> profileDTOs = new ArrayList<>();
