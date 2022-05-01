@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ProfileDto {
+public class ProfileDto extends BaseDTO {
 
 	private long id;
 	private String firstName;

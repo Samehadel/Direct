@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity(name = "users_images")
 @Data
 @NoArgsConstructor
-public class UserImageEntity {
+public class UserImageEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_generator")

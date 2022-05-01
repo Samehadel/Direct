@@ -3,7 +3,6 @@ package com.direct.app.io.entities;
 import com.direct.app.shared.dto.UserDto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -15,9 +14,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Table(name = "users")
-public class UserEntity implements Serializable {
+public class UserEntity extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6671347407969225029L;
 
@@ -55,7 +53,7 @@ public class UserEntity implements Serializable {
 	private UserAuthorityEntity authority;
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL) // 2- with 'user_details'
-	private UserDetailsEntity userDetails = new UserDetailsEntity();
+	private UserDetailsEntity userDetails;
 
 	// TODO: replace eager with lazy
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER) // 3- with 'subscriptions'
@@ -80,6 +78,15 @@ public class UserEntity implements Serializable {
 	@OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL) // 9- with 'publications'
 	private List<PublicationEntity> receivedPublications;
 
+	public UserEntity() {
+		this.authority = new UserAuthorityEntity();
+		this.userDetails = new UserDetailsEntity();
+		this.subscriptions = new ArrayList<>();
+		this.sentRequests = new ArrayList<>();
+		this.receivedRequests = new ArrayList<>();
+		this.sentConnections = new ArrayList<>();
+		this.receivedConnections = new ArrayList<>();
+	}
 	public UserEntity(Long id) {
 		this.id = id;
 	}

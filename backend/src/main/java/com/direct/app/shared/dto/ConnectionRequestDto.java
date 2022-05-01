@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ConnectionRequestDto {
+public class ConnectionRequestDto extends BaseDTO {
     private Long id;
     private Long senderId;
     private Long receiverId;

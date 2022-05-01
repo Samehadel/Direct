@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Table(name = "requests")
-public class RequestEntity {
+public class RequestEntity extends BaseEntity {
 
 	// Entity attributes
 

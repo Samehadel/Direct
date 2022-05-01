@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Data
 @NoArgsConstructor
 @Table(name = "keywords")
-public class KeywordEntity {
+public class KeywordEntity extends BaseEntity {
 
 	//Entity attributes
 	

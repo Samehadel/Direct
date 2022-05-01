@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Table(name = "subscriptions")
-public class SubscriptionEntity {
+public class SubscriptionEntity extends BaseEntity {
 
 	// Entity attributes
 

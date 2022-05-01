@@ -1,15 +1,13 @@
 package com.direct.app.io.entities;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Data
-@NoArgsConstructor
 @Table(name = "publications")
-public class PublicationEntity {
+public class PublicationEntity extends BaseEntity {
 
 	//Entity attributes
 
@@ -38,4 +36,8 @@ public class PublicationEntity {
 	@JoinColumn(name = "receiver_id", foreignKey = @ForeignKey(name = "fk_publications_receiver_id"))
 	private UserEntity receiver;
 
+	public PublicationEntity() {
+		this.sender = new UserEntity();
+		this.receiver = new UserEntity();
+	}
 }

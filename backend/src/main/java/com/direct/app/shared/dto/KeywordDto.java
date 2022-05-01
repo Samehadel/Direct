@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class KeywordDto {
+public class KeywordDto extends BaseDTO {
 
 	private Long subscriptionId;
 	private Integer keywordId;

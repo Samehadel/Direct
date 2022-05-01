@@ -2,7 +2,6 @@ package com.direct.app.io.entities;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,13 +10,10 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @EqualsAndHashCode
 @Table(name = "user_details")
-public class UserDetailsEntity {
+public class UserDetailsEntity extends BaseEntity {
 
-	//Entity attributes
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "details_generator")
 	@SequenceGenerator(name = "details_generator", sequenceName = "details_sequence", allocationSize = 1)

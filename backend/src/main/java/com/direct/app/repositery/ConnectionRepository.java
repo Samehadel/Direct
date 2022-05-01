@@ -12,7 +12,7 @@ import com.direct.app.io.entities.ConnectionEntity;
 import javax.transaction.Transactional;
 
 public interface ConnectionRepository extends CrudRepository<ConnectionEntity, Long> {
-	//TODO: convert native queries to JPQL
+	// TODO: convert native queries to JPQL
 
 	@Query( value = "SELECT * FROM connections conn WHERE conn.first_user_id =:userId",
 			nativeQuery = true)
