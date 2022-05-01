@@ -1,0 +1,77 @@
+package com.direct.app.ws.unit.mappers;
+
+import com.direct.app.io.entities.RequestEntity;
+import com.direct.app.io.entities.UserDetailsEntity;
+import com.direct.app.io.entities.UserEntity;
+import com.direct.app.mappers.EntityToDtoMapper;
+import com.direct.app.mappers.impl.RequestEntityToDtoMapper;
+import com.direct.app.shared.SenderDetails;
+import com.direct.app.shared.dto.ConnectionRequestDto;
+import com.direct.app.shared.dto.ProfileDto;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+public class RequestEntityToDtoMapperTest {
+	private EntityToDtoMapper entityMapper;
+	private RequestEntity originalEntity;
+	private ConnectionRequestDto resultDTO;
+
+	@Before
+	public void init() {
+		originalEntity = new RequestEntity();
+		entityMapper = new RequestEntityToDtoMapper();
+	}
+
+	@After
+	public void reset() {
+		entityMapper = null;
+	}
+
+	@Test
+	public void testRequestEntityToDtoMapper() {
+		generateRequestEntity();
+		resultDTO = (ConnectionRequestDto) entityMapper.mapToDTO(originalEntity);
+
+		assertEntityMatchDTO();
+	}
+
+	private void generateRequestEntity() {
+		originalEntity.setId(1L);
+		originalEntity.setSender(generateSenderEntity());
+	}
+
+	private UserEntity generateSenderEntity() {
+		UserEntity userEntity = new UserEntity();
+		userEntity.setFirstName("fName");
+		userEntity.setLastName("lName");
+		userEntity.setUserDetails(generateSenderDetailsEntity());
+
+		return userEntity;
+	}
+
+	private UserDetailsEntity generateSenderDetailsEntity() {
+		UserDetailsEntity detailsEntity = new UserDetailsEntity();
+
+		detailsEntity.setProfessionalTitle("pTitle");
+
+		return detailsEntity;
+	}
+
+	private void assertEntityMatchDTO(){
+		assertEquals(originalEntity.getId(), resultDTO.getId());
+		assertEquals(originalEntity.getSender().getId(), resultDTO.getSenderId());
+		assertEquals(originalEntity.getReceiver().getId(), resultDTO.getReceiverId());
+		assertSenderDetails();
+	}
+
+	private void assertSenderDetails(){
+		UserEntity senderEntity = originalEntity.getSender();
+		SenderDetails senderDetailsDto = resultDTO.getSenderDetails();
+		assertEquals(senderEntity.getFirstName(), senderDetailsDto.getFirstName());
+		assertEquals(senderEntity.getLastName(), senderDetailsDto.getLastName());
+		assertEquals(senderEntity.getUserDetails().getProfessionalTitle(), senderDetailsDto.getProfessionalTitle());
+	}
+}
