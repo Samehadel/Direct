@@ -4,6 +4,7 @@ import com.direct.app.exceptions.ErrorCode;
 import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.RequestEntity;
+import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static com.direct.app.exceptions.ErrorCode.U$0004;
 import static com.direct.app.exceptions.ErrorCode.U$0005;
+import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
@@ -117,16 +119,18 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
     private List<ConnectionRequestDto> getRequestDTOs(List<RequestEntity> requests){
         List<ConnectionRequestDto> requestDTOs = new ArrayList<>();
 
-        requests.forEach(req -> requestDTOs.add(convertRequestEntityToDto(req)));
+        requests.forEach(req -> {
+            requestDTOs.add(convertRequestEntityToDto(req));
+        });
 
         return requestDTOs;
     }
 
+    // TODO: create Request Entity To Dto mapper
     private ConnectionRequestDto convertRequestEntityToDto(RequestEntity req){
         ConnectionRequestDto requestDto = new ConnectionRequestDto();
         BeanUtils.copyProperties(req.getSender(), requestDto.getSenderDetails());
-        BeanUtils.copyProperties(req.getSender().getUserDetails(), requestDto.getSenderDetails());
-        BeanUtils.copyProperties(req.getSender().getUserDetails().getUserImage(), requestDto.getSenderDetails());
+        BeanUtils.copyProperties( ofNullable(req.getSender().getUserDetails()).orElse(new UserDetailsEntity()), requestDto.getSenderDetails());
 
         requestDto.setId(req.getId());
         requestDto.setReceiverId(req.getReceiver().getId());

@@ -48,8 +48,6 @@ public class UserServiceImplementation implements UserService {
 
         UserAuthorityEntity authorities = new UserAuthorityEntity(UserRole.ROLE_USER.name());
         UserDetailsEntity userDetails = new UserDetailsEntity();
-        UserImageEntity userImage = new UserImageEntity();
-
 
         // Relationship Exchange
         userEntity.setAuthority(authorities);
@@ -57,9 +55,6 @@ public class UserServiceImplementation implements UserService {
 
         userEntity.setUserDetails(userDetails);
         userDetails.setUser(userEntity);
-
-        userDetails.setUserImage(userImage);
-        userImage.setUserDetails(userDetails);
 
         userEntity.setVirtualUserId(utils.generateUserId(10));
 

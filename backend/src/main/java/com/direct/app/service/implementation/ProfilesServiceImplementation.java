@@ -2,16 +2,20 @@ package com.direct.app.service.implementation;
 
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.io.entities.UserImageEntity;
+import com.direct.app.mappers.EntityToDtoMapper;
+import com.direct.app.mappers.impl.UserEntityToProfileDTOMapper;
 import com.direct.app.repositery.UserImageRepository;
+import com.direct.app.repositery.UserRepository;
 import com.direct.app.service.ProfilesService;
 import com.direct.app.service.SubscriptionService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.util.user_service_utils.ProfilesServiceUtils;
-import com.direct.app.shared.dto.ProfileDetailsDto;
+import com.direct.app.shared.dto.ProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,59 +26,42 @@ public class ProfilesServiceImplementation implements ProfilesService {
 	private SubscriptionService subscriptionsService;
 
 	@Autowired
-	private UserImageRepository userImageRepository;
-
-	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private ProfilesServiceUtils profilesServiceUtils;
 
+	@Autowired
+	private UserRepository userRepository;
+
 	@Override
-	public Set<UserEntity> retrieveSimilarUsers() throws Exception {
+	public Set<ProfileDto> retrieveSimilarUsers() throws Exception {
+		EntityToDtoMapper mapper = new UserEntityToProfileDTOMapper();
+		Set<ProfileDto> profileDTOs = new HashSet<>();
 		UserEntity user = userService.getCurrentUserEntity_FullData();
 		Set<UserEntity> similarUsers = profilesServiceUtils.retrieveSimilarUsersBySubscriptions(user.getSubscriptions(), user.getId());
 
-		return similarUsers;
+		similarUsers.forEach(similarUser -> {
+			ProfileDto model = (ProfileDto) mapper.mapToDTO(similarUser);
+			profileDTOs.add(model);
+		});
+
+		return profileDTOs;
 	}
 
 	@Override
-	public boolean editAccountDetails(ProfileDetailsDto detailsModel) {
-		return false;
-	}
-
-	// TODO: remove boolean return
-	// TODO: apply SRP
-	@Override
-	public boolean setAccountImage(MultipartFile image) throws Exception {
+	public void setAccountImage(String imageUrl) throws Exception {
 		final UserEntity user = userService.getCurrentUserEntity();
+		user.getUserDetails().setImageUrl(imageUrl);
 
-		UserImageEntity imageEntity = new UserImageEntity();
-
-		//TODO: use ofNullable
-		Optional<UserImageEntity> optionalImageEntity = userImageRepository.findByUserDetails(user.getUserDetails());
-
-		if (optionalImageEntity.isPresent())
-			imageEntity = optionalImageEntity.get();
-
-		imageEntity.setImageData(image.getBytes());
-		imageEntity.setImageFormat(image.getContentType());
-
-		// Relationship exchange
-		imageEntity.setUserDetails(user.getUserDetails());
-		user.getUserDetails().setUserImage(imageEntity);
-
-		userImageRepository.save(imageEntity);
-
-		return imageEntity.getId() > 0 ? true : false;
+		userRepository.save(user);
 	}
 
 	@Override
-	public UserEntity getAccountDetails() throws Exception {
-
-		final long userId = userService.getCurrentUserId();
-		return userService.retrieveUserById(userId);
-
+	public ProfileDto getAccountDetails() throws Exception {
+		EntityToDtoMapper mapper = new UserEntityToProfileDTOMapper();
+		final UserEntity userEntity = userService.getCurrentUserEntity();
+		return (ProfileDto) mapper.mapToDTO(userEntity);
 	}
 
 }

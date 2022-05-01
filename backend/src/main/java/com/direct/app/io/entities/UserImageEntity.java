@@ -16,7 +16,7 @@ public class UserImageEntity extends BaseEntity {
     private long id;
 
     @Column(name = "image_data", nullable = true)
-    private byte [] imageData;
+    private Byte [] imageData;
 
     @Column(name = "image_format", nullable = true)
     private String imageFormat;

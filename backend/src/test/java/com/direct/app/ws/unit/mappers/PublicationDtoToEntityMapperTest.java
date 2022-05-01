@@ -1,4 +1,4 @@
-package com.direct.app.ws.unit.utils;
+package com.direct.app.ws.unit.mappers;
 
 import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.io.entities.UserDetailsEntity;
@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class DtoToEntityConvertersTest {
+public class PublicationDtoToEntityMapperTest {
 	private DtoToEntityMapper mapper;
 
 	@After
@@ -23,10 +23,10 @@ public class DtoToEntityConvertersTest {
 	@Test
 	public void testPublicationDtoToEntityMapper(){
 		mapper = new PublicationDtoToEntityMapper();
-		PublicationDto publicationDto = generatePublicationDTO();
-		PublicationEntity resultEntity = (PublicationEntity) mapper.mapToEntity(publicationDto);
+		PublicationDto publicationDTO = generatePublicationDTO();
+		PublicationEntity resultEntity = (PublicationEntity) mapper.mapToEntity(publicationDTO);
 
-		assertEntityMatchDTO(resultEntity, publicationDto);
+		assertEntityMatchDTO(resultEntity, publicationDTO);
 	}
 
 	private PublicationDto generatePublicationDTO(){
@@ -51,13 +51,13 @@ public class DtoToEntityConvertersTest {
 		return senderDetails;
 	}
 
-	private void assertEntityMatchDTO(PublicationEntity resultEntity, PublicationDto publicationDto) {
-		assertEquals(publicationDto.getId(), resultEntity.getId());
-		assertEquals(publicationDto.getSenderId(), resultEntity.getSender().getId());
-		assertSenderDetails(publicationDto.getSenderDetails(), resultEntity);
-		assertEquals(publicationDto.getContent(), resultEntity.getContent());
-		assertEquals(publicationDto.getLink(), resultEntity.getLink());
-		assertEquals(publicationDto.getIsRead(), resultEntity.isRead());
+	private void assertEntityMatchDTO(PublicationEntity resultEntity, PublicationDto originalDTO) {
+		assertEquals(originalDTO.getId(), resultEntity.getId());
+		assertEquals(originalDTO.getSenderId(), resultEntity.getSender().getId());
+		assertSenderDetails(originalDTO.getSenderDetails(), resultEntity);
+		assertEquals(originalDTO.getContent(), resultEntity.getContent());
+		assertEquals(originalDTO.getLink(), resultEntity.getLink());
+		assertEquals(originalDTO.getIsRead(), resultEntity.isRead());
 	}
 
 	private void assertSenderDetails(SenderDetails senderDetails, PublicationEntity resultEntity) {

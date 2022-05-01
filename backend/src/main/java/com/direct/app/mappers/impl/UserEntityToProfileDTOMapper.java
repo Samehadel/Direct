@@ -1,11 +1,19 @@
-package com.direct.app.utils.copy_factory;
+package com.direct.app.mappers.impl;
 
+import com.direct.app.io.entities.BaseEntity;
 import com.direct.app.io.entities.UserEntity;
+import com.direct.app.mappers.EntityToDtoMapper;
+import com.direct.app.shared.dto.BaseDTO;
 import com.direct.app.shared.dto.ProfileDto;
 
-public class UserEntityCopyFactory {
+import java.util.List;
 
-	public static ProfileDto copyProfileDTOFromEntity(UserEntity userEntity){
+public class UserEntityToProfileDTOMapper implements EntityToDtoMapper {
+
+	// TODO: clean
+	@Override
+	public BaseDTO mapToDTO(BaseEntity entity) {
+		UserEntity userEntity = (UserEntity) entity;
 		ProfileDto profileDto = new ProfileDto();
 
 		profileDto.setId(userEntity.getId());
@@ -15,9 +23,12 @@ public class UserEntityCopyFactory {
 		profileDto.setMajorField(userEntity.getUserDetails().getMajorField());
 		profileDto.setBio(userEntity.getUserDetails().getBio());
 		profileDto.setProfessionalTitle(userEntity.getUserDetails().getProfessionalTitle());
-		profileDto.setImageData(userEntity.getUserDetails().getUserImage().getImageData());
-		profileDto.setImageFormat(userEntity.getUserDetails().getUserImage().getImageFormat());
 
 		return profileDto;
+	}
+
+	@Override
+	public List<? extends BaseDTO> mapToDTOs(List<? extends BaseEntity> entities) {
+		return null;
 	}
 }

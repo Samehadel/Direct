@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ProfileDto extends BaseDTO {
 
-	private long id;
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private String phone;
 	private String majorField;
 	private String bio;
 	private String professionalTitle;
-	private byte [] imageData;
+	private Byte [] imageData;
 	private String imageFormat;
 
 	public ProfileDto(long id, String firstName, String lastName) {

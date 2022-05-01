@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode
 @Table(name = "requests")
 public class RequestEntity extends BaseEntity {
@@ -35,6 +34,10 @@ public class RequestEntity extends BaseEntity {
 	@JoinColumn(name = "receiver_id", foreignKey = @ForeignKey(name = "fk_requests_receiver_id"))
 	private UserEntity receiver;
 
+	public RequestEntity() {
+		sender = new UserEntity();
+		receiver = new UserEntity();
+	}
 	public RequestEntity(Long id) {
 		this.id = id;
 	}
