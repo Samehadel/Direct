@@ -9,7 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "connections")
-public class ConnectionEntity {
+public class ConnectionEntity extends BaseEntity{
 
 	// Entity attributes
 

@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Table(name = "user_authorities")
-public class UserAuthorityEntity {
+public class UserAuthorityEntity extends BaseEntity {
 
 	//Entity attributes
 	
