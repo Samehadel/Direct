@@ -3,6 +3,7 @@ package com.direct.app.ws.unit.service;
 import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.RequestEntity;
+import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
@@ -26,6 +27,7 @@ import java.util.Optional;
 
 import static com.direct.app.exceptions.ErrorCode.U$0003;
 import static com.direct.app.exceptions.ErrorCode.U$0005;
+import static java.util.Optional.ofNullable;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -215,11 +217,11 @@ public class ConnectionRequestServiceTest {
         return requestEntities;
     }
 
+    // TODO: create Request Entity To Dto mapper
     private ConnectionRequestDto convertRequestEntityToDto(RequestEntity req) {
         ConnectionRequestDto requestDto = new ConnectionRequestDto();
         BeanUtils.copyProperties(req.getSender(), requestDto.getSenderDetails());
-        BeanUtils.copyProperties(req.getSender().getUserDetails(), requestDto.getSenderDetails());
-        BeanUtils.copyProperties(req.getSender().getUserDetails().getUserImage(), requestDto.getSenderDetails());
+        BeanUtils.copyProperties( ofNullable(req.getSender().getUserDetails()).orElse(new UserDetailsEntity()), requestDto.getSenderDetails());
         requestDto.setId(req.getId());
         requestDto.setReceiverId(req.getReceiver().getId());
         requestDto.setSenderId(req.getSender().getId());

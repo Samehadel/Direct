@@ -40,7 +40,6 @@ public class NetworkServiceImplementation implements NetworkService {
 
             BeanUtils.copyProperties(otherUser, profileDTO);
             BeanUtils.copyProperties(otherUser.getUserDetails(), profileDTO);
-            BeanUtils.copyProperties(otherUser.getUserDetails().getUserImage(), profileDTO);
 
             profileDTOs.add(profileDTO);
         }

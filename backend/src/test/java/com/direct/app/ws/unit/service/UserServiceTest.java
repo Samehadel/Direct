@@ -80,7 +80,6 @@ public class UserServiceTest {
         assertEquals(user.getAuthority().getRole(), UserRole.ROLE_USER.name());
         assertNotNull(user.getUserDetails());
         assertNotNull(user.getAuthority());
-        assertNotNull(user.getUserDetails().getUserImage());
     }
 
     @Test
@@ -90,7 +89,6 @@ public class UserServiceTest {
 
         when(userRepo.findByUsername(anyString()))
                 .thenReturn(Optional.of(userEntity)); // Mocking an exist username
-
 
         try {
             userService.createUser(userEntity);
