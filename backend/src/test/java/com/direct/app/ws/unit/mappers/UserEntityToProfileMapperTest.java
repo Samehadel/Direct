@@ -18,6 +18,7 @@ public class UserEntityToProfileMapperTest {
 
 	@Before
 	public void init() {
+		originalEntity = new UserEntity();
 		entityMapper = new UserEntityToProfileDTOMapper();
 	}
 
@@ -27,7 +28,7 @@ public class UserEntityToProfileMapperTest {
 	}
 
 	@Test
-	public void testProfileEntityToDtoMapper() {
+	public void testUserEntityToDtoMapper() {
 		generateUserEntity();
 		resultDTO = (ProfileDto) entityMapper.mapToDTO(originalEntity);
 
@@ -35,8 +36,6 @@ public class UserEntityToProfileMapperTest {
 	}
 
 	private UserEntity generateUserEntity() {
-		originalEntity = new UserEntity();
-
 		originalEntity.setId(1L);
 		originalEntity.setFirstName("fName");
 		originalEntity.setLastName("lName");
