@@ -1,12 +1,15 @@
 package com.direct.app.mappers.impl;
 
-import com.direct.app.exceptions.RuntimeBusinessException;
-import com.direct.app.io.entities.*;
+import com.direct.app.io.entities.BaseEntity;
+import com.direct.app.io.entities.RequestEntity;
+import com.direct.app.io.entities.UserDetailsEntity;
+import com.direct.app.io.entities.UserEntity;
 import com.direct.app.mappers.EntityToDtoMapper;
 import com.direct.app.shared.SenderDetails;
 import com.direct.app.shared.dto.BaseDTO;
 import com.direct.app.shared.dto.ConnectionRequestDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
@@ -76,6 +79,12 @@ public class RequestEntityToDtoMapper implements EntityToDtoMapper {
 
 	@Override
 	public List<? extends BaseDTO> mapToDTOs(List<? extends BaseEntity> entities) {
-		return null;
+		List<ConnectionRequestDto> resultDTOs = new ArrayList<>();
+
+		entities.forEach(entity -> {
+			ConnectionRequestDto resultDTO = (ConnectionRequestDto) mapToDTO(entity);
+			resultDTOs.add(resultDTO);
+		});
+		return resultDTOs;
 	}
 }

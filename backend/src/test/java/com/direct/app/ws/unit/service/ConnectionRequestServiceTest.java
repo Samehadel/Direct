@@ -3,8 +3,9 @@ package com.direct.app.ws.unit.service;
 import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.RequestEntity;
-import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
+import com.direct.app.mappers.EntityToDtoMapper;
+import com.direct.app.mappers.impl.RequestEntityToDtoMapper;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.ConnectionRequestService;
@@ -18,7 +19,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.BeanUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +27,6 @@ import java.util.Optional;
 
 import static com.direct.app.exceptions.ErrorCode.U$0003;
 import static com.direct.app.exceptions.ErrorCode.U$0005;
-import static java.util.Optional.ofNullable;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -201,8 +200,9 @@ public class ConnectionRequestServiceTest {
 
     private List<ConnectionRequestDto> getRequestDTOs(List<RequestEntity> requests) {
         List<ConnectionRequestDto> requestDTOs = new ArrayList<>();
+        EntityToDtoMapper mapper = new RequestEntityToDtoMapper();
 
-        requests.forEach(req -> requestDTOs.add(convertRequestEntityToDto(req)));
+        requests.forEach(req -> requestDTOs.add((ConnectionRequestDto) mapper.mapToDTO(req)));
 
         return requestDTOs;
     }
@@ -215,17 +215,6 @@ public class ConnectionRequestServiceTest {
         requestEntities.add(new RequestEntity(4L, new UserEntity(10L), new UserEntity(1L)));
 
         return requestEntities;
-    }
-
-    // TODO: create Request Entity To Dto mapper
-    private ConnectionRequestDto convertRequestEntityToDto(RequestEntity req) {
-        ConnectionRequestDto requestDto = new ConnectionRequestDto();
-        BeanUtils.copyProperties(req.getSender(), requestDto.getSenderDetails());
-        BeanUtils.copyProperties( ofNullable(req.getSender().getUserDetails()).orElse(new UserDetailsEntity()), requestDto.getSenderDetails());
-        requestDto.setId(req.getId());
-        requestDto.setReceiverId(req.getReceiver().getId());
-        requestDto.setSenderId(req.getSender().getId());
-        return requestDto;
     }
 
     private ExceptionBody getExceptionBody(Exception exception) throws IOException {
