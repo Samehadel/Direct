@@ -15,7 +15,6 @@ import com.direct.app.shared.dto.ConnectionRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.direct.app.exceptions.ErrorCode.U$0004;
@@ -107,22 +106,11 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
 
     @Override
     public List<ConnectionRequestDto> retrieveConnectionRequests() throws Exception {
-
+        EntityToDtoMapper mapper = new RequestEntityToDtoMapper();
         long userId = userService.getCurrentUserId();
 
         List<RequestEntity> requests = connectionRequestsRepo.findRequestsByReceiverId(userId);
 
-        return getRequestDTOs(requests);
-    }
-
-    private List<ConnectionRequestDto> getRequestDTOs(List<RequestEntity> requests){
-        List<ConnectionRequestDto> requestDTOs = new ArrayList<>();
-        EntityToDtoMapper mapper = new RequestEntityToDtoMapper();
-
-        requests.forEach(req -> {
-            requestDTOs.add((ConnectionRequestDto) mapper.mapToDTO(req));
-        });
-
-        return requestDTOs;
+        return  (List<ConnectionRequestDto>) mapper.mapToDTOs(requests);
     }
 }

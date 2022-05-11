@@ -36,26 +36,29 @@ public class PublicationDtoToEntityMapper implements DtoToEntityMapper {
 	private void setSenderEntity() {
 		Long senderId = publicationDto.getSenderId();
 		sender = ofNullable(publicationEntity.getSender())
-						.orElse(new UserEntity());
+				.orElse(new UserEntity());
 		publicationEntity.setSender(sender);
 		sender.setId(senderId);
 	}
 
-	private void setSenderDetailsEntity(){
-		SenderDetails senderDetails = publicationDto.getSenderDetails();
-		senderDetailsEntity = ofNullable(sender.getUserDetails())
-									.orElse(new UserDetailsEntity());
+	private void setSenderDetailsEntity() {
+		SenderDetails senderDetails =
+				ofNullable(publicationDto.getSenderDetails())
+						.orElse(new SenderDetails());
+		senderDetailsEntity =
+				ofNullable(sender.getUserDetails())
+						.orElse(new UserDetailsEntity());
 		senderDetailsEntity.setProfessionalTitle(senderDetails.getProfessionalTitle());
 	}
 
-	private void setSenderInfo(){
+	private void setSenderInfo() {
 		SenderDetails senderDetails = publicationDto.getSenderDetails();
 		sender.setUserDetails(senderDetailsEntity);
 		sender.setFirstName(senderDetails.getFirstName());
 		sender.setLastName(senderDetails.getLastName());
 	}
 
-	private void setPublicationContent(){
+	private void setPublicationContent() {
 		publicationEntity.setId(publicationDto.getId());
 		publicationEntity.setContent(publicationDto.getContent());
 		publicationEntity.setLink(publicationDto.getLink());
@@ -70,6 +73,6 @@ public class PublicationDtoToEntityMapper implements DtoToEntityMapper {
 			PublicationEntity entity = (PublicationEntity) mapToEntity(dto);
 			publicationEntities.add(entity);
 		});
-		return null;
+		return publicationEntities;
 	}
 }

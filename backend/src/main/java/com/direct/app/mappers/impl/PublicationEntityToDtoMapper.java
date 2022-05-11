@@ -33,12 +33,12 @@ public class PublicationEntityToDtoMapper implements EntityToDtoMapper {
 	}
 
 	@Override
-	public List<BaseDTO> mapToDTOs(List<? extends BaseEntity> entities) {
+	public List<? extends BaseDTO> mapToDTOs(List<? extends BaseEntity> entities) {
 		List<PublicationDto> publications = new ArrayList<>();
 		entities.forEach(entity -> {
 			PublicationDto publicationDto = (PublicationDto) this.mapToDTO(entity);
 			publications.add(publicationDto);
 		});
-		return null;
+		return publications;
 	}
 }
