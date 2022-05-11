@@ -1,17 +1,21 @@
 package com.direct.app.ws.integration.commons;
 
+import com.direct.app.exceptions.ErrorCode;
+import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.security.SecurityConstants;
 import com.direct.app.shared.dto.ConnectionRequestDto;
 import com.direct.app.utils.JwtUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static java.util.Optional.ofNullable;
@@ -72,5 +76,13 @@ public class TestCommons {
 		usersPasswords.put("username_4", "password_4");
 
 		return usersPasswords;
+	}
+
+	public boolean responseMatchErrorCode(ResponseEntity<Object> response, ErrorCode errorCode) throws IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> responseBody = (LinkedHashMap) response.getBody();
+		ExceptionBody responseErrorBody = mapper.readValue(responseBody.get("message"), ExceptionBody.class);
+
+		return responseErrorBody.getErrorCode().equals(errorCode);
 	}
 }
