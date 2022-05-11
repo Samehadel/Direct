@@ -17,8 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.direct.app.exceptions.ErrorCode.U$0004;
-import static com.direct.app.exceptions.ErrorCode.U$0005;
+import static com.direct.app.exceptions.ErrorCode.*;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
@@ -55,7 +54,7 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
         Long currentUserId = userService.getCurrentUserId();
 
         if (!currentUserId.equals(senderId))
-            throw new RuntimeBusinessException(NOT_ACCEPTABLE, ErrorCode.U$0003, senderId);
+            throw new RuntimeBusinessException(NOT_ACCEPTABLE, U$0003, senderId);
 
     }
 

@@ -18,7 +18,7 @@ public class RequestsController {
     private ConnectionRequestService requestService;
 
     @PostMapping("/send")
-    public ResponseEntity sendConnectionRequest(@RequestBody ConnectionRequestDto connectionRequestDto) throws Exception {
+    public ResponseEntity<Long> sendConnectionRequest(@RequestBody ConnectionRequestDto connectionRequestDto) throws Exception {
 
 
         Long connectionRequestId = requestService.sendConnectionRequest(connectionRequestDto);
