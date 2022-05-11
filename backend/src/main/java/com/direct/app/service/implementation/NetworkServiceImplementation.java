@@ -3,9 +3,12 @@ package com.direct.app.service.implementation;
 import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.UserEntity;
+import com.direct.app.mappers.EntityToDtoMapper;
+import com.direct.app.mappers.impl.UserEntityToProfileDTOMapper;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.service.NetworkService;
 import com.direct.app.service.UserService;
+import com.direct.app.shared.dto.BaseDTO;
 import com.direct.app.shared.dto.ProfileDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +36,15 @@ public class NetworkServiceImplementation implements NetworkService {
         Long userId = userService.getCurrentUserId();
         List<ConnectionEntity> connections = connectionRepo.findByUserId(userId);
         Set<ProfileDto> profileDTOs = new HashSet<>();
+        EntityToDtoMapper mapper = new UserEntityToProfileDTOMapper();
 
         for(ConnectionEntity conn: connections){
-            ProfileDto profileDTO = new ProfileDto();
             UserEntity otherUser = getOtherUserInConnection(conn);
-
-            BeanUtils.copyProperties(otherUser, profileDTO);
-            BeanUtils.copyProperties(otherUser.getUserDetails(), profileDTO);
+            ProfileDto profileDTO = (ProfileDto) mapper.mapToDTO(otherUser);
 
             profileDTOs.add(profileDTO);
         }
+
         return profileDTOs;
     }
 

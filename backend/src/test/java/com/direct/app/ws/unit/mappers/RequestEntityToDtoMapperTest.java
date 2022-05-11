@@ -41,14 +41,22 @@ public class RequestEntityToDtoMapperTest {
 	private void generateRequestEntity() {
 		originalEntity.setId(1L);
 		originalEntity.setSender(generateSenderEntity());
+		originalEntity.setReceiver(generateReceiverEntity());
 	}
 
 	private UserEntity generateSenderEntity() {
 		UserEntity userEntity = new UserEntity();
+		userEntity.setId(1L);
 		userEntity.setFirstName("fName");
 		userEntity.setLastName("lName");
 		userEntity.setUserDetails(generateSenderDetailsEntity());
 
+		return userEntity;
+	}
+
+	private UserEntity generateReceiverEntity() {
+		UserEntity userEntity = new UserEntity();
+		userEntity.setId(2L);
 		return userEntity;
 	}
 

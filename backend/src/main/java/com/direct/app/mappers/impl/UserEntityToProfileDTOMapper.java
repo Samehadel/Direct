@@ -6,6 +6,7 @@ import com.direct.app.mappers.EntityToDtoMapper;
 import com.direct.app.shared.dto.BaseDTO;
 import com.direct.app.shared.dto.ProfileDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserEntityToProfileDTOMapper implements EntityToDtoMapper {
@@ -29,6 +30,12 @@ public class UserEntityToProfileDTOMapper implements EntityToDtoMapper {
 
 	@Override
 	public List<? extends BaseDTO> mapToDTOs(List<? extends BaseEntity> entities) {
+		List<ProfileDto> profileDTOs = new ArrayList<>();
+
+		entities.forEach(entity -> {
+			ProfileDto profileDTO = (ProfileDto) mapToDTO(entity);
+			profileDTOs.add(profileDTO);
+		});
 		return null;
 	}
 }

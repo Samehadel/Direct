@@ -16,6 +16,7 @@ import static java.util.Optional.ofNullable;
 
 public class RequestEntityToDtoMapper implements EntityToDtoMapper {
 	private UserEntity sender;
+	private UserEntity receiver;
 	private ConnectionRequestDto resultDto;
 	private RequestEntity sourceEntity;
 
@@ -28,29 +29,24 @@ public class RequestEntityToDtoMapper implements EntityToDtoMapper {
 				.map(RequestEntity::getId)
 				.ifPresent(requestId -> resultDto.setId(requestId));
 
-		ofNullable(sourceEntity.getSender())
-				.map(UserEntity::getId)
-				.ifPresent(senderId -> resultDto.setSenderId(senderId));
-
-		ofNullable(sourceEntity.getReceiver())
-				.map(UserEntity::getId)
-				.ifPresent(receiverId -> resultDto.setReceiverId(receiverId));
-
 		setRequestUsers();
 
 		return resultDto;
 	}
 
-	private void setRequestUsers(){
+	private void setRequestUsers() {
 		setRequestReceiver();
 		setRequestSender();
 	}
 
-	private void setRequestReceiver(){
-		resultDto.setReceiverId(sourceEntity.getReceiver().getId());
+	private void setRequestReceiver() {
+		receiver = sourceEntity.getReceiver();
+		ofNullable(receiver)
+				.map(UserEntity::getId)
+				.ifPresent(receiverId -> resultDto.setReceiverId(receiverId));
 	}
 
-	private void setRequestSender(){
+	private void setRequestSender() {
 		sender = sourceEntity.getSender();
 		ofNullable(sender)
 				.map(UserEntity::getId)
@@ -59,7 +55,7 @@ public class RequestEntityToDtoMapper implements EntityToDtoMapper {
 		setRequestSenderDetails();
 	}
 
-	private void setRequestSenderDetails(){
+	private void setRequestSenderDetails() {
 		SenderDetails senderDetails = new SenderDetails();
 
 		ofNullable(sender.getUserDetails())
