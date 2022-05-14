@@ -54,7 +54,6 @@ public class UserServiceImplementation implements UserService {
         authorities.setUser(userEntity);
 
         userEntity.setUserDetails(userDetails);
-        userDetails.setUser(userEntity);
 
         userEntity.setVirtualUserId(utils.generateUserId(10));
 

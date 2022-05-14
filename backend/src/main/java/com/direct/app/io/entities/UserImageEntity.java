@@ -15,15 +15,13 @@ public class UserImageEntity extends BaseEntity {
     @SequenceGenerator(name = "image_generator", sequenceName = "images_sequence", allocationSize = 1)
     private long id;
 
-    @Column(name = "image_data", nullable = true)
-    private Byte [] imageData;
+    @Column(name = "image_name", nullable = true)
+    private String imageName;
+
+    @Column(name = "image_url", nullable = true)
+    private String imageUrl;
 
     @Column(name = "image_format", nullable = true)
     private String imageFormat;
 
-
-    // Relationships
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_details_id", foreignKey = @ForeignKey(name = "fk_users_images_user_details_id"))
-    private UserDetailsEntity userDetails;
 }

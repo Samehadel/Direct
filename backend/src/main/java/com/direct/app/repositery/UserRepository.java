@@ -13,6 +13,7 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 	@Query("SELECT user FROM UserEntity user " +
 			"LEFT JOIN FETCH user.authority authority " +
 			"LEFT JOIN FETCH user.userDetails userDetails " +
+			"LEFT JOIN FETCH userDetails.userImage userImage " +
 			"LEFT JOIN FETCH user.subscriptions subscriptions " +
 			"WHERE user.username = :username")
 	Optional<UserEntity> findByUsername_FullData(String username);
