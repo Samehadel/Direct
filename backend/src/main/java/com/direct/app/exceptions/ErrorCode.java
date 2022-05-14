@@ -20,7 +20,8 @@ public enum ErrorCode {
 	IMG$0001("Could not create the Base directory [%s] for storing profile images!"),
 	IMG$0002("Could not save the image [%s] in directory [%s]!"),
 	IMG$0003("Could not delete directory [%s]!"),
-	IMG$0004("Could not read image from directory [%s]!");
+	IMG$0004("Could not read image from directory [%s]!"),
+	IMG$0005("Invalid MIME type [%s]!");
 
 	@JsonValue
 	@Getter
