@@ -19,7 +19,7 @@ public class ProfileImageController {
 	private ProfileImageService profileImageService;
 
 	@PostMapping(value = "/image", produces = APPLICATION_JSON_VALUE, consumes = MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity setProfileImage(@RequestPart MultipartFile imageFile) throws Exception {
+	public ResponseEntity setProfileImage(@RequestPart("imageFile") MultipartFile imageFile) throws Exception {
 		String imageUrl = profileImageService.setProfileImage(imageFile);
 
 		return ResponseEntity

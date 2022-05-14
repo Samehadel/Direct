@@ -79,7 +79,7 @@ public class ConnectionsControllerIntegrationTest {
 
 
     @Test
-    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/sql/Insert_User_Data.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/sql/database_cleanup.sql", "/sql/Insert_User_Data.sql"})
     @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
     public void send_connection_request_authToken_and_sender_id_mismatch() throws IOException {
         prepareConnectionRequestJson("username_2", "username_3");

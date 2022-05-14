@@ -60,6 +60,7 @@ public class ProfileImageServiceImplementation implements ProfileImageService {
 	@Override
 	public String setProfileImage(MultipartFile imageFile) throws Exception {
 		getImageEntity();
+		// TODO: validate MIME type
 		deletePreviousImageIfExist();
 		setImageDetails(imageFile);
 		saveImageToDirectory(imageFile);
