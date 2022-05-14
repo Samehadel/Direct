@@ -31,13 +31,10 @@ public class UserDetailsEntity extends BaseEntity {
 	@Column(name = "professional_title", nullable = true, length = 50)
 	private String professionalTitle;
 
-	@Column(name = "profile_image_url", nullable = true)
-	private String imageUrl;
-
 	//Relationships
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_details_user_id"), referencedColumnName = "id")
-	private UserEntity user;
+	@JoinColumn(name = "user_image_id", foreignKey = @ForeignKey(name = "fk_user_image_id"), referencedColumnName = "id")
+	private UserImageEntity userImage;
 
 }

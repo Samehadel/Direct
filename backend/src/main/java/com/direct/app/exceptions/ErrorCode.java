@@ -14,7 +14,13 @@ public enum ErrorCode {
 	U$0007("Username can't be empty!"),
 	U$0008("Connection ID: [%d] not exist with user ID: [%d]!"),
 	U$0009("No publication exist with ID: [%d]!"),
-	U$0010("User with ID [%d] not allowed to modify publication with ID: [%d]!");
+	U$0010("User with ID [%d] not allowed to modify publication with ID: [%d]!"),
+
+
+	IMG$0001("Could not create the Base directory [%s] for storing profile images!"),
+	IMG$0002("Could not save the image [%s] in directory [%s]!"),
+	IMG$0003("Could not delete directory [%s]!"),
+	IMG$0004("Could not read image from directory [%s]!");
 
 	@JsonValue
 	@Getter

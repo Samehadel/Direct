@@ -50,15 +50,7 @@ public class ProfilesServiceImplementation implements ProfilesService {
 	}
 
 	@Override
-	public void setAccountImage(String imageUrl) throws Exception {
-		final UserEntity user = userService.getCurrentUserEntity();
-		user.getUserDetails().setImageUrl(imageUrl);
-
-		userRepository.save(user);
-	}
-
-	@Override
-	public ProfileDto getAccountDetails() throws Exception {
+	public ProfileDto getProfileDetails() throws Exception {
 		EntityToDtoMapper mapper = new UserEntityToProfileDTOMapper();
 		final UserEntity userEntity = userService.getCurrentUserEntity();
 		return (ProfileDto) mapper.mapToDTO(userEntity);

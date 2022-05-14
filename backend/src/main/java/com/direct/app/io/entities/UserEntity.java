@@ -52,7 +52,8 @@ public class UserEntity extends BaseEntity implements Serializable {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL) // 1- with 'user_authorities'
 	private UserAuthorityEntity authority;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL) // 2- with 'user_details'
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_details_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_details_id"))// 2- with 'user_details'
 	private UserDetailsEntity userDetails;
 
 	// TODO: replace eager with lazy
