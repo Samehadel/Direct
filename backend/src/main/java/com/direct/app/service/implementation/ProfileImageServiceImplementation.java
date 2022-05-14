@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import static com.direct.app.exceptions.ErrorCode.*;
 import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
 public class ProfileImageServiceImplementation implements ProfileImageService {
@@ -39,6 +40,7 @@ public class ProfileImageServiceImplementation implements ProfileImageService {
 	private Path basePath;
 	private UserImageEntity userImageEntity;
 	private ProfileImageDTO imageDTO;
+	private MultipartFile imageFile;
 
 	@PostConstruct
 	public void setupFileLocation() throws RuntimeBusinessException {
@@ -59,11 +61,13 @@ public class ProfileImageServiceImplementation implements ProfileImageService {
 
 	@Override
 	public String setProfileImage(MultipartFile imageFile) throws Exception {
+		this.imageFile = imageFile;
+
 		getImageEntity();
-		// TODO: validate MIME type
+		validateMimeType();
 		deletePreviousImageIfExist();
-		setImageDetails(imageFile);
-		saveImageToDirectory(imageFile);
+		setImageDetails();
+		saveImageToDirectory();
 		saveImageToDB();
 
 		return userImageEntity.getImageUrl();
@@ -76,6 +80,23 @@ public class ProfileImageServiceImplementation implements ProfileImageService {
 		userImageEntity = ofNullable(userDetails.getUserImage())
 				.orElse(new UserImageEntity());
 		userDetails.setUserImage(userImageEntity);
+	}
+
+	private void validateMimeType(){
+		String mimeType = imageFile.getContentType();
+
+		if(mimeTypeNotImage(mimeType)){
+			throw new RuntimeBusinessException(NOT_ACCEPTABLE, IMG$0005, mimeType);
+		}
+	}
+
+	private boolean mimeTypeNotImage(String mimeType) {
+		String contentType = mimeType.substring(0, mimeType.indexOf('/'));
+
+		if(!contentType.equalsIgnoreCase("image"))
+			return true;
+
+		return false;
 	}
 
 	private void deletePreviousImageIfExist() throws Exception {
@@ -92,7 +113,7 @@ public class ProfileImageServiceImplementation implements ProfileImageService {
 		}
 	}
 
-	private void setImageDetails(MultipartFile imageFile) {
+	private void setImageDetails() {
 		String imageOriginalName = imageFile.getOriginalFilename();
 		String imageFormat = imageFile.getContentType();
 		String imageUrl = getSavePath(imageFile).toString();
@@ -102,7 +123,7 @@ public class ProfileImageServiceImplementation implements ProfileImageService {
 		userImageEntity.setImageUrl(imageUrl);
 	}
 
-	private void saveImageToDirectory(MultipartFile imageFile) {
+	private void saveImageToDirectory() {
 		try {
 			Path saveDirectory = getSavePath(imageFile);
 			imageFile.transferTo(saveDirectory);
