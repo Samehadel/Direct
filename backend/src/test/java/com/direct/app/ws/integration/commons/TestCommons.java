@@ -55,7 +55,7 @@ public class TestCommons {
 		return authTokens;
 	}
 
-	private String generateUserAuthToken(String username) {
+	public String generateUserAuthToken(String username) {
 		Map<String, String> usersPasswords = getUsersPasswords();
 		String userPassword = ofNullable(usersPasswords.get(username))
 								.orElse(null);
