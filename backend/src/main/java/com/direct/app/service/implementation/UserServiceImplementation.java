@@ -1,5 +1,6 @@
 package com.direct.app.service.implementation;
 
+import com.direct.app.enumerations.UserRole;
 import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.*;
 import com.direct.app.repositery.UserAuthorityRepository;
@@ -7,8 +8,6 @@ import com.direct.app.repositery.UserDetailsRepository;
 import com.direct.app.repositery.UserRepository;
 import com.direct.app.service.UserService;
 import com.direct.app.shared.Utils;
-import com.direct.app.shared.dto.UserDto;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 import static com.direct.app.exceptions.ErrorCode.*;
 import static java.util.Optional.ofNullable;

@@ -4,7 +4,7 @@ import com.direct.app.exceptions.ErrorCode;
 import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.io.entities.UserRole;
+import com.direct.app.enumerations.UserRole;
 import com.direct.app.repositery.UserAuthorityRepository;
 import com.direct.app.repositery.UserDetailsRepository;
 import com.direct.app.repositery.UserRepository;
