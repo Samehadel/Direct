@@ -1,21 +1,24 @@
 package com.direct.app.service.util.user_service_utils;
 
+import com.direct.app.io.entities.*;
+import com.direct.app.repositery.ConnectionRepository;
+import com.direct.app.repositery.RequestRepository;
+import com.direct.app.repositery.SubscriptionRepository;
+import com.direct.app.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.stereotype.Component;
+
+import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheResult;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.direct.app.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.direct.app.io.entities.ConnectionEntity;
-import com.direct.app.io.entities.RequestEntity;
-import com.direct.app.io.entities.SubscriptionEntity;
-import com.direct.app.io.entities.UserEntity;
-import com.direct.app.repositery.ConnectionRepository;
-import com.direct.app.repositery.RequestRepository;
-import com.direct.app.repositery.SubscriptionRepository;
+import static com.direct.app.cache.CacheNames.SIMILAR_USERS;
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class ProfilesServiceUtils {
@@ -32,7 +35,8 @@ public class ProfilesServiceUtils {
 	@Autowired
 	private UserService userService;
 
-	public Set<UserEntity> retrieveSimilarUsersBySubscriptions(List<SubscriptionEntity> subscriptions, Long userId) throws Exception {
+
+	public Set<UserEntity> retrieveSimilarUsersBySubscriptions(List<SubscriptionEntity> subscriptions, @CacheKey Long userId) throws Exception {
 
 		// Step1: Extract similar subscriptions
 		List<SubscriptionEntity> similarSubscriptions = retrieveSimilarSubscriptions(subscriptions, userId);
@@ -54,17 +58,17 @@ public class ProfilesServiceUtils {
 		return users;
 	}
 
-	private List<SubscriptionEntity> retrieveSimilarSubscriptions(List<SubscriptionEntity> subscriptions, long userId) {
-		List<Integer> keywords = new ArrayList<>();
+	private List<SubscriptionEntity> retrieveSimilarSubscriptions(List<SubscriptionEntity> subscriptions, Long userId) {
+		List<Integer> keywords = subscriptions
+				.stream()
+				.map(SubscriptionEntity::getKeyword)
+				.map(KeywordEntity::getId)
+				.collect(toList());
 
-		subscriptions.forEach(subscription -> {
-			keywords.add(subscription.getKeyword().getId());
-		});
+		if(!keywords.isEmpty())
+			return subscriptionRepo.findSimilarSubscriptions(keywords, userId);
 
-		List<SubscriptionEntity> subs = subscriptionRepo.findSimilarSubscriptions(keywords, userId);
-
-		return subs;
-
+		return emptyList();
 	}
 
 	private Set<UserEntity> excludeConnectedProfiles(Set<UserEntity> users, long id) {

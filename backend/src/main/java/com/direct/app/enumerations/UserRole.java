@@ -1,4 +1,4 @@
-package com.direct.app.io.entities;
+package com.direct.app.enumerations;
 
 public enum UserRole {
 	ROLE_USER,
