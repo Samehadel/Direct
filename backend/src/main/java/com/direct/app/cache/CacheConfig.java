@@ -5,6 +5,8 @@ import org.ehcache.config.CacheConfiguration;
 import org.ehcache.core.config.DefaultConfiguration;
 import org.ehcache.jsr107.EhcacheCachingProvider;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +16,7 @@ import javax.cache.Caching;
 import java.util.List;
 import java.util.Map;
 
-import static com.direct.app.cache.CacheNames.*;
+import static com.direct.app.cache.CacheNames.SIMILAR_USERS;
 import static java.time.Duration.ofMinutes;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
@@ -24,6 +26,7 @@ import static org.ehcache.config.builders.ResourcePoolsBuilder.heap;
 import static org.ehcache.config.units.MemoryUnit.MB;
 
 @Configuration
+@EnableCaching
 public class CacheConfig extends CachingConfigurerSupport {
 
 	private List<String> cacheNames = asList(
@@ -73,5 +76,10 @@ public class CacheConfig extends CachingConfigurerSupport {
 
 	private CacheManager getCacheManager(EhcacheCachingProvider provider, DefaultConfiguration configuration) {
 		return provider.getCacheManager(provider.getDefaultURI(), configuration);
+	}
+
+	@Bean("userBasedKeyGenerator")
+	public KeyGenerator keyGenerator() {
+		return new UserBasedKeyGenerator();
 	}
 }
