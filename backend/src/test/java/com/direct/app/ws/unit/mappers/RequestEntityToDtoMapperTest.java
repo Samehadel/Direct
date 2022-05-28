@@ -5,7 +5,7 @@ import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.mappers.EntityToDtoMapper;
 import com.direct.app.mappers.impl.RequestEntityToDtoMapper;
-import com.direct.app.shared.SenderDetails;
+import com.direct.app.io.dto.SenderDetails;
 import com.direct.app.io.dto.ConnectionRequestDto;
 import org.junit.After;
 import org.junit.Before;

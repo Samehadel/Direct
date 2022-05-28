@@ -1,6 +1,5 @@
 package com.direct.app.io.dto;
 
-import com.direct.app.shared.SenderDetails;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;

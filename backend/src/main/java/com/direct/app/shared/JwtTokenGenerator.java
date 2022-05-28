@@ -42,8 +42,4 @@ public class JwtTokenGenerator {
 	public String generateJwtByUsername(String username) {
 		return generateToken(username);
 	}
-
-	public String generateJwtByUserId(String userId) {
-		return generateToken(userId);
-	}
 }
