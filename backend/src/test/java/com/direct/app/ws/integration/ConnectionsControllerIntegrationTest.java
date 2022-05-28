@@ -6,7 +6,7 @@ import com.direct.app.io.entities.UserEntity;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
 import com.direct.app.repositery.UserRepository;
-import com.direct.app.shared.dto.ConnectionRequestDto;
+import com.direct.app.io.dto.ConnectionRequestDto;
 import com.direct.app.ws.integration.commons.TestCommons;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +33,6 @@ import static com.direct.app.exceptions.ErrorCode.U$0003;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
-import static org.springframework.http.HttpStatus.OK;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource("/test.application.properties")

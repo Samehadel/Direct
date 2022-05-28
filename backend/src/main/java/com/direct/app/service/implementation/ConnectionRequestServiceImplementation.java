@@ -1,6 +1,5 @@
 package com.direct.app.service.implementation;
 
-import com.direct.app.exceptions.ErrorCode;
 import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.RequestEntity;
@@ -11,7 +10,7 @@ import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.ConnectionRequestService;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.dto.ConnectionRequestDto;
+import com.direct.app.io.dto.ConnectionRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

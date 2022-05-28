@@ -1,4 +1,4 @@
-package com.direct.app.shared.dto;
+package com.direct.app.io.dto;
 
 import com.direct.app.io.entities.UserEntity;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;

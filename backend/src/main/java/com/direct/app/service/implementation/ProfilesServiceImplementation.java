@@ -9,7 +9,7 @@ import com.direct.app.service.ProfilesService;
 import com.direct.app.service.SubscriptionService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.util.user_service_utils.ProfilesServiceUtils;
-import com.direct.app.shared.dto.ProfileDto;
+import com.direct.app.io.dto.ProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

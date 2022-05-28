@@ -1,7 +1,7 @@
 package com.direct.app.ui.controller;
 
 import com.direct.app.service.ConnectionRequestService;
-import com.direct.app.shared.dto.ConnectionRequestDto;
+import com.direct.app.io.dto.ConnectionRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

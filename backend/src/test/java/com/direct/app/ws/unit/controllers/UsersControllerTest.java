@@ -3,9 +3,9 @@ package com.direct.app.ws.unit.controllers;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.security.SecurityConstants;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.dto.UserDto;
+import com.direct.app.io.dto.UserDto;
 import com.direct.app.ui.controller.UsersController;
-import com.direct.app.utils.JwtUtils;
+import com.direct.app.shared.JwtTokenGenerator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class UsersControllerTest {
     private UserService userService;
 
     @Mock
-    private JwtUtils jwtUtils;
+    private JwtTokenGenerator jwtTokenGenerator;
 
     @Mock
     private AuthenticationManager authenticationManager;

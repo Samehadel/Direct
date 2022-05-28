@@ -1,7 +1,7 @@
 package com.direct.app.mappers;
 
 import com.direct.app.io.entities.BaseEntity;
-import com.direct.app.shared.dto.BaseDTO;
+import com.direct.app.io.dto.BaseDTO;
 
 import java.util.List;
 

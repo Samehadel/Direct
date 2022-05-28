@@ -11,7 +11,7 @@ import com.direct.app.repositery.UserRepository;
 import com.direct.app.service.UserService;
 import com.direct.app.service.implementation.UserServiceImplementation;
 import com.direct.app.shared.Utils;
-import com.direct.app.shared.dto.UserDto;
+import com.direct.app.io.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,12 +71,9 @@ public class UserServiceTest {
                 .thenReturn(Optional.empty());
         when(userRepo.save(any()))
                 .thenReturn(userEntity);
-         when(utils.generateUserId(anyInt()))
-                .thenReturn("0123456789");
 
         UserEntity user = userService.createUser(userEntity);
 
-        assertEquals(10, user.getVirtualUserId().length());
         assertEquals(user.getAuthority().getRole(), UserRole.ROLE_USER.name());
         assertNotNull(user.getUserDetails());
         assertNotNull(user.getAuthority());

@@ -1,6 +1,6 @@
 package com.direct.app.service;
 
-import com.direct.app.shared.dto.ProfileDto;
+import com.direct.app.io.dto.ProfileDto;
 
 import java.util.Set;
 

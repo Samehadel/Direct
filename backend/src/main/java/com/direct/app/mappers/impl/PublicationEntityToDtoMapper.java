@@ -5,8 +5,8 @@ import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.mappers.EntityToDtoMapper;
-import com.direct.app.shared.dto.BaseDTO;
-import com.direct.app.shared.dto.PublicationDto;
+import com.direct.app.io.dto.BaseDTO;
+import com.direct.app.io.dto.PublicationDto;
 
 import java.util.ArrayList;
 import java.util.List;

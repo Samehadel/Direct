@@ -1,5 +1,6 @@
 package com.direct.app.service.implementation;
 
+import com.direct.app.io.dto.KeywordDto;
 import com.direct.app.io.entities.KeywordEntity;
 import com.direct.app.io.entities.SubscriptionEntity;
 import com.direct.app.io.entities.UserEntity;
@@ -7,7 +8,6 @@ import com.direct.app.repositery.SubscriptionRepository;
 import com.direct.app.service.KeywordService;
 import com.direct.app.service.SubscriptionService;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.dto.KeywordDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

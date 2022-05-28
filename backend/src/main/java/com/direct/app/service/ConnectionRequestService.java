@@ -1,6 +1,6 @@
 package com.direct.app.service;
 
-import com.direct.app.shared.dto.ConnectionRequestDto;
+import com.direct.app.io.dto.ConnectionRequestDto;
 
 import java.util.List;
 

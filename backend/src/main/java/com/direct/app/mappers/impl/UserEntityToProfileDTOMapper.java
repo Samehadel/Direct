@@ -3,8 +3,8 @@ package com.direct.app.mappers.impl;
 import com.direct.app.io.entities.BaseEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.mappers.EntityToDtoMapper;
-import com.direct.app.shared.dto.BaseDTO;
-import com.direct.app.shared.dto.ProfileDto;
+import com.direct.app.io.dto.BaseDTO;
+import com.direct.app.io.dto.ProfileDto;
 
 import java.util.ArrayList;
 import java.util.List;

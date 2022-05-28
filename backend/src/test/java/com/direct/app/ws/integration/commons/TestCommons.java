@@ -2,9 +2,9 @@ package com.direct.app.ws.integration.commons;
 
 import com.direct.app.exceptions.ErrorCode;
 import com.direct.app.exceptions.ExceptionBody;
+import com.direct.app.io.dto.ConnectionRequestDto;
 import com.direct.app.security.SecurityConstants;
-import com.direct.app.shared.dto.ConnectionRequestDto;
-import com.direct.app.utils.JwtUtils;
+import com.direct.app.shared.JwtTokenGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -23,7 +23,7 @@ import static java.util.Optional.ofNullable;
 @Component
 public class TestCommons {
 	@Autowired
-	private JwtUtils jwtUtils;
+	private JwtTokenGenerator jwtTokenGenerator;
 
 	public HttpEntity getHttpEntity(ConnectionRequestDto connectionRequestDto, String token){
 		HttpHeaders headers = addHeader_AuthorizationToken(token);
@@ -59,8 +59,9 @@ public class TestCommons {
 		Map<String, String> usersPasswords = getUsersPasswords();
 		String userPassword = ofNullable(usersPasswords.get(username))
 								.orElse(null);
+
 		String token = ofNullable(userPassword)
-							.map(pass -> jwtUtils.getJWT(username, pass))
+							.map(pass -> jwtTokenGenerator.generateJwtByUsernameAndPassword(username, pass))
 							.orElse("$2a$10$cwa.NIMgxz5RXjo5BuNdA.9eew4ldS6VlC.64ZEb8KvviKOfslHQq");
 		token = SecurityConstants.TOKEN_PREFIX + token;
 

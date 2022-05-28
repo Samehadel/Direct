@@ -1,6 +1,6 @@
 package com.direct.app.service;
 
-import com.direct.app.shared.dto.PublicationDto;
+import com.direct.app.io.dto.PublicationDto;
 
 import java.util.List;
 

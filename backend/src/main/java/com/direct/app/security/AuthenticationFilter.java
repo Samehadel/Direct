@@ -8,8 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.direct.app.shared.dto.UserDto;
-import com.direct.app.utils.JwtUtils;
+import com.direct.app.io.dto.UserDto;
+import com.direct.app.shared.JwtTokenGenerator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,14 +45,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
                             new ArrayList<>()));
                     
 		}catch(BadCredentialsException ex) {
-			
-			// Respond status Unauthorized
 			response.setStatus(401);
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			
-			// Internal server error
 			response.setStatus(500);
 		}
 		
@@ -64,10 +60,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
                                             HttpServletResponse res,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-    	JwtUtils jwtUtils = new JwtUtils();
+    	JwtTokenGenerator jwtTokenGenerator = new JwtTokenGenerator();
  
-        String userName = ((User) auth.getPrincipal()).getUsername();
-        String token = jwtUtils.getJWT(userName);
+        String username = ((User) auth.getPrincipal()).getUsername();
+        String token = jwtTokenGenerator.generateJwtByUsername(username);
 
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
     }  

@@ -1,8 +1,8 @@
 package com.direct.app.ws.unit.controllers;
 
+import com.direct.app.io.dto.KeywordDto;
 import com.direct.app.service.SubscriptionService;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.dto.KeywordDto;
 import com.direct.app.ui.controller.SubscriptionsController;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,7 +15,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class SubscriptionsControllerTest {

@@ -4,7 +4,7 @@ import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.mappers.EntityToDtoMapper;
 import com.direct.app.mappers.impl.UserEntityToProfileDTOMapper;
-import com.direct.app.shared.dto.ProfileDto;
+import com.direct.app.io.dto.ProfileDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -10,7 +10,7 @@ import com.direct.app.mappers.impl.UserImageEntityToDtoMapper;
 import com.direct.app.repositery.UserImageRepository;
 import com.direct.app.service.ProfileImageService;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.dto.ProfileImageDTO;
+import com.direct.app.io.dto.ProfileImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

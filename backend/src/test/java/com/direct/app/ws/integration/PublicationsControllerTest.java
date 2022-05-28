@@ -4,7 +4,7 @@ import com.direct.app.exceptions.ErrorCode;
 import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.repositery.PublicationsRepository;
-import com.direct.app.shared.dto.PublicationDto;
+import com.direct.app.io.dto.PublicationDto;
 import com.direct.app.ws.integration.commons.TestCommons;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

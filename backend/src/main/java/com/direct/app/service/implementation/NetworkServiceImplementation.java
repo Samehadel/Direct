@@ -8,11 +8,8 @@ import com.direct.app.mappers.impl.UserEntityToProfileDTOMapper;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.service.NetworkService;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.dto.BaseDTO;
-import com.direct.app.shared.dto.ProfileDto;
-import org.springframework.beans.BeanUtils;
+import com.direct.app.io.dto.ProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;

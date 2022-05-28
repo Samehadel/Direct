@@ -1,7 +1,7 @@
 package com.direct.app.service.util.publication_service_utils;
 
 import com.direct.app.io.entities.PublicationEntity;
-import com.direct.app.shared.dto.PublicationDto;
+import com.direct.app.io.dto.PublicationDto;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.direct.app.io.entities;
 
-import com.direct.app.shared.dto.UserDto;
+import com.direct.app.io.dto.UserDto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

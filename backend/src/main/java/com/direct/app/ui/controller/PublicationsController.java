@@ -1,7 +1,7 @@
 package com.direct.app.ui.controller;
 
 import com.direct.app.service.PublicationsService;
-import com.direct.app.shared.dto.PublicationDto;
+import com.direct.app.io.dto.PublicationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

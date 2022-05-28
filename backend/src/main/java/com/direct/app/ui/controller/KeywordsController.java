@@ -1,7 +1,7 @@
 package com.direct.app.ui.controller;
 
 import com.direct.app.service.KeywordService;
-import com.direct.app.shared.dto.KeywordDto;
+import com.direct.app.io.dto.KeywordDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

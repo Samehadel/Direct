@@ -1,4 +1,4 @@
-package com.direct.app.shared.dto;
+package com.direct.app.io.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

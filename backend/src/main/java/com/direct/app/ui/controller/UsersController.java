@@ -3,9 +3,8 @@ package com.direct.app.ui.controller;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.security.SecurityConstants;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.dto.UserDto;
-import com.direct.app.utils.JwtUtils;
-import org.springframework.beans.BeanUtils;
+import com.direct.app.io.dto.UserDto;
+import com.direct.app.shared.JwtTokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ public class UsersController {
     UserService userService;
 
 	@Autowired
-	JwtUtils jwtUtils;
+	JwtTokenGenerator jwtTokenGenerator;
 	
 	
 	@PostMapping("/signup")
@@ -32,7 +31,7 @@ public class UsersController {
 		ResponseEntity response =
 				ResponseEntity.status(HttpStatus.OK)
                 	.header(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX +
-                        	jwtUtils.getJWT(userDto.getUsername(), userDto.getPassword()))
+                        	jwtTokenGenerator.generateJwtByUsername(userDto.getUsername()))
                 	.body(createdUserEntity.generateUserDTOFromEntity());
 
 		return response;

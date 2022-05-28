@@ -1,9 +1,7 @@
 package com.direct.app.service;
 
-import com.direct.app.shared.dto.UserDto;
-import org.springframework.security.core.userdetails.UserDetailsService;
-
 import com.direct.app.io.entities.UserEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
 

@@ -1,7 +1,7 @@
 package com.direct.app.ws.integration;
 
 import com.direct.app.security.SecurityConstants;
-import com.direct.app.shared.dto.UserDto;
+import com.direct.app.io.dto.UserDto;
 import com.direct.app.ui.controller.UsersController;
 import org.junit.Assert;
 import org.junit.Test;

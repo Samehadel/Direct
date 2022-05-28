@@ -55,22 +55,4 @@ public class Utils {
 		return returnValue;
 	}
 
-    public String generateEmailVerificationToken(String userId) {
-        String token = Jwts.builder()
-                .setSubject(userId)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
-                .compact();
-        return token;
-    }
-    
-    public String generatePasswordResetToken(String userId)
-    {
-        String token = Jwts.builder()
-                .setSubject(userId)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
-                .compact();
-        return token;
-    }
 }

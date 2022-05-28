@@ -1,10 +1,7 @@
 package com.direct.app.service.implementation;
 
 import com.direct.app.exceptions.RuntimeBusinessException;
-import com.direct.app.io.entities.BaseEntity;
 import com.direct.app.io.entities.PublicationEntity;
-import com.direct.app.io.entities.UserDetailsEntity;
-import com.direct.app.io.entities.UserEntity;
 import com.direct.app.mappers.EntityToDtoMapper;
 import com.direct.app.mappers.impl.PublicationEntityToDtoMapper;
 import com.direct.app.repositery.ConnectionRepository;
@@ -12,13 +9,12 @@ import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.service.PublicationsService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.util.publication_service_utils.PublishPostsUtil;
-import com.direct.app.shared.dto.PublicationDto;
+import com.direct.app.io.dto.PublicationDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.direct.app.exceptions.ErrorCode.U$0009;
@@ -60,7 +56,7 @@ public class PublicationServiceImplementation implements PublicationsService {
 
 	@Override
 	public void publish(PublicationDto publication) throws Exception {
-		PublicationDto publicationDto = new com.direct.app.shared.dto.PublicationDto();
+		PublicationDto publicationDto = new PublicationDto();
 
 		// Retrieve User Id
 		long senderId = userService.getCurrentUserId();

@@ -11,7 +11,7 @@ import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.ConnectionRequestService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.implementation.ConnectionRequestServiceImplementation;
-import com.direct.app.shared.dto.ConnectionRequestDto;
+import com.direct.app.io.dto.ConnectionRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;

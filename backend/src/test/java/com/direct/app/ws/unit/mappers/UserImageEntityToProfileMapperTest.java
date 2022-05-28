@@ -3,7 +3,7 @@ package com.direct.app.ws.unit.mappers;
 import com.direct.app.io.entities.UserImageEntity;
 import com.direct.app.mappers.EntityToDtoMapper;
 import com.direct.app.mappers.impl.UserImageEntityToDtoMapper;
-import com.direct.app.shared.dto.ProfileImageDTO;
+import com.direct.app.io.dto.ProfileImageDTO;
 import org.junit.Before;
 import org.junit.Test;
 

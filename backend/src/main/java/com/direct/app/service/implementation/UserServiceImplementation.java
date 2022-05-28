@@ -1,23 +1,23 @@
 package com.direct.app.service.implementation;
 
-import com.direct.app.enumerations.UserRole;
 import com.direct.app.exceptions.RuntimeBusinessException;
-import com.direct.app.io.entities.*;
+import com.direct.app.io.entities.UserAuthorityEntity;
+import com.direct.app.io.entities.UserDetailsEntity;
+import com.direct.app.io.entities.UserEntity;
 import com.direct.app.repositery.UserAuthorityRepository;
 import com.direct.app.repositery.UserDetailsRepository;
 import com.direct.app.repositery.UserRepository;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+import static com.direct.app.enumerations.UserRole.ROLE_USER;
 import static com.direct.app.exceptions.ErrorCode.*;
 import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
@@ -34,28 +34,20 @@ public class UserServiceImplementation implements UserService {
     @Autowired
     UserDetailsRepository detailsRepo;
 
-    @Autowired
-    BCryptPasswordEncoder encoder;
-
-    @Autowired
-    Utils utils;
 
     @Override
     public UserEntity createUser(UserEntity userEntity) throws Exception {
         checkIfUsernameExists(userEntity.getUsername());
 
-        UserAuthorityEntity authorities = new UserAuthorityEntity(UserRole.ROLE_USER.name());
+        UserAuthorityEntity authorities = new UserAuthorityEntity(ROLE_USER.name());
         UserDetailsEntity userDetails = new UserDetailsEntity();
 
-        // Relationship Exchange
         userEntity.setAuthority(authorities);
         authorities.setUser(userEntity);
 
         userEntity.setUserDetails(userDetails);
 
-        userEntity.setVirtualUserId(utils.generateUserId(10));
 
-        // Use Repository To Save The User And Its Role
         userRepo.save(userEntity);
         authRepo.save(authorities);
         detailsRepo.save(userDetails);
@@ -98,8 +90,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public UserEntity getCurrentUserEntity() throws Exception {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
+        String username = getCurrentUsername();
 
         UserEntity userEntity =
                 userRepo.findByUsername(username)
@@ -107,11 +98,10 @@ public class UserServiceImplementation implements UserService {
 
         return userEntity;
     }
+
     @Override
     public UserEntity getCurrentUserEntity_FullData() throws Exception {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-
+        String username = getCurrentUsername();
         UserEntity userEntity =
                 userRepo.findByUsername_FullData(username)
                         .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0006, username));
@@ -141,6 +131,4 @@ public class UserServiceImplementation implements UserService {
         return new User(user.getUsername(), user.getEncryptedPassword(), new ArrayList<>());
 
     }
-
-
 }

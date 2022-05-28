@@ -6,7 +6,7 @@ import com.direct.app.io.entities.SubscriptionEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.PublicationsRepository;
-import com.direct.app.shared.dto.PublicationDto;
+import com.direct.app.io.dto.PublicationDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
