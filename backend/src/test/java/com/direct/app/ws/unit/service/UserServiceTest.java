@@ -10,7 +10,6 @@ import com.direct.app.repositery.UserDetailsRepository;
 import com.direct.app.repositery.UserRepository;
 import com.direct.app.service.UserService;
 import com.direct.app.service.implementation.UserServiceImplementation;
-import com.direct.app.shared.Utils;
 import com.direct.app.io.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -44,9 +43,6 @@ public class UserServiceTest {
 
     @Mock
     private BCryptPasswordEncoder encoder;
-
-    @Mock
-    private Utils utils;
 
     @Autowired
     private ObjectMapper mapper;

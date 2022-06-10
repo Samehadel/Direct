@@ -6,7 +6,7 @@ import com.direct.app.io.entities.UserEntity;
 import com.direct.app.io.entities.UserImageEntity;
 import com.direct.app.repositery.UserImageRepository;
 import com.direct.app.service.UserService;
-import com.direct.app.ws.integration.commons.TestCommons;
+import com.direct.app.ws.commons.TestCommons;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Before;

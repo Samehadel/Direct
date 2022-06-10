@@ -7,7 +7,7 @@ import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
 import com.direct.app.repositery.UserRepository;
 import com.direct.app.io.dto.ConnectionRequestDto;
-import com.direct.app.ws.integration.commons.TestCommons;
+import com.direct.app.ws.commons.TestCommons;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -38,7 +38,7 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 @TestPropertySource("/test.application.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(executionPhase= Sql.ExecutionPhase.AFTER_TEST_METHOD,  scripts={"/sql/database_cleanup.sql"})
-public class ConnectionsControllerIntegrationTest {
+public class ConnectionsControllerTest {
 
     @LocalServerPort
     private int port;
