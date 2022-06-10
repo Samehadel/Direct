@@ -107,9 +107,9 @@ public class ProfilesServiceUtils {
 	private UserEntity getOtherUserInRequest(RequestEntity request) throws Exception {
 		Long userId = userService.getCurrentUserId();
 
-		if (request.getReceiver().getId() != userId)
-			return request.getReceiver();
-		else
+		if (request.getReceiver().getId().equals(userId))
 			return request.getSender();
+		else
+			return request.getReceiver();
 	}
 }

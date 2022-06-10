@@ -1,9 +1,8 @@
 package com.direct.app.io.entities;
 
 import com.direct.app.io.dto.UserDto;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,8 +11,8 @@ import java.util.List;
 
 	
 @Entity
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "users")
 public class UserEntity extends BaseEntity implements Serializable {
 

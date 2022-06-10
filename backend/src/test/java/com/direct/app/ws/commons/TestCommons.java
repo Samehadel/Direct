@@ -1,4 +1,4 @@
-package com.direct.app.ws.integration.commons;
+package com.direct.app.ws.commons;
 
 import com.direct.app.exceptions.ErrorCode;
 import com.direct.app.exceptions.ExceptionBody;
@@ -25,17 +25,18 @@ public class TestCommons {
 	@Autowired
 	private JwtTokenGenerator jwtTokenGenerator;
 
-	public HttpEntity getHttpEntity(ConnectionRequestDto connectionRequestDto, String token){
-		HttpHeaders headers = addHeader_AuthorizationToken(token);
-
-		return new HttpEntity(connectionRequestDto, headers);
-	}
-
 	public HttpEntity getHttpEntity(String body, String username){
 		String token = generateUserAuthToken(username);
 		HttpHeaders headers = addHeader_AuthorizationToken(token);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		return new HttpEntity(body, headers);
+	}
+
+	public HttpEntity getHttpEntity(String username){
+		String token = generateUserAuthToken(username);
+		HttpHeaders headers = addHeader_AuthorizationToken(token);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		return new HttpEntity(null, headers);
 	}
 
 	private HttpHeaders addHeader_AuthorizationToken(String token){

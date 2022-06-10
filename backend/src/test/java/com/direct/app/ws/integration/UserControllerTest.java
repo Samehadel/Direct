@@ -21,14 +21,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = { "/sql/database_cleanup.sql",
-                    "/sql/Insert_User_Data.sql",
-				"/sql/publications/Publications_Test_Data_1.sql"})
+				    "/sql/publications/Publications_Test_Data_1.sql"})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
 
-public class UserControllerIntegrationTest {
+public class UserControllerTest {
 
-    @LocalServerPort
-    private int port;
+    private final String USER_SIGN_UP_URL = "/users/signup";
 
     @Autowired
     private UsersController usersController;
@@ -45,7 +43,7 @@ public class UserControllerIntegrationTest {
                 "email",
                 "pass");
 
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/users/signup", userDto, UserDto.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(USER_SIGN_UP_URL, userDto, UserDto.class);
 
         Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         Assert.assertNotNull(responseEntity.getHeaders().get(SecurityConstants.HEADER_STRING));
@@ -67,7 +65,7 @@ public class UserControllerIntegrationTest {
                 "lName", username,
                 "pass");
 
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/users/signup", userDto, UserDto.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(USER_SIGN_UP_URL, userDto, UserDto.class);
 
         Assert.assertNotEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
@@ -81,6 +79,6 @@ public class UserControllerIntegrationTest {
                 username,
                 "pass");
 
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/users/signup", userDto, UserDto.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(USER_SIGN_UP_URL, userDto, UserDto.class);
     }
 }

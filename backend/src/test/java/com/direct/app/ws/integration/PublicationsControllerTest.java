@@ -5,7 +5,7 @@ import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.io.dto.PublicationDto;
-import com.direct.app.ws.integration.commons.TestCommons;
+import com.direct.app.ws.commons.TestCommons;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -44,9 +44,6 @@ public class PublicationsControllerTest {
 	private final String MARK_PUBLICATION_AS_READ_URL = "/publications/status/read";
 	private final String MARK_PUBLICATION_AS_UNREAD_URL = "/publications/status/unread";
 
-	@LocalServerPort
-	private int port;
-
 	@Autowired
 	private TestRestTemplate testRestTemplate;
 
@@ -77,7 +74,6 @@ public class PublicationsControllerTest {
 	@Test
 	@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
 			scripts = {"/sql/database_cleanup.sql",
-					"/sql/Insert_User_Data.sql",
 					"/sql/publications/Publications_Test_Data_1.sql"})
 	@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
 	public void publishJobPost_happy_path_test() throws Exception {
@@ -92,7 +88,6 @@ public class PublicationsControllerTest {
 	@Test
 	@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
 			scripts = {"/sql/database_cleanup.sql",
-					"/sql/Insert_User_Data.sql",
 					"/sql/publications/Publications_Test_Data_2.sql"})
 	@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
 	public void checkPublicationReceiversAsExpected() throws Exception {
@@ -135,7 +130,6 @@ public class PublicationsControllerTest {
 	@Test
 	@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
 			scripts = {	"/sql/database_cleanup.sql",
-						"/sql/Insert_User_Data.sql",
 						"/sql/publications/Publications_Test_Data_3.sql"})
 	@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
 	public void accessInboxPublications_happy_path_test() {
@@ -167,7 +161,6 @@ public class PublicationsControllerTest {
 	@Test
 	@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
 			scripts = {	"/sql/database_cleanup.sql",
-						"/sql/Insert_User_Data.sql",
 						"/sql/publications/Publications_Test_Data_3.sql"})
 	@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
 	public void markPublicationAsRead_happy_path_test(){
@@ -192,7 +185,6 @@ public class PublicationsControllerTest {
 	@Test
 	@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
 			scripts = {	"/sql/database_cleanup.sql",
-						"/sql/Insert_User_Data.sql",
 						"/sql/publications/Publications_Test_Data_3.sql"})
 	@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
 	public void markPublicationAsRead_unhappy_path_incompatible_user() throws IOException {
@@ -211,8 +203,7 @@ public class PublicationsControllerTest {
 	@Test
 	@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
 			scripts = {	"/sql/database_cleanup.sql",
-					"/sql/Insert_User_Data.sql",
-					"/sql/publications/Publications_Test_Data_3.sql"})
+					    "/sql/publications/Publications_Test_Data_3.sql"})
 	@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
 	public void markPublicationAsRead_unhappy_path_publication_not_exist() throws IOException {
 		Long publicationId = 8000L;
@@ -236,7 +227,6 @@ public class PublicationsControllerTest {
 	@Test
 	@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
 			scripts = {	"/sql/database_cleanup.sql",
-						"/sql/Insert_User_Data.sql",
 						"/sql/publications/Publications_Test_Data_3.sql"})
 	@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
 	public void markPublicationAsUnRead_happy_path_test(){
