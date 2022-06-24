@@ -27,9 +27,7 @@ public class KeywordsController {
 	
 	@GetMapping
 	public ResponseEntity retrieveAllKeywords() throws Exception {
-		
-		// Call the service
-		List<KeywordDto> keywordsDto = keywordService.getKeywords();
+		List<KeywordDto> keywordsDto = keywordService.getAllExistingKeywords();
 
 		return ResponseEntity
 				.status(HttpStatus.OK)

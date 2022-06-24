@@ -10,6 +10,9 @@ import com.direct.app.io.dto.PublicationDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class PublicationEntityToDtoMapper implements EntityToDtoMapper {
 	@Override
@@ -34,11 +37,8 @@ public class PublicationEntityToDtoMapper implements EntityToDtoMapper {
 
 	@Override
 	public List<? extends BaseDTO> mapToDTOs(List<? extends BaseEntity> entities) {
-		List<PublicationDto> publications = new ArrayList<>();
-		entities.forEach(entity -> {
-			PublicationDto publicationDto = (PublicationDto) this.mapToDTO(entity);
-			publications.add(publicationDto);
-		});
-		return publications;
+		return entities.stream()
+						.map(this::mapToDTO)
+						.collect(toList());
 	}
 }
