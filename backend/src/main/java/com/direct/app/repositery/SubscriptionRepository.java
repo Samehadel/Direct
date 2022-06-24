@@ -23,5 +23,5 @@ public interface SubscriptionRepository extends CrudRepository<SubscriptionEntit
 	@Query(value = "DELETE FROM subscriptions subs WHERE subs.user_id=:userId and keyword_id=:keywordId", nativeQuery = true)
 	@Modifying
 	@Transactional
-	void deleteSubscribedKeyword(@Param(value = "userId") long userId, @Param(value = "keywordId") int keywordId);
+	void deleteSubscribedKeyword(@Param(value = "userId") Long userId, @Param(value = "keywordId") Integer keywordId);
 }

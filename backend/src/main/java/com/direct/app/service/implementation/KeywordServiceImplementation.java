@@ -1,6 +1,7 @@
 package com.direct.app.service.implementation;
 
 import com.direct.app.io.dto.KeywordDto;
+import com.direct.app.io.dto.SubscriptionDTO;
 import com.direct.app.io.entities.KeywordEntity;
 import com.direct.app.mappers.EntityToDtoMapper;
 import com.direct.app.mappers.impl.KeywordEntityToDtoMapper;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class KeywordServiceImplementation implements KeywordService {
@@ -42,7 +45,7 @@ public class KeywordServiceImplementation implements KeywordService {
 	}
 	
 	@Override
-	public KeywordEntity getKeywordById(int id) {
+	public Optional<KeywordEntity> getKeywordById(Integer id) {
 		return keywordRepo.findById(id);
 	}
 
@@ -57,25 +60,36 @@ public class KeywordServiceImplementation implements KeywordService {
 
 	@Override
 	public List<KeywordDto> getKeywordsWithSubscriptions() throws Exception {
-		long userId = userService.getCurrentUserId();
 		List<KeywordDto> allKeywords = getAllExistingKeywords();
-		assignSubscriptionsToKeywords(allKeywords, userId);
+		assignSubscriptionsToKeywords(allKeywords);
 
 		return allKeywords;
 	}
 
-	private List<KeywordDto> assignSubscriptionsToKeywords(List<KeywordDto>keywordDtos, long userId){
-		// TODO: change use of KeywordDTO to SubscriptionDTO
-		List<KeywordDto> subscriptions = subscriptionService.getSubscriptions(userId);
-
-		for(KeywordDto dto: keywordDtos){
-			for(KeywordDto sub: subscriptions){
-				if(sub.getKeywordId() == dto.getKeywordId())
-					dto.setSubscribed(true);
-			}
-		}
+	private List<KeywordDto> assignSubscriptionsToKeywords(List<KeywordDto> keywordDtos) throws Exception {
+		keywordDtos
+				.stream()
+				.map(this::assignSubscriptionToKeyword)
+				.collect(Collectors.toList());
 
 		return keywordDtos;
 	}
+	private KeywordDto assignSubscriptionToKeyword(KeywordDto keywordDto) {
 
+		if(didUserSubscribedToKeyword(keywordDto.getId()))
+			keywordDto.setSubscribed(true);
+		else
+			keywordDto.setSubscribed(false);
+
+		return keywordDto;
+	}
+
+	private boolean didUserSubscribedToKeyword(Integer keywordId){
+		List<SubscriptionDTO> subscriptions = subscriptionService.getCurrentUserSubscriptions();
+		return 1 == subscriptions
+						.stream()
+						.map(SubscriptionDTO::getKeyword)
+						.filter(keyword -> keyword.getId().equals(keywordId))
+						.count();
+	}
 }

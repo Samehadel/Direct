@@ -66,8 +66,8 @@ public class KeywordEntityToDtoMapperTest {
 	}
 
 	private void assertEntityMatchDTO() {
-		assertEquals(originalEntity.getId(), resultDTO.getKeywordId());
-		assertEquals(originalEntity.getDescription(), resultDTO.getKeywordDescription());
+		assertEquals(originalEntity.getId(), resultDTO.getId());
+		assertEquals(originalEntity.getDescription(), resultDTO.getDescription());
 	}
 
 	private void assertEntitiesMatchDTOs() {
