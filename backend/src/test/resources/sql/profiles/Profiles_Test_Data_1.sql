@@ -64,7 +64,7 @@ INSERT INTO subscriptions (id, keyword_id, user_id) VALUES (418, 802, 1006);
 
 
 INSERT INTO requests (id, receiver_id, sender_id) VALUES (101, 1001, 1002);
-INSERT INTO requests (id, receiver_id, sender_id) VALUES (102, 1001, 1007);
+INSERT INTO requests (id, receiver_id, sender_id) VALUES (102, 1007, 1001);
 INSERT INTO requests (id, receiver_id, sender_id) VALUES (103, 1006, 1002);
 
 INSERT INTO connections (id, first_user_id, second_user_id) VALUES (201, 1001, 1004);
