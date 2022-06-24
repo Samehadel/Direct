@@ -15,6 +15,7 @@ public class KeywordDto extends BaseDTO {
 	private Long userId;
 	private String keywordDescription;
 	private boolean subscribed;
+
 	public KeywordDto(Integer keywordId, Long userId) {
 		this.keywordId = keywordId;
 		this.userId = userId;

@@ -11,7 +11,7 @@ public interface KeywordService {
 	
 	public KeywordEntity getKeywordById(int id);
 	
-	public List<KeywordDto> getKeywords() throws Exception;
+	public List<KeywordDto> getAllExistingKeywords() throws Exception;
 
 	public List<KeywordDto> getKeywordsWithSubscriptions() throws Exception;
 
