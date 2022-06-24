@@ -9,7 +9,7 @@ public interface UserService extends UserDetailsService {
 	
 	public UserEntity retrieveUser(String username) throws Exception;
 
-	public Long getCurrentUserId() throws Exception;
+	public Long getCurrentUserId();
 
 	public String getCurrentUsername() throws Exception;
 

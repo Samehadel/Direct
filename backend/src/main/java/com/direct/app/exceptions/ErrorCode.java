@@ -21,7 +21,9 @@ public enum ErrorCode {
 	IMG$0002("Could not save the image [%s] in directory [%s]!"),
 	IMG$0003("Could not delete directory [%s]!"),
 	IMG$0004("Could not read image from directory [%s]!"),
-	IMG$0005("Invalid MIME type [%s]!");
+	IMG$0005("Invalid MIME type [%s]!"),
+
+	KWRD$0001("No keyword exist with ID: [%d]!");
 
 	@JsonValue
 	@Getter

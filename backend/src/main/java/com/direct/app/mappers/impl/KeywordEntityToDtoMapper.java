@@ -16,8 +16,8 @@ public class KeywordEntityToDtoMapper implements EntityToDtoMapper {
 		KeywordEntity keywordEntity = (KeywordEntity) entity;
 		KeywordDto keywordDto = new KeywordDto();
 
-		keywordDto.setKeywordId(keywordEntity.getId());
-		keywordDto.setKeywordDescription(keywordEntity.getDescription());
+		keywordDto.setId(keywordEntity.getId());
+		keywordDto.setDescription(keywordEntity.getDescription());
 
 		return keywordDto;
 	}

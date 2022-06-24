@@ -1,16 +1,15 @@
 package com.direct.app.service;
 
 import com.direct.app.io.dto.KeywordDto;
+import com.direct.app.io.dto.SubscriptionDTO;
 
 import java.util.List;
 
 public interface SubscriptionService {
 
-	boolean createSubscription(Long userId, Integer keywordId) throws Exception;
+	void subscribeToKeyword(Integer keywordId) throws Exception;
 	
-	List<KeywordDto> getSubscriptions(Long userId);
-	
-	void dropSubscription(long subscriptionId);
+	List<SubscriptionDTO> getCurrentUserSubscriptions();
 
-	void dropSubscription(int keywordId) throws Exception;
+	void unsubscribeToKeyword(Integer keywordId) throws Exception;
 }

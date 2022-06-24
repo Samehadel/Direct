@@ -75,7 +75,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public Long getCurrentUserId() throws Exception {
+    public Long getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
@@ -83,13 +83,13 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public String getCurrentUsername() throws Exception {
+    public String getCurrentUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
     }
 
     @Override
-    public UserEntity getCurrentUserEntity() throws Exception {
+    public UserEntity getCurrentUserEntity() {
         String username = getCurrentUsername();
 
         UserEntity userEntity =
@@ -100,7 +100,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public UserEntity getCurrentUserEntity_FullData() throws Exception {
+    public UserEntity getCurrentUserEntity_FullData() {
         String username = getCurrentUsername();
         UserEntity userEntity =
                 userRepo.findByUsername_FullData(username)
@@ -110,7 +110,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public UserEntity retrieveUserById(long id) throws Exception {
+    public UserEntity retrieveUserById(long id) {
         UserEntity userEntity =
                 userRepo.findById(id)
                         .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0002, id));

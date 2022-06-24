@@ -1,15 +1,14 @@
 package com.direct.app.ui.controller;
 
+import com.direct.app.io.dto.KeywordDto;
+import com.direct.app.io.dto.SubscriptionDTO;
 import com.direct.app.service.SubscriptionService;
 import com.direct.app.service.UserService;
-import com.direct.app.io.dto.KeywordDto;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,51 +23,28 @@ public class SubscriptionsController {
     private SubscriptionService subscriptionService;
 
     @PostMapping("/subscribe")
-    public ResponseEntity subscribe(@RequestBody KeywordDto keywordDto) throws Exception {
+    public ResponseEntity subscribe(@RequestParam(value = "keyword_id") Integer keywordId) throws Exception {
 
-        Long userId = userService.getCurrentUserId();
+        subscriptionService.subscribeToKeyword(keywordId);
 
-        boolean check = subscriptionService.createSubscription(userId, keywordDto.getKeywordId());
-
-        return check ? ResponseEntity.status(HttpStatus.OK).build() :
-                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
 
     }
 
     @GetMapping("/")
     public ResponseEntity accessSubscriptions() throws Exception {
 
-        // Extract user's info from ContextHolder and get user's id from DB
-        long userId = userService.getCurrentUserId();
+        List<SubscriptionDTO> subscriptions = subscriptionService.getCurrentUserSubscriptions();
 
-        List<KeywordDto> keywordsSubscriptions = new ArrayList<>();
-        List<KeywordDto> subscriptionsDto = subscriptionService.getSubscriptions(userId);
-
-        for (KeywordDto dto : subscriptionsDto) {
-            KeywordDto responseDto = new KeywordDto();
-
-            // Copy values from DTO to response model
-            BeanUtils.copyProperties(dto, responseDto);
-
-            keywordsSubscriptions.add(responseDto);
-        }
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(keywordsSubscriptions);
+                .body(subscriptions);
     }
 
-    @DeleteMapping("/drop/{subscriptionId}")
-    public ResponseEntity removeSubscription(@PathVariable long subscriptionId) {
-        subscriptionService.dropSubscription(subscriptionId);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .build();
-    }
-    @DeleteMapping("/drop/keyword/{keywordId}")
-    public ResponseEntity removeSubscribedKeyword(@PathVariable int keywordId) throws Exception {
-        subscriptionService.dropSubscription(keywordId);
+    @DeleteMapping("/unsubscribe")
+    public ResponseEntity unsubscribedKeyword(@RequestParam(value = "keyword_id") Integer keywordId) throws Exception {
+        subscriptionService.unsubscribeToKeyword(keywordId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
