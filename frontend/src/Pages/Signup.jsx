@@ -31,9 +31,8 @@ function Signup() {
 
   // Form Submission Code
   const formSubmit = (data) => {
-    const { firstName, lastName, username: userName, password } = data;
 
-    UserAPIs.signup({ firstName, lastName, userName, password })
+    UserAPIs.signup(data)
       .then(res => {
         setError(false);
         setSuccess(true);

@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 class KeywordsService {
+  
   getAllKeywords(check) {
+    console.log(check);
     axios.defaults.headers.common = {
       Authorization: sessionStorage.getItem('Authorization'),
     };
@@ -12,22 +14,20 @@ class KeywordsService {
 
   
 
-  subscribe(keywordId) {
+  subscribe(keyword_id) {
+    console.log('br3')
     axios.defaults.headers.common = {
       Authorization: sessionStorage.getItem('Authorization'),
     };
-    return axios.post('http://localhost:8082/subscriptions/subscribe', {
-      userId: null,
-      keywordId,
-    });
+    return axios.post(`http://localhost:8082/subscriptions/subscribe?keyword_id=${keyword_id}`);
   }
 
-  unsubscribe(keywordId) {
+  unsubscribe(keyword_id) {
     axios.defaults.headers.common = {
       Authorization: sessionStorage.getItem('Authorization'),
     };
     return axios.delete(
-      `http://localhost:8082/subscriptions/drop/keyword/${keywordId}`
+      `http://localhost:8082/subscriptions/unsubscribe?keyword_id=${keyword_id}`
     );
   }
 }
