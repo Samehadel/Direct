@@ -4,15 +4,25 @@ import com.direct.app.io.dto.BaseDTO;
 import com.direct.app.io.dto.KeywordDto;
 import com.direct.app.io.entities.BaseEntity;
 import com.direct.app.io.entities.KeywordEntity;
-import com.direct.app.mappers.EntityToDtoMapper;
+import com.direct.app.mappers.EntityDTOMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class KeywordEntityToDtoMapper implements EntityToDtoMapper {
+public class KeywordEntityToDtoMapper implements EntityDTOMapper {
 
 	@Override
-	public BaseDTO mapToDTO(BaseEntity entity) {
+	public BaseEntity mapDtoToEntity(BaseDTO dto) {
+		return null;
+	}
+
+	@Override
+	public List<? extends BaseEntity> mapDTOsToEntities(List<? extends BaseDTO> dtos) {
+		return null;
+	}
+
+	@Override
+	public BaseDTO mapEntityToDTO(BaseEntity entity) {
 		KeywordEntity keywordEntity = (KeywordEntity) entity;
 		KeywordDto keywordDto = new KeywordDto();
 
@@ -23,9 +33,9 @@ public class KeywordEntityToDtoMapper implements EntityToDtoMapper {
 	}
 
 	@Override
-	public List<? extends BaseDTO> mapToDTOs(List<? extends BaseEntity> entities) {
+	public List<? extends BaseDTO> mapEntitiesToDTOs(List<? extends BaseEntity> entities) {
 		return entities.stream()
-						.map(this::mapToDTO)
+						.map(this::mapEntityToDTO)
 						.collect(Collectors.toList());
 
 	}

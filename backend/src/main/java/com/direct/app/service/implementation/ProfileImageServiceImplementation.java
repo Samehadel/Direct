@@ -2,15 +2,16 @@ package com.direct.app.service.implementation;
 
 import com.direct.app.config.AppConfiguration;
 import com.direct.app.exceptions.RuntimeBusinessException;
+import com.direct.app.factories.EntityDTOMapperFactory;
+import com.direct.app.io.dto.ProfileImageDTO;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.io.entities.UserImageEntity;
-import com.direct.app.mappers.EntityToDtoMapper;
-import com.direct.app.mappers.impl.UserImageEntityToDtoMapper;
+import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.mappers.impl.UserImageEntityDTOMapper;
 import com.direct.app.repositery.UserImageRepository;
 import com.direct.app.service.ProfileImageService;
 import com.direct.app.service.UserService;
-import com.direct.app.io.dto.ProfileImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.direct.app.enumerations.EntityDTOMapperType.USER_IMAGE_MAPPER;
 import static com.direct.app.exceptions.ErrorCode.*;
 import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -41,6 +43,7 @@ public class ProfileImageServiceImplementation implements ProfileImageService {
 	private UserImageEntity userImageEntity;
 	private ProfileImageDTO imageDTO;
 	private MultipartFile imageFile;
+	private EntityDTOMapper mapper;
 
 	@PostConstruct
 	public void setupFileLocation() throws RuntimeBusinessException {
@@ -156,9 +159,9 @@ public class ProfileImageServiceImplementation implements ProfileImageService {
 	}
 
 	private void getImageDTO(UserImageEntity imageEntity){
-		EntityToDtoMapper mapper = new UserImageEntityToDtoMapper();
+		mapper = EntityDTOMapperFactory.getEntityDTOMapper(USER_IMAGE_MAPPER);
 		byte [] imageData = getImageData(imageEntity.getImageUrl());
-		imageDTO = (ProfileImageDTO) mapper.mapToDTO(imageEntity);
+		imageDTO = (ProfileImageDTO) mapper.mapEntityToDTO(imageEntity);
 		imageDTO.setImageData(imageData);
 	}
 

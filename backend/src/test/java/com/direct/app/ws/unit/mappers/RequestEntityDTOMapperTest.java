@@ -1,27 +1,28 @@
 package com.direct.app.ws.unit.mappers;
 
+import com.direct.app.factories.EntityDTOMapperFactory;
+import com.direct.app.io.dto.ConnectionRequestDto;
+import com.direct.app.io.dto.SenderDetails;
 import com.direct.app.io.entities.RequestEntity;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.EntityToDtoMapper;
-import com.direct.app.mappers.impl.RequestEntityToDtoMapper;
-import com.direct.app.io.dto.SenderDetails;
-import com.direct.app.io.dto.ConnectionRequestDto;
+import com.direct.app.mappers.EntityDTOMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.direct.app.enumerations.EntityDTOMapperType.REQUEST_MAPPER;
 import static org.junit.Assert.assertEquals;
 
-public class RequestEntityToDtoMapperTest {
-	private EntityToDtoMapper entityMapper;
+public class RequestEntityDTOMapperTest {
+	private EntityDTOMapper entityMapper;
 	private RequestEntity originalEntity;
 	private ConnectionRequestDto resultDTO;
 
 	@Before
 	public void init() {
 		originalEntity = new RequestEntity();
-		entityMapper = new RequestEntityToDtoMapper();
+		entityMapper = EntityDTOMapperFactory.getEntityDTOMapper(REQUEST_MAPPER);
 	}
 
 	@After
@@ -32,7 +33,7 @@ public class RequestEntityToDtoMapperTest {
 	@Test
 	public void testRequestEntityToDtoMapper() {
 		generateRequestEntity();
-		resultDTO = (ConnectionRequestDto) entityMapper.mapToDTO(originalEntity);
+		resultDTO = (ConnectionRequestDto) entityMapper.mapEntityToDTO(originalEntity);
 
 		assertEntityMatchDTO();
 	}

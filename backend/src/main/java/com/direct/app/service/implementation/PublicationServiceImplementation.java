@@ -1,15 +1,15 @@
 package com.direct.app.service.implementation;
 
 import com.direct.app.exceptions.RuntimeBusinessException;
+import com.direct.app.factories.EntityDTOMapperFactory;
+import com.direct.app.io.dto.PublicationDto;
 import com.direct.app.io.entities.PublicationEntity;
-import com.direct.app.mappers.EntityToDtoMapper;
-import com.direct.app.mappers.impl.PublicationEntityToDtoMapper;
+import com.direct.app.mappers.EntityDTOMapper;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.service.PublicationsService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.util.publication_service_utils.PublishPostsUtil;
-import com.direct.app.io.dto.PublicationDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static com.direct.app.enumerations.EntityDTOMapperType.PUBLICATION_MAPPER;
+import static com.direct.app.enumerations.EntityDTOMapperType.USER_MAPPER;
 import static com.direct.app.exceptions.ErrorCode.U$0009;
 import static com.direct.app.exceptions.ErrorCode.U$0010;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
@@ -48,8 +50,8 @@ public class PublicationServiceImplementation implements PublicationsService {
 	}
 
 	private List<PublicationDto> generatePublicationDTOs(List<PublicationEntity> publicationEntities) {
-		EntityToDtoMapper entityMapper = new PublicationEntityToDtoMapper();
-		List<PublicationDto> publications = (List<PublicationDto>) entityMapper.mapToDTOs(publicationEntities);
+		EntityDTOMapper entityMapper = EntityDTOMapperFactory.getEntityDTOMapper(PUBLICATION_MAPPER);
+		List<PublicationDto> publications = (List<PublicationDto>) entityMapper.mapEntitiesToDTOs(publicationEntities);
 
 		return publications;
 	}

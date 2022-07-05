@@ -1,9 +1,9 @@
 package com.direct.app.ws.unit.mappers;
 
+import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.KeywordDto;
 import com.direct.app.io.entities.KeywordEntity;
-import com.direct.app.mappers.EntityToDtoMapper;
-import com.direct.app.mappers.impl.KeywordEntityToDtoMapper;
+import com.direct.app.mappers.EntityDTOMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,10 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.direct.app.enumerations.EntityDTOMapperType.KEYWORD_MAPPER;
 import static org.junit.Assert.assertEquals;
 
 public class KeywordEntityToDtoMapperTest {
-	private EntityToDtoMapper entityMapper;
+	private EntityDTOMapper entityMapper;
 	private KeywordEntity originalEntity;
 	private KeywordDto resultDTO;
 	private List<KeywordDto> resultDTOs;
@@ -25,7 +26,7 @@ public class KeywordEntityToDtoMapperTest {
 	@Before
 	public void init() {
 		originalEntity = new KeywordEntity();
-		entityMapper = new KeywordEntityToDtoMapper();
+		entityMapper = EntityDTOMapperFactory.getEntityDTOMapper(KEYWORD_MAPPER);
 		originalEntities = new ArrayList<>();
 		random = new Random();
 	}
@@ -38,7 +39,7 @@ public class KeywordEntityToDtoMapperTest {
 	@Test
 	public void testKeywordEntityToDtoMapper() {
 		originalEntity = generateKeywordEntity();
-		resultDTO = (KeywordDto) entityMapper.mapToDTO(originalEntity);
+		resultDTO = (KeywordDto) entityMapper.mapEntityToDTO(originalEntity);
 
 		assertEntityMatchDTO();
 	}
@@ -46,7 +47,7 @@ public class KeywordEntityToDtoMapperTest {
 	@Test
 	public void testKeywordEntityToDtoMapper_List() {
 		generateKeywordEntities();
-		resultDTOs = (List<KeywordDto>) entityMapper.mapToDTOs(originalEntities);
+		resultDTOs = (List<KeywordDto>) entityMapper.mapEntitiesToDTOs(originalEntities);
 
 		assertEntitiesMatchDTOs();
 	}
