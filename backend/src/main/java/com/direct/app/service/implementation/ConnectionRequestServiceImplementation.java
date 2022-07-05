@@ -1,21 +1,22 @@
 package com.direct.app.service.implementation;
 
 import com.direct.app.exceptions.RuntimeBusinessException;
+import com.direct.app.factories.EntityDTOMapperFactory;
+import com.direct.app.io.dto.ConnectionRequestDto;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.RequestEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.EntityToDtoMapper;
-import com.direct.app.mappers.impl.RequestEntityToDtoMapper;
+import com.direct.app.mappers.EntityDTOMapper;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.ConnectionRequestService;
 import com.direct.app.service.UserService;
-import com.direct.app.io.dto.ConnectionRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.direct.app.enumerations.EntityDTOMapperType.REQUEST_MAPPER;
 import static com.direct.app.exceptions.ErrorCode.*;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
@@ -23,13 +24,16 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 public class ConnectionRequestServiceImplementation implements ConnectionRequestService {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    RequestRepository connectionRequestsRepo;
+    private RequestRepository connectionRequestsRepo;
 
     @Autowired
-    ConnectionRepository connectionRepo;
+    private ConnectionRepository connectionRepo;
+
+    private EntityDTOMapper entityDtoMapper;
+
 
     @Override
     public Long sendConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception {
@@ -65,12 +69,8 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
 
         setConnectionUsers(connection, request);
 
-        // Delete the request from the request table
         connectionRequestsRepo.delete(request);
-
-        // Save the connection in connections table
         connectionRepo.save(connection);
-
 
         return true;
     }
@@ -104,11 +104,11 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
 
     @Override
     public List<ConnectionRequestDto> retrieveConnectionRequests() throws Exception {
-        EntityToDtoMapper mapper = new RequestEntityToDtoMapper();
+        entityDtoMapper = EntityDTOMapperFactory.getEntityDTOMapper(REQUEST_MAPPER);
         long userId = userService.getCurrentUserId();
 
         List<RequestEntity> requests = connectionRequestsRepo.findRequestsByReceiverId(userId);
 
-        return  (List<ConnectionRequestDto>) mapper.mapToDTOs(requests);
+        return  (List<ConnectionRequestDto>) entityDtoMapper.mapEntitiesToDTOs(requests);
     }
 }

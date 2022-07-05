@@ -1,25 +1,25 @@
 package com.direct.app.ws.unit.mappers;
 
+import com.direct.app.io.dto.ProfileDto;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.EntityToDtoMapper;
-import com.direct.app.mappers.impl.UserEntityToProfileDTOMapper;
-import com.direct.app.io.dto.ProfileDto;
+import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.mappers.impl.UserEntityDTOMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class UserEntityToProfileMapperTest {
-	private EntityToDtoMapper entityMapper;
+public class UserEntityDTOMapperTest {
+	private EntityDTOMapper entityMapper;
 	private UserEntity originalEntity;
 	private ProfileDto resultDTO;
 
 	@Before
 	public void init() {
 		originalEntity = new UserEntity();
-		entityMapper = new UserEntityToProfileDTOMapper();
+		entityMapper = new UserEntityDTOMapper();
 	}
 
 	@After
@@ -30,7 +30,7 @@ public class UserEntityToProfileMapperTest {
 	@Test
 	public void testUserEntityToDtoMapper() {
 		generateUserEntity();
-		resultDTO = (ProfileDto) entityMapper.mapToDTO(originalEntity);
+		resultDTO = (ProfileDto) entityMapper.mapEntityToDTO(originalEntity);
 
 		assertEntityMatchDTO();
 	}

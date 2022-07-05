@@ -1,19 +1,27 @@
 package com.direct.app.ws.unit.mappers;
 
+import com.direct.app.factories.EntityDTOMapperFactory;
+import com.direct.app.io.dto.PublicationDto;
+import com.direct.app.io.dto.SenderDetails;
 import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.DtoToEntityMapper;
-import com.direct.app.mappers.impl.PublicationDtoToEntityMapper;
-import com.direct.app.io.dto.SenderDetails;
-import com.direct.app.io.dto.PublicationDto;
+import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.mappers.impl.PublicationEntityDTOMapper;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import static com.direct.app.enumerations.EntityDTOMapperType.PUBLICATION_MAPPER;
 import static org.junit.Assert.assertEquals;
 
-public class PublicationDtoToEntityMapperTest {
-	private DtoToEntityMapper mapper;
+public class PublicationEntityDTOMapperTest {
+	private EntityDTOMapper mapper;
+
+	@Before
+	public void initialize(){
+		mapper = EntityDTOMapperFactory.getEntityDTOMapper(PUBLICATION_MAPPER);
+	}
 
 	@After
 	public void reset(){
@@ -22,9 +30,9 @@ public class PublicationDtoToEntityMapperTest {
 
 	@Test
 	public void testPublicationDtoToEntityMapper(){
-		mapper = new PublicationDtoToEntityMapper();
+		mapper = new PublicationEntityDTOMapper();
 		PublicationDto publicationDTO = generatePublicationDTO();
-		PublicationEntity resultEntity = (PublicationEntity) mapper.mapToEntity(publicationDTO);
+		PublicationEntity resultEntity = (PublicationEntity) mapper.mapDtoToEntity(publicationDTO);
 
 		assertEntityMatchDTO(resultEntity, publicationDTO);
 	}

@@ -1,27 +1,55 @@
 package com.direct.app.mappers.impl;
 
+import com.direct.app.io.dto.BaseDTO;
+import com.direct.app.io.dto.PublicationDto;
+import com.direct.app.io.dto.SenderDetails;
 import com.direct.app.io.entities.BaseEntity;
 import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.DtoToEntityMapper;
-import com.direct.app.io.dto.SenderDetails;
-import com.direct.app.io.dto.BaseDTO;
-import com.direct.app.io.dto.PublicationDto;
+import com.direct.app.mappers.EntityDTOMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
-public class PublicationDtoToEntityMapper implements DtoToEntityMapper {
+public class PublicationEntityDTOMapper implements EntityDTOMapper {
 	private UserDetailsEntity senderDetailsEntity;
 	private UserEntity sender;
 	private PublicationDto publicationDto;
 	private PublicationEntity publicationEntity;
 
 	@Override
-	public BaseEntity mapToEntity(BaseDTO dto) {
+	public BaseDTO mapEntityToDTO(BaseEntity entity) {
+		PublicationDto publicationDto = new PublicationDto();
+		PublicationEntity publicationEntity = (PublicationEntity) entity;
+		UserEntity sender = publicationEntity.getSender();
+		UserDetailsEntity senderDetails = sender.getUserDetails();
+
+		publicationDto.setId(publicationEntity.getId());
+		publicationDto.setSenderId(sender.getId());
+		publicationDto.setContent(publicationEntity.getContent());
+		publicationDto.setLink(publicationEntity.getLink());
+		publicationDto.setIsRead(publicationEntity.isRead());
+
+		publicationDto.getSenderDetails().setFirstName(sender.getFirstName());
+		publicationDto.getSenderDetails().setLastName(sender.getLastName());
+		publicationDto.getSenderDetails().setProfessionalTitle(senderDetails.getProfessionalTitle());
+
+		return publicationDto;
+	}
+
+	@Override
+	public List<? extends BaseDTO> mapEntitiesToDTOs(List<? extends BaseEntity> entities) {
+		return entities.stream()
+				.map(this::mapEntityToDTO)
+				.collect(toList());
+	}
+
+	@Override
+	public BaseEntity mapDtoToEntity(BaseDTO dto) {
 		publicationDto = (PublicationDto) dto;
 		publicationEntity = new PublicationEntity();
 
@@ -66,13 +94,14 @@ public class PublicationDtoToEntityMapper implements DtoToEntityMapper {
 	}
 
 	@Override
-	public List<? extends BaseEntity> mapToEntities(List<? extends BaseDTO> dtos) {
+	public List<? extends BaseEntity> mapDTOsToEntities(List<? extends BaseDTO> dtos) {
 		List<PublicationEntity> publicationEntities = new ArrayList<>();
 
 		dtos.forEach(dto -> {
-			PublicationEntity entity = (PublicationEntity) mapToEntity(dto);
+			PublicationEntity entity = (PublicationEntity) mapDtoToEntity(dto);
 			publicationEntities.add(entity);
 		});
 		return publicationEntities;
 	}
+
 }

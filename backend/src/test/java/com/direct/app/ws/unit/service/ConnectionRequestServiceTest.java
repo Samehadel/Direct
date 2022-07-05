@@ -2,16 +2,16 @@ package com.direct.app.ws.unit.service;
 
 import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.exceptions.RuntimeBusinessException;
+import com.direct.app.factories.EntityDTOMapperFactory;
+import com.direct.app.io.dto.ConnectionRequestDto;
 import com.direct.app.io.entities.RequestEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.EntityToDtoMapper;
-import com.direct.app.mappers.impl.RequestEntityToDtoMapper;
+import com.direct.app.mappers.EntityDTOMapper;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.ConnectionRequestService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.implementation.ConnectionRequestServiceImplementation;
-import com.direct.app.io.dto.ConnectionRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.direct.app.enumerations.EntityDTOMapperType.REQUEST_MAPPER;
 import static com.direct.app.exceptions.ErrorCode.U$0003;
 import static com.direct.app.exceptions.ErrorCode.U$0005;
 import static org.junit.Assert.assertEquals;
@@ -200,9 +201,9 @@ public class ConnectionRequestServiceTest {
 
     private List<ConnectionRequestDto> getRequestDTOs(List<RequestEntity> requests) {
         List<ConnectionRequestDto> requestDTOs = new ArrayList<>();
-        EntityToDtoMapper mapper = new RequestEntityToDtoMapper();
+        EntityDTOMapper mapper = EntityDTOMapperFactory.getEntityDTOMapper(REQUEST_MAPPER);
 
-        requests.forEach(req -> requestDTOs.add((ConnectionRequestDto) mapper.mapToDTO(req)));
+        requests.forEach(req -> requestDTOs.add((ConnectionRequestDto) mapper.mapEntityToDTO(req)));
 
         return requestDTOs;
     }
