@@ -1,35 +1,117 @@
 package com.direct.app.service.util.publication_service_utils;
 
-import com.direct.app.io.entities.PublicationEntity;
+import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.PublicationDto;
+import com.direct.app.io.entities.ConnectionEntity;
+import com.direct.app.io.entities.PublicationEntity;
+import com.direct.app.io.entities.SubscriptionEntity;
+import com.direct.app.io.entities.UserEntity;
+import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.repositery.ConnectionRepository;
+import com.direct.app.repositery.PublicationsRepository;
+import com.direct.app.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-/**
- * This Util class uses the template method design pattern to follow some fixed steps
- * to send publications to the interested connections of a specific user (sender)
- */
+import static com.direct.app.enumerations.EntityDTOMapperType.PUBLICATION_MAPPER;
 
-public abstract class PublishPostsUtil {
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Service
+public class PublishPostsUtil {
 
-    public void publish(PublicationDto publicationDto) {
+    @Autowired
+    private PublicationsRepository publicationRepo;
 
-        // STEP 1: Extract user's connections and prepare the required entities
-        prepareEntities(publicationDto);
+    @Autowired
+    private ConnectionRepository connectionRepo;
 
-        /*  STEP 2: Extract the matched connections who already subscribed to the pre-assigned
-            keywords by the sender and prepare the publication entities for the next step
-            to be saved in the database
-        */
-        List<PublicationEntity> publications = buildPublications(publicationDto);
+    @Autowired
+    private UserService userService;
 
-        //  STEP 3: Save the built publications to the database
-        savePublications(publications);
+    private UserEntity sender = new UserEntity();
+    private List<ConnectionEntity> userConnections;
+    private List<Integer> keywords;
+    private EntityDTOMapper entityDTOMapper;
+    private PublicationDto publicationDto;
+
+
+    public PublishPostsUtil() {
+        entityDTOMapper = EntityDTOMapperFactory.getEntityDTOMapper(PUBLICATION_MAPPER);
     }
 
-    protected abstract void prepareEntities(PublicationDto publicationDto);
+    public void publish(PublicationDto publicationDto) throws Exception {
 
-    protected abstract List<PublicationEntity> buildPublications(PublicationDto publicationDto);
+        prepareEntities(publicationDto);
 
-    protected abstract void savePublications(List<PublicationEntity> publications);
+        List<PublicationEntity> publications = buildPublications();
+
+        savePublicationsToDB(publications);
+    }
+
+    private void prepareEntities(PublicationDto publicationDto) throws Exception {
+        Long userId = publicationDto.getSenderId();
+        this.publicationDto = publicationDto;
+        userConnections = connectionRepo.findByUserId(userId);
+        keywords = publicationDto.getKeywords();
+        sender = userService.retrieveUserById(userId);
+    }
+
+    private List<PublicationEntity> buildPublications() {
+        Set<UserEntity> receivers =
+                userConnections
+                        .stream()
+                        .map(conn -> getReceiverFromConnection(conn))
+                        .map(UserEntity::getSubscriptions)
+                        .flatMap(List::stream)
+                        .filter(this::keywordsContainSubscription)
+                        .map(SubscriptionEntity::getUser)
+                        .collect(Collectors.toSet());
+
+        return buildPublications(receivers);
+    }
+
+    private UserEntity getReceiverFromConnection(ConnectionEntity conn) {
+        UserEntity receiver = conn.getFirstUser();
+        if (receiver.getId().equals(publicationDto.getSenderId()))
+            receiver = conn.getSecondUser();
+
+        return receiver;
+    }
+
+    private boolean keywordsContainSubscription(SubscriptionEntity subscription) {
+        return keywords.contains(subscription.getKeyword().getId());
+    }
+
+    private List<PublicationEntity> buildPublications(Set<UserEntity> receivers) {
+        return receivers
+                .stream()
+                .map(this::buildSinglePublication)
+                .collect(Collectors.toList());
+    }
+
+    private PublicationEntity buildSinglePublication(UserEntity receiver) {
+        PublicationEntity publication = (PublicationEntity) entityDTOMapper.mapDtoToEntity(publicationDto);
+
+        publication.setReceiver(receiver);
+        publication.setSender(sender);
+
+        receiver.addReceivedPublication(publication);
+        receiver.addSentPublication(publication);
+
+        return publication;
+    }
+
+    private void savePublicationsToDB(List<PublicationEntity> publications) {
+        for (PublicationEntity publication : publications)
+            publicationRepo.save(publication);
+
+    }
 }

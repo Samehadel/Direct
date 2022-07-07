@@ -1,112 +1,107 @@
 package com.direct.app.service.util.publication_service_utils;
 
+import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.io.entities.SubscriptionEntity;
 import com.direct.app.io.entities.UserEntity;
+import com.direct.app.mappers.EntityDTOMapper;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.io.dto.PublicationDto;
-import org.springframework.beans.BeanUtils;
+import com.direct.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Service
-public class PublishPostsUtilImplementation extends PublishPostsUtil {
+import static com.direct.app.enumerations.EntityDTOMapperType.PUBLICATION_MAPPER;
 
-    @Autowired
-    private PublicationsRepository publicationRepo;
+public class PublishPostsUtilImplementation {
 
-    @Autowired
-    private ConnectionRepository connectionRepo;
+	@Autowired
+	private PublicationsRepository publicationRepo;
 
-    private UserEntity sender = new UserEntity();
-    private List<ConnectionEntity> userConnections;
-    private List<Integer> keywords;
+	@Autowired
+	private ConnectionRepository connectionRepo;
 
+	@Autowired
+	private UserService userService;
 
-    @Override
-    protected void prepareEntities(PublicationDto publicationDto) {
-        long userId = publicationDto.getSenderId();
+	private UserEntity sender = new UserEntity();
+	private List<ConnectionEntity> userConnections;
+	private List<Integer> keywords;
+	private EntityDTOMapper entityDTOMapper;
+	private PublicationDto publicationDto;
 
-        // Extract user's connections
-        userConnections = connectionRepo.findByUserId(userId);
-        keywords = publicationDto.getKeywords();
-
-        // Assign sender
-        if (!userConnections.isEmpty()) {
-            ConnectionEntity tempConn = userConnections.get(0);
-
-            if (tempConn.getFirstUser().getId() == userId)
-                sender = tempConn.getFirstUser();
-            else
-                sender = tempConn.getSecondUser();
-
-        }
-    }
-
-    @Override
-    protected List<PublicationEntity> buildPublications(PublicationDto publicationDto) {
-        List<PublicationEntity> publications = new ArrayList<>();
-
-        // Loop over connections
-        for (ConnectionEntity conn : userConnections) {
-            boolean hasCommon = false;
-
-            // Look for the receiver whether is first or second in each connection
-            UserEntity receiver = conn.getFirstUser();
-            if (receiver.getId() == publicationDto.getSenderId())
-                receiver = conn.getSecondUser();
+	@PostConstruct
+	public void initialize() {
+		entityDTOMapper = EntityDTOMapperFactory.getEntityDTOMapper(PUBLICATION_MAPPER);
+	}
 
 
-            /* Check user's subscriptions */
+	protected void prepareEntities(PublicationDto publicationDto) throws Exception {
+		Long userId = publicationDto.getSenderId();
+		this.publicationDto = publicationDto;
+		userConnections = connectionRepo.findByUserId(userId);
+		keywords = publicationDto.getKeywords();
+		sender = userService.retrieveUserById(userId);
+	}
 
-            // Retrieve receiver's subscriptions
-            List<SubscriptionEntity> receiverSubscriptions = receiver.getSubscriptions();
 
-            // Loop over the receiver's subscriptions
-            for (SubscriptionEntity sub : receiverSubscriptions) {
+	protected List<PublicationEntity> buildPublications() {
 
-                // Check if subscription's keyword match any of the given keywords
-                for (int id : keywords) {
-                    if (sub.getKeyword().getId() == id) { // This receiver has subscribed for this keyword before
+		Set<UserEntity> receivers =
+				userConnections
+						.stream()
+						.map(conn -> getReceiverFromConnection(conn))
+						.map(UserEntity::getSubscriptions)
+						.flatMap(List::stream)
+						.filter(this::keywordsContainSubscription)
+						.map(SubscriptionEntity::getUser)
+						.collect(Collectors.toSet());
 
-                        // Prepare publication
-                        PublicationEntity publication = new PublicationEntity();
-                        publication.setReceiver(receiver);
-                        publication.setSender(sender);
+		return buildPublications(receivers);
+	}
 
-                        // Assign Relationships
-                        receiver.addReceivedPublication(publication);
-                        receiver.addSentPublication(publication);
+	private UserEntity getReceiverFromConnection(ConnectionEntity conn) {
+		UserEntity receiver = conn.getFirstUser();
+		if (receiver.getId().equals(publicationDto.getSenderId()))
+			receiver = conn.getSecondUser();
 
-                        BeanUtils.copyProperties(publicationDto, publication);
+		return receiver;
+	}
 
-                        // Use Repository to save one publication
-                        publications.add(publication);
+	private boolean keywordsContainSubscription(SubscriptionEntity subscription) {
+		return keywords.contains(subscription.getKeyword().getId());
+	}
 
-                        // To escape from assigned user
-                        hasCommon = true;
-                        break;
-                    }
-                }
+	private List<PublicationEntity> buildPublications(Set<UserEntity> receivers) {
+		return receivers
+				.stream()
+				.map(this::buildSinglePublication)
+				.collect(Collectors.toList());
+	}
 
-                // Return to main loop
-                if (hasCommon)
-                    break;
+	private PublicationEntity buildSinglePublication(UserEntity receiver) {
+		PublicationEntity publication = (PublicationEntity) entityDTOMapper.mapDtoToEntity(publicationDto);
 
-            }
-        }
-        return publications;
-    }
+		publication.setReceiver(receiver);
+		publication.setSender(sender);
 
-    @Override
-    protected void savePublications(List<PublicationEntity> publications) {
-        for(PublicationEntity publication: publications)
-            publicationRepo.save(publication);
+		receiver.addReceivedPublication(publication);
+		receiver.addSentPublication(publication);
 
-    }
+		return publication;
+	}
+
+
+	protected void savePublications(List<PublicationEntity> publications) {
+		for (PublicationEntity publication : publications)
+			publicationRepo.save(publication);
+
+	}
 }
