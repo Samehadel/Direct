@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +27,7 @@ import java.util.*;
 
 import static com.direct.app.exceptions.ErrorCode.U$0009;
 import static com.direct.app.exceptions.ErrorCode.U$0010;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.*;
 
@@ -125,6 +123,31 @@ public class PublicationsControllerTest {
 				.count();
 
 		assertEquals(1L, count.longValue());
+	}
+
+	@Test
+	@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+			scripts = {"/sql/database_cleanup.sql",
+					"/sql/publications/Publications_Test_Data_2.sql"})
+	@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/database_cleanup.sql"})
+	public void checkPublicationsContentAsExpected() throws Exception {
+		this.senderId = 1003L;
+
+		setPublicationJsonForPostRequest();
+		sendPublicationRequest();
+		assertPublicationContentNotNull();
+	}
+
+	private void assertPublicationContentNotNull() {
+		Set<PublicationEntity> publications = publicationsRepo.findPublicationsBySenderId(this.senderId);
+		publications.forEach(publication -> {
+			assertNotNull(publication.getId());
+			assertNotNull(publication.getContent());
+			assertNotNull(publication.getLink());
+			assertNotNull(publication.isRead());
+			assertNotNull(publication.getSender());
+			assertNotNull(publication.getReceiver());
+		});
 	}
 
 	@Test
