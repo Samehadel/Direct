@@ -5,7 +5,6 @@ import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.ProfileDto;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.mappers.EntityDTOMapper;
-import com.direct.app.mappers.impl.UserEntityDTOMapper;
 import com.direct.app.repositery.UserRepository;
 import com.direct.app.service.ProfilesService;
 import com.direct.app.service.SubscriptionService;
@@ -60,5 +59,4 @@ public class ProfilesServiceImplementation implements ProfilesService {
 		final UserEntity userEntity = userService.getCurrentUserEntity();
 		return (ProfileDto) mapper.mapEntityToDTO(userEntity);
 	}
-
 }

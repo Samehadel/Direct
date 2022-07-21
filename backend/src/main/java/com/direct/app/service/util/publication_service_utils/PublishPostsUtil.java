@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,25 +64,32 @@ public class PublishPostsUtil {
     }
 
     private List<PublicationEntity> buildPublications() {
-        Set<UserEntity> receivers =
-                userConnections
-                        .stream()
-                        .map(conn -> getReceiverFromConnection(conn))
-                        .map(UserEntity::getSubscriptions)
-                        .flatMap(List::stream)
-                        .filter(this::keywordsContainSubscription)
-                        .map(SubscriptionEntity::getUser)
-                        .collect(Collectors.toSet());
+        Set<UserEntity> receivers = filterUserConnectionsBasedOnSubscriptions();
 
         return buildPublications(receivers);
     }
 
+    private Set<UserEntity> filterUserConnectionsBasedOnSubscriptions() {
+        return userConnections
+                    .stream()
+                    .map(conn -> getReceiverFromConnection(conn))
+                    .map(UserEntity::getSubscriptions)
+                    .flatMap(List::stream)
+                    .filter(this::keywordsContainSubscription)
+                    .map(SubscriptionEntity::getUser)
+                    .collect(Collectors.toSet());
+    }
+
     private UserEntity getReceiverFromConnection(ConnectionEntity conn) {
         UserEntity receiver = conn.getFirstUser();
-        if (receiver.getId().equals(publicationDto.getSenderId()))
+        if (receiverIsSecondUserInConnecttion(receiver))
             receiver = conn.getSecondUser();
 
         return receiver;
+    }
+
+    private boolean receiverIsSecondUserInConnecttion(UserEntity receiver){
+        return receiver.getId().equals(publicationDto.getSenderId());
     }
 
     private boolean keywordsContainSubscription(SubscriptionEntity subscription) {
