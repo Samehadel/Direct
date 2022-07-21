@@ -6,17 +6,14 @@ import com.direct.app.repositery.RequestRepository;
 import com.direct.app.repositery.SubscriptionRepository;
 import com.direct.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Component;
 
 import javax.cache.annotation.CacheKey;
-import javax.cache.annotation.CacheResult;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.direct.app.cache.CacheNames.SIMILAR_USERS;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
@@ -36,80 +33,87 @@ public class ProfilesServiceUtils {
 	private UserService userService;
 
 
-	public Set<UserEntity> retrieveSimilarUsersBySubscriptions(List<SubscriptionEntity> subscriptions, @CacheKey Long userId) throws Exception {
+	public Set<UserEntity> retrieveSimilarUsersBySubscriptions(List<SubscriptionEntity> subscriptions, @CacheKey Long loggedUserId) throws Exception {
 
 		// Step1: Extract similar subscriptions
-		List<SubscriptionEntity> similarSubscriptions = retrieveSimilarSubscriptions(subscriptions, userId);
+		List<SubscriptionEntity> similarSubscriptions = retrieveSimilarSubscriptions(subscriptions, loggedUserId);
 
-		// Store final users for return
-		Set<UserEntity> users = new HashSet<>();
+		Set<UserEntity> similarUsers = new HashSet<>();
 
-		// Step2: Extract users from similar subscriptions
-		for (SubscriptionEntity sub : similarSubscriptions) {
-			users.add(sub.getUser());
-		}
 
-		// Step3: Exclude users in connection list of the user
-		users = excludeConnectedProfiles(users, userId);
+		for (SubscriptionEntity sub : similarSubscriptions)
+			similarUsers.add(sub.getUser());
 
-		// Step4: Exclude users in requested list of the user
-		users = excludeRequestedProfiles(users, userId);
+		similarUsers = excludeConnectedProfiles(similarUsers, loggedUserId);
+		similarUsers = excludeRequestedProfiles(similarUsers, loggedUserId);
 
-		return users;
+		return similarUsers;
 	}
 
-	private List<SubscriptionEntity> retrieveSimilarSubscriptions(List<SubscriptionEntity> subscriptions, Long userId) {
-		List<Integer> keywords = subscriptions
-				.stream()
-				.map(SubscriptionEntity::getKeyword)
-				.map(KeywordEntity::getId)
-				.collect(toList());
+	private List<SubscriptionEntity> retrieveSimilarSubscriptions(List<SubscriptionEntity> subscriptions, Long loggedUserId) {
+		List<Integer> keywordsIds= getKeywordsIdsFromSubscriptions(subscriptions);
 
-		if(!keywords.isEmpty())
-			return subscriptionRepo.findSimilarSubscriptions(keywords, userId);
+		if(!keywordsIds.isEmpty())
+			return subscriptionRepo.findSimilarSubscriptions(keywordsIds, loggedUserId);
 
 		return emptyList();
 	}
 
-	private Set<UserEntity> excludeConnectedProfiles(Set<UserEntity> users, long id) {
+	private List<Integer> getKeywordsIdsFromSubscriptions(List<SubscriptionEntity> subscriptions){
+		return subscriptions
+					.stream()
+					.map(SubscriptionEntity::getKeyword)
+					.map(KeywordEntity::getId)
+					.collect(toList());
+	}
 
-		List<ConnectionEntity> userConnections = connectionRepo.findByUserId(id);
+	private Set<UserEntity> excludeConnectedProfiles(Set<UserEntity> similarUsers, Long loggedUserId) {
+
+		List<ConnectionEntity> userConnections = connectionRepo.findByUserId(loggedUserId);
 		List<UserEntity> excludedUsers = new ArrayList<UserEntity>();
 
 		for (int i = 0; i < userConnections.size(); i++) {
 			ConnectionEntity conn = userConnections.get(i);
 
-			if (conn.getFirstUser().getId() != id)
-				excludedUsers.add(conn.getFirstUser());
-			else
+			if (loggedUserIsFirstUser(conn))
 				excludedUsers.add(conn.getSecondUser());
+			else
+				excludedUsers.add(conn.getFirstUser());
 		}
 
-		for (int i = 0; i < excludedUsers.size(); i++)
-			users.remove(excludedUsers.get(i));
+		excludedUsers.forEach(similarUsers::remove);
 
-
-		return users;
+		return similarUsers;
 	}
 
-	private Set<UserEntity> excludeRequestedProfiles(Set<UserEntity> users, Long userId) throws Exception {
-		List<RequestEntity> userRequests = requestRepo.findRequestsBySenderOrReceiverId(userId);
+	private boolean loggedUserIsFirstUser(ConnectionEntity connection){
+		Long loggedUserId = userService.getCurrentUserId();
+		Long firstUserId = connection.getFirstUser().getId();
+
+		return firstUserId.equals(loggedUserId);
+	}
+
+	private Set<UserEntity> excludeRequestedProfiles(Set<UserEntity> similarUsers, Long loggedUserId) throws Exception {
+		List<RequestEntity> userRequests = requestRepo.findRequestsBySenderOrReceiverId(loggedUserId);
 		List<UserEntity> excludedUsers = new ArrayList<UserEntity>();
 
 		for (RequestEntity req : userRequests)
 			excludedUsers.add(getOtherUserInRequest(req));
 
-		excludedUsers.forEach(excludedUser -> users.remove(excludedUser));
+		excludedUsers.forEach(similarUsers::remove);
 
-		return users;
+		return similarUsers;
 	}
 
 	private UserEntity getOtherUserInRequest(RequestEntity request) throws Exception {
-		Long userId = userService.getCurrentUserId();
-
-		if (request.getReceiver().getId().equals(userId))
+		if (loggedUserIsReceiver(request))
 			return request.getSender();
 		else
 			return request.getReceiver();
+	}
+
+	private boolean loggedUserIsReceiver(RequestEntity request){
+		Long loggedUserId = userService.getCurrentUserId();
+		return request.getReceiver().getId().equals(loggedUserId);
 	}
 }
