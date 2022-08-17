@@ -4,6 +4,7 @@ import com.direct.app.service.ProfileImageService;
 import com.direct.app.io.dto.ProfileImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,9 +31,11 @@ public class ProfileImageController {
 	@GetMapping("/image")
 	public ResponseEntity getProfileImage() throws Exception {
 		ProfileImageDTO profileImageDTO = profileImageService.getProfileImage();
+		MediaType mediaType = MediaType.parseMediaType(profileImageDTO.getImageFormat());
 
 		return ResponseEntity
-				.status(HttpStatus.OK)
-				.body(profileImageDTO);
+				.ok()
+				.contentType(mediaType)
+				.body(profileImageDTO.getImageData());
 	}
 }
