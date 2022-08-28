@@ -62,7 +62,6 @@ public class UserServiceTest {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername("username");
 
-        // Mocking Stage 1
         when(userRepo.findByUsername(anyString()))
                 .thenReturn(Optional.empty());
         when(userRepo.save(any()))
@@ -87,7 +86,7 @@ public class UserServiceTest {
             userService.createUser(userEntity);
             assertEquals(0, 1);
         } catch (RuntimeBusinessException ex) {
-            assertExceptionWithErrorCode(ex, U$0001);
+            assertEquals(U$0001, ex.getErrorCode());
         }
     }
 
@@ -98,18 +97,16 @@ public class UserServiceTest {
         when(userRepo.findByUsername(anyString()))
                 .thenReturn(Optional.of(userEntity)); // Mocking an exist username
 
-        // Assertion Stage
         try {
             userService.createUser(userEntity);
             assertEquals(0, 1);
         } catch (RuntimeBusinessException ex) {
-            assertExceptionWithErrorCode(ex, U$0007);
+            assertEquals(U$0007, ex.getErrorCode());
         }
     }
 
     @Test
     public void retrieveUser_happy_path_test() throws Exception {
-        // Mocking Stage
         when(userRepo.findByUsername(anyString()))
                 .thenReturn(Optional.of(new UserEntity()));
 
@@ -124,7 +121,6 @@ public class UserServiceTest {
         user.setUsername("username");
         user.setEncryptedPassword("userEncryptedPassword");
 
-        // Mocking Stage
         when(userRepo.findByUsername(anyString()))
                 .thenReturn(Optional.of(user));
 
@@ -137,7 +133,6 @@ public class UserServiceTest {
 
     @Test
     public void loadUserByUsername_unhappy_path_username_not_exist() throws Exception {
-        // Mocking Stage
         when(userRepo.findByUsername(anyString()))
                 .thenReturn(Optional.empty());
 
@@ -145,7 +140,7 @@ public class UserServiceTest {
             userService.loadUserByUsername(anyString());
             assertEquals(1, 0);
         } catch (RuntimeBusinessException ex){
-            assertExceptionWithErrorCode(ex, U$0006);
+            assertEquals(U$0006, ex.getErrorCode());
         }
     }
     @Test
@@ -156,24 +151,21 @@ public class UserServiceTest {
             userService.retrieveUser("username");
             assertEquals(0, 1);
         } catch (RuntimeBusinessException ex) {
-            assertExceptionWithErrorCode(ex, U$0006);
+            assertEquals(U$0006, ex.getErrorCode());
         }
     }
 
     @Test
     public void retrieveUserById_happy_path() throws Exception {
-        // Mocking Stage
         when(userRepo.findById(anyLong()))
                 .thenReturn(Optional.of(new UserEntity()));
 
-        // Assertion Stage
         UserEntity user = userService.retrieveUserById(anyLong());
         assertNotNull(user);
     }
 
     @Test
     public void retrieveUserById_unhappy_path_user_id_not_exist() throws Exception{
-        // Mocking Stage
         when(userRepo.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
@@ -181,7 +173,7 @@ public class UserServiceTest {
             UserEntity user = userService.retrieveUserById(anyLong());
             assertEquals(1, 0);
         }catch (RuntimeBusinessException ex){
-            assertExceptionWithErrorCode(ex, U$0002);
+            assertEquals(U$0002, ex.getErrorCode());
         }
     }
 
@@ -247,16 +239,7 @@ public class UserServiceTest {
         return dto;
     }
 
-    private void assertExceptionWithErrorCode(ResponseStatusException ex, ErrorCode errorCode) throws IOException {
-        ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
-        assertEquals(errorCode, exceptionBody.getErrorCode());
-    }
-
-    private UserEntity createUserEntity(UserDto dto) {
-        UserEntity userEntity = new UserEntity();
-
-        BeanUtils.copyProperties(dto, userEntity);
-
-        return userEntity;
+    private void assertExceptionWithErrorCode(RuntimeBusinessException ex, ErrorCode errorCode) throws IOException {
+        assertEquals(errorCode, ex.getErrorCode());
     }
 }

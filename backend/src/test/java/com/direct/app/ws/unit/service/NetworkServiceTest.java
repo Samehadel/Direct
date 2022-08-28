@@ -75,12 +75,7 @@ public class NetworkServiceTest {
 			networkService.removeConnection(connectionId);
 			assertEquals(1, 0);
 		}catch (RuntimeBusinessException ex){
-			assertExceptionWithErrorCode(ex, U$0008);
+			assertEquals(U$0008, ex.getErrorCode());
 		}
-	}
-
-	private void assertExceptionWithErrorCode(ResponseStatusException ex, ErrorCode errorCode) throws IOException {
-		ExceptionBody exceptionBody = mapper.readValue(ex.getReason(), ExceptionBody.class);
-		assertEquals(errorCode, exceptionBody.getErrorCode());
 	}
 }

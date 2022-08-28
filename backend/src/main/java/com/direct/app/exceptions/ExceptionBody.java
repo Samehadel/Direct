@@ -1,6 +1,5 @@
 package com.direct.app.exceptions;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,11 +11,11 @@ import lombok.SneakyThrows;
 @NoArgsConstructor
 public class ExceptionBody {
     private String errorMessage;
-    private ErrorCode errorCode;
+    private String errorCode;
 
-    public ExceptionBody(String errorMessage, ErrorCode errorCode) {
-        this.errorMessage = errorMessage;
-        this.errorCode = errorCode;
+    public ExceptionBody(ErrorCode errorCode) {
+        this.errorCode = errorCode.toString();
+        this.errorMessage = errorCode.getErrorMessage();
     }
 
     @SneakyThrows
