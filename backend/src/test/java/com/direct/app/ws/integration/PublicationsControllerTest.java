@@ -220,7 +220,7 @@ public class PublicationsControllerTest {
 
 	private void assertUserIncompatibility() throws IOException {
 		assertEquals(NOT_ACCEPTABLE, this.response.getStatusCode());
-		assertEquals(U$0010, getResponseErrorCode());
+		testCommons.responseMatchErrorCode(this.response, U$0010);
 	}
 
 	@Test
@@ -238,13 +238,7 @@ public class PublicationsControllerTest {
 
 	private void assertPublicationNotFound() throws IOException {
 		assertEquals(NOT_ACCEPTABLE, this.response.getStatusCode());
-		assertEquals(U$0009, getResponseErrorCode());
-	}
-
-	private ErrorCode getResponseErrorCode() throws IOException {
-		HashMap responseBody = (HashMap) this.response.getBody();
-		String message = (String) responseBody.get("message");
-		return mapper.readValue(message, ExceptionBody.class).getErrorCode();
+		testCommons.responseMatchErrorCode(this.response, U$0009);
 	}
 
 	@Test

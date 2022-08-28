@@ -1,6 +1,5 @@
 package com.direct.app.ws.unit.service;
 
-import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.ConnectionRequestDto;
@@ -12,7 +11,6 @@ import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.ConnectionRequestService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.implementation.ConnectionRequestServiceImplementation;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -86,9 +83,8 @@ public class ConnectionRequestServiceTest {
         try {
             connectionRequestService.sendConnectionRequest(new ConnectionRequestDto(senderId, receiverId));
             assertEquals(0, 1);
-        } catch (RuntimeException ex) {
-            ExceptionBody body = getExceptionBody(ex);
-            assertEquals(U$0003, body.getErrorCode());
+        } catch (RuntimeBusinessException ex) {
+            assertEquals(U$0003, ex.getErrorCode());
         }
     }
 
@@ -131,9 +127,8 @@ public class ConnectionRequestServiceTest {
         try {
             connectionRequestService.acceptConnectionRequest(1L);
             assertEquals(0, 1);
-        } catch (RuntimeException ex) {
-            ExceptionBody body = getExceptionBody(ex);
-            assertEquals(U$0005, body.getErrorCode());
+        } catch (RuntimeBusinessException ex) {
+            assertEquals(U$0005, ex.getErrorCode());
         }
     }
 
@@ -162,7 +157,6 @@ public class ConnectionRequestServiceTest {
         Long senderId = 1L;
         Long receiverId = 2L;
 
-        // Mocking
         when(connectionRequestsRepoMock.findById(1L))
                 .thenReturn(Optional
                         .of(new RequestEntity(1L, createUserEntity(senderId), createUserEntity(receiverId))));
@@ -176,16 +170,14 @@ public class ConnectionRequestServiceTest {
         try {
             connectionRequestService.rejectConnectionRequest(1L);
             assertEquals(0, 1);
-        } catch (RuntimeException ex) {
-            ExceptionBody body = getExceptionBody(ex);
-            assertEquals(U$0005, body.getErrorCode());
+        } catch (RuntimeBusinessException ex) {
+            assertEquals(U$0005, ex.getErrorCode());
         }
     }
 
     @Test
     public void retrieveConnectionRequestsTest() throws Exception {
         Long userId = 1L;
-
 
         when(userServiceMock.getCurrentUserId())
                 .thenReturn(userId);
@@ -216,13 +208,6 @@ public class ConnectionRequestServiceTest {
         requestEntities.add(new RequestEntity(4L, new UserEntity(10L), new UserEntity(1L)));
 
         return requestEntities;
-    }
-
-    private ExceptionBody getExceptionBody(Exception exception) throws IOException {
-        String reason = ((RuntimeBusinessException) exception).getReason().toString();
-        ObjectMapper mapper = new ObjectMapper();
-
-        return mapper.readValue(reason, ExceptionBody.class);
     }
 
     private UserEntity createUserEntity(Long userId) {
