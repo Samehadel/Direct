@@ -16,6 +16,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -49,7 +50,7 @@ public class ProfilesControllerTest {
 	public void findSimilarUsersTest_user_1(){
 		String senderUsername = "username_1";
 		HttpEntity req = testCommons.getHttpEntity(senderUsername);
-		ResponseEntity<Set<ProfileDto>> exchange = testRestTemplate.exchange(FIND_SIMILAR_USERS_URL, GET, req, new ParameterizedTypeReference<Set<ProfileDto>>() {});
+		ResponseEntity<List<ProfileDto>> exchange = testRestTemplate.exchange(FIND_SIMILAR_USERS_URL, GET, req, new ParameterizedTypeReference<List<ProfileDto>>() {});
 
 		assertEquals(2, exchange.getBody().size());
 	}
@@ -62,7 +63,7 @@ public class ProfilesControllerTest {
 	public void findSimilarUsersTest_user_2(){
 		String senderUsername = "username_2";
 		HttpEntity req = testCommons.getHttpEntity(senderUsername);
-		ResponseEntity<Set<ProfileDto>> exchange = testRestTemplate.exchange(FIND_SIMILAR_USERS_URL, GET, req, new ParameterizedTypeReference<Set<ProfileDto>>() {});
+		ResponseEntity<List<ProfileDto>> exchange = testRestTemplate.exchange(FIND_SIMILAR_USERS_URL, GET, req, new ParameterizedTypeReference<List<ProfileDto>>() {});
 
 		assertEquals(2, exchange.getBody().size());
 	}

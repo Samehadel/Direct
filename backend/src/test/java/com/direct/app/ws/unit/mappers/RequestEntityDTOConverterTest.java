@@ -1,39 +1,32 @@
 package com.direct.app.ws.unit.mappers;
 
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.ConnectionRequestDto;
 import com.direct.app.io.dto.SenderDetails;
 import com.direct.app.io.entities.RequestEntity;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.shared.EntityDTOConverter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.direct.app.enumerations.EntityDTOMapperType.REQUEST_MAPPER;
 import static org.junit.Assert.assertEquals;
 
-public class RequestEntityDTOMapperTest {
-	private EntityDTOMapper entityMapper;
+public class RequestEntityDTOConverterTest {
+	private EntityDTOConverter converter;
 	private RequestEntity originalEntity;
 	private ConnectionRequestDto resultDTO;
 
 	@Before
 	public void init() {
 		originalEntity = new RequestEntity();
-		entityMapper = EntityDTOMapperFactory.getEntityDTOMapper(REQUEST_MAPPER);
-	}
-
-	@After
-	public void reset() {
-		entityMapper = null;
+		converter = new EntityDTOConverter();
 	}
 
 	@Test
 	public void testRequestEntityToDtoMapper() {
 		generateRequestEntity();
-		resultDTO = (ConnectionRequestDto) entityMapper.mapEntityToDTO(originalEntity);
+		resultDTO = (ConnectionRequestDto) converter.mapToDTO(originalEntity);
 
 		assertEntityMatchDTO();
 	}

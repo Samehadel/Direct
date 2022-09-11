@@ -10,12 +10,15 @@ import com.direct.app.service.ProfilesService;
 import com.direct.app.service.SubscriptionService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.util.user_service_utils.ProfilesServiceUtils;
+import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.direct.app.enumerations.EntityDTOMapperType.USER_MAPPER;
 
@@ -34,29 +37,26 @@ public class ProfilesServiceImplementation implements ProfilesService {
 	@Autowired
 	private UserRepository userRepository;
 
-	private EntityDTOMapper mapper;
+	@Autowired
+	private EntityDTOConverter converter;
 
 	@Cacheable(cacheNames = CacheNames.SIMILAR_USERS, keyGenerator = "userBasedKeyGenerator")
 	@Override
-	public Set<ProfileDto> retrieveSimilarUsers() throws Exception {
-		mapper = EntityDTOMapperFactory.getEntityDTOMapper(USER_MAPPER);
-		Set<ProfileDto> profileDTOs = new HashSet<>();
+	public List<ProfileDto> retrieveSimilarUsers() throws Exception {
 		UserEntity user = userService.getCurrentUserEntity_FullData();
-		Set<UserEntity> similarUsers = profilesServiceUtils.retrieveSimilarUsersBySubscriptions(user.getSubscriptions(), user.getId());
+		List<UserEntity> similarUsers = profilesServiceUtils
+				.retrieveSimilarUsersBySubscriptions(user.getSubscriptions(), user.getId())
+				.stream()
+				.collect(Collectors.toList());
 
-
-		similarUsers.forEach(similarUser -> {
-			ProfileDto model = (ProfileDto) mapper.mapEntityToDTO(similarUser);
-			profileDTOs.add(model);
-		});
+		List<ProfileDto> profileDTOs = (List<ProfileDto>) converter.mapToDTOs(similarUsers);
 
 		return profileDTOs;
 	}
 
 	@Override
 	public ProfileDto getProfileDetails() throws Exception {
-		mapper = EntityDTOMapperFactory.getEntityDTOMapper(USER_MAPPER);;
 		final UserEntity userEntity = userService.getCurrentUserEntity();
-		return (ProfileDto) mapper.mapEntityToDTO(userEntity);
+		return (ProfileDto) converter.mapToDTO(userEntity);
 	}
 }

@@ -10,6 +10,7 @@ import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.service.PublicationsService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.util.publication_service_utils.PublishPostsUtil;
+import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,10 @@ public class PublicationServiceImplementation implements PublicationsService {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private EntityDTOConverter converter;
+
+
 	@Override
 	public List<PublicationDto> retrievePublications() throws Exception {
 		Long userId = userService.getCurrentUserId();
@@ -50,8 +55,7 @@ public class PublicationServiceImplementation implements PublicationsService {
 	}
 
 	private List<PublicationDto> generatePublicationDTOs(List<PublicationEntity> publicationEntities) {
-		EntityDTOMapper entityMapper = EntityDTOMapperFactory.getEntityDTOMapper(PUBLICATION_MAPPER);
-		List<PublicationDto> publications = (List<PublicationDto>) entityMapper.mapEntitiesToDTOs(publicationEntities);
+		List<PublicationDto> publications = (List<PublicationDto>) converter.mapToDTOs(publicationEntities);
 
 		return publications;
 	}

@@ -1,6 +1,5 @@
 package com.direct.app.mappers.impl;
 
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.BaseDTO;
 import com.direct.app.io.dto.KeywordDto;
 import com.direct.app.io.dto.SubscriptionDTO;
@@ -10,14 +9,13 @@ import com.direct.app.mappers.EntityDTOMapper;
 
 import java.util.List;
 
-import static com.direct.app.enumerations.EntityDTOMapperType.KEYWORD_MAPPER;
 import static java.util.stream.Collectors.toList;
 
-public class SubscriptionEntityToDtoMapper implements EntityDTOMapper {
+public class SubscriptionEntityDTOMapper implements EntityDTOMapper {
 	private EntityDTOMapper entityDTOMapper;
 
-	public SubscriptionEntityToDtoMapper(){
-		entityDTOMapper = EntityDTOMapperFactory.getEntityDTOMapper(KEYWORD_MAPPER);
+	public SubscriptionEntityDTOMapper(){
+		entityDTOMapper = new KeywordEntityDTOMapper();
 	}
 
 	@Override
