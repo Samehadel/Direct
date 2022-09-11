@@ -11,6 +11,7 @@ import com.direct.app.repositery.SubscriptionRepository;
 import com.direct.app.service.KeywordService;
 import com.direct.app.service.SubscriptionService;
 import com.direct.app.service.UserService;
+import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,8 @@ public class SubscriptionServiceImplementation implements SubscriptionService {
     @Autowired
     private SubscriptionRepository subscriptionRepo;
 
-    private EntityDTOMapper entityDtoMapper;
+    @Autowired
+    private EntityDTOConverter converter;
 
     @Override
     public void subscribeToKeyword(Integer keywordId) throws Exception {
@@ -54,10 +56,9 @@ public class SubscriptionServiceImplementation implements SubscriptionService {
     @Override
     public List<SubscriptionDTO> getCurrentUserSubscriptions() {
         Long userId = userService.getCurrentUserId();
-        entityDtoMapper = EntityDTOMapperFactory.getEntityDTOMapper(SUBSCRIPTION_MAPPER);
 
         List<SubscriptionEntity> subscriptions = subscriptionRepo.findAllByUserId(userId);
-        List<SubscriptionDTO> subscriptionsDto = (List<SubscriptionDTO>) entityDtoMapper.mapEntitiesToDTOs(subscriptions);
+        List<SubscriptionDTO> subscriptionsDto = (List<SubscriptionDTO>) converter.mapToDTOs(subscriptions);
 
         return subscriptionsDto;
     }

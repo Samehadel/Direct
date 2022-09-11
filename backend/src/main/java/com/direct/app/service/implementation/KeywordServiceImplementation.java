@@ -9,6 +9,7 @@ import com.direct.app.repositery.KeywordRepository;
 import com.direct.app.service.KeywordService;
 import com.direct.app.service.SubscriptionService;
 import com.direct.app.service.UserService;
+import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,8 @@ public class KeywordServiceImplementation implements KeywordService {
 	@Autowired
 	private SubscriptionService subscriptionService;
 
-	private EntityDTOMapper entityDtoMapper;
+	@Autowired
+	private EntityDTOConverter converter;
 
 	@Override
 	public boolean addKeyword(String keyword) {
@@ -53,9 +55,8 @@ public class KeywordServiceImplementation implements KeywordService {
 
 	@Override
 	public List<KeywordDto> getAllExistingKeywords() throws Exception{
-		entityDtoMapper = EntityDTOMapperFactory.getEntityDTOMapper(KEYWORD_MAPPER);
 		List<KeywordEntity> keywords = keywordRepo.findAll();
-		List<KeywordDto> keywordsDto = (List<KeywordDto>) entityDtoMapper.mapEntitiesToDTOs(keywords);
+		List<KeywordDto> keywordsDto = (List<KeywordDto>) converter.mapToDTOs(keywords);
 	
 		return keywordsDto;
 	}

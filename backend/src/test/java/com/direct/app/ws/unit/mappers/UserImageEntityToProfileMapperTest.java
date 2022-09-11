@@ -1,30 +1,28 @@
 package com.direct.app.ws.unit.mappers;
 
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.ProfileImageDTO;
 import com.direct.app.io.entities.UserImageEntity;
-import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.shared.EntityDTOConverter;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.direct.app.enumerations.EntityDTOMapperType.USER_IMAGE_MAPPER;
 import static org.junit.Assert.assertEquals;
 
 public class UserImageEntityToProfileMapperTest {
-	private EntityDTOMapper entityMapper;
+	private EntityDTOConverter converter;
 	private UserImageEntity originalEntity;
 	private ProfileImageDTO resultDTO;
 
 	@Before
 	public void init() {
 		originalEntity = new UserImageEntity();
-		entityMapper = EntityDTOMapperFactory.getEntityDTOMapper(USER_IMAGE_MAPPER);
+		converter = new EntityDTOConverter();
 	}
 
 	@Test
 	public void testUserEntityToDtoMapper() {
 		generateImageEntity();
-		resultDTO = (ProfileImageDTO) entityMapper.mapEntityToDTO(originalEntity);
+		resultDTO = (ProfileImageDTO) converter.mapToDTO(originalEntity);
 
 		assertEntityMatchDTO();
 	}

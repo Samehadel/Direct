@@ -10,6 +10,7 @@ import com.direct.app.mappers.EntityDTOMapper;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.service.UserService;
+import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,16 +36,14 @@ public class PublishPostsUtil {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EntityDTOConverter converter;
+
     private UserEntity sender = new UserEntity();
     private List<ConnectionEntity> userConnections;
     private List<Integer> keywords;
-    private EntityDTOMapper entityDTOMapper;
     private PublicationDto publicationDto;
 
-
-    public PublishPostsUtil() {
-        entityDTOMapper = EntityDTOMapperFactory.getEntityDTOMapper(PUBLICATION_MAPPER);
-    }
 
     public void publish(PublicationDto publicationDto) throws Exception {
 
@@ -104,7 +103,7 @@ public class PublishPostsUtil {
     }
 
     private PublicationEntity buildSinglePublication(UserEntity receiver) {
-        PublicationEntity publication = (PublicationEntity) entityDTOMapper.mapDtoToEntity(publicationDto);
+        PublicationEntity publication = (PublicationEntity) converter.mapToEntity(publicationDto);
 
         publication.setReceiver(receiver);
         publication.setSender(sender);

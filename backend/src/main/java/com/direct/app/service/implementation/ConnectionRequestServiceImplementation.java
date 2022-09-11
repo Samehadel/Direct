@@ -11,6 +11,7 @@ import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.ConnectionRequestService;
 import com.direct.app.service.UserService;
+import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,8 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
     @Autowired
     private ConnectionRepository connectionRepo;
 
-    private EntityDTOMapper entityDtoMapper;
+    @Autowired
+    private EntityDTOConverter converter;
 
 
     @Override
@@ -104,11 +106,10 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
 
     @Override
     public List<ConnectionRequestDto> retrieveConnectionRequests() throws Exception {
-        entityDtoMapper = EntityDTOMapperFactory.getEntityDTOMapper(REQUEST_MAPPER);
         long userId = userService.getCurrentUserId();
 
         List<RequestEntity> requests = connectionRequestsRepo.findRequestsByReceiverId(userId);
-
-        return  (List<ConnectionRequestDto>) entityDtoMapper.mapEntitiesToDTOs(requests);
+        List<ConnectionRequestDto> dtos = (List<ConnectionRequestDto>) converter.mapToDTOs(requests);
+        return dtos;
     }
 }

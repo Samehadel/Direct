@@ -2,9 +2,9 @@ package com.direct.app.service;
 
 import com.direct.app.io.dto.ProfileDto;
 
-import java.util.Set;
+import java.util.List;
 
 public interface ProfilesService {
-	public Set<ProfileDto> retrieveSimilarUsers() throws Exception;
+	public List<ProfileDto> retrieveSimilarUsers() throws Exception;
 	public ProfileDto getProfileDetails() throws Exception;
 }

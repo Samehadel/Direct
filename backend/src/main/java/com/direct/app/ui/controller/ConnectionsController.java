@@ -1,13 +1,13 @@
 package com.direct.app.ui.controller;
 
-import com.direct.app.service.NetworkService;
 import com.direct.app.io.dto.ProfileDto;
+import com.direct.app.service.NetworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/connections")
@@ -20,7 +20,7 @@ public class ConnectionsController {
 	@GetMapping
 	public ResponseEntity accessNetwork() throws Exception {
 
-		Set<ProfileDto> responseModels = networkService.retrieveNetwork();
+		List<ProfileDto> responseModels = networkService.retrieveNetwork();
 
 		return ResponseEntity
 				.status(HttpStatus.OK)

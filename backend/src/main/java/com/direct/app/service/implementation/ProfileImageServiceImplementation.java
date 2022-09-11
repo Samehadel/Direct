@@ -12,6 +12,7 @@ import com.direct.app.mappers.impl.UserImageEntityDTOMapper;
 import com.direct.app.repositery.UserImageRepository;
 import com.direct.app.service.ProfileImageService;
 import com.direct.app.service.UserService;
+import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,11 +40,13 @@ public class ProfileImageServiceImplementation implements ProfileImageService {
 	@Autowired
 	private AppConfiguration appConfig;
 
+	@Autowired
+	private EntityDTOConverter converter;
+
 	private Path basePath;
 	private UserImageEntity userImageEntity;
 	private ProfileImageDTO imageDTO;
 	private MultipartFile imageFile;
-	private EntityDTOMapper mapper;
 
 	@PostConstruct
 	public void setupFileLocation() throws RuntimeBusinessException {
@@ -159,9 +162,8 @@ public class ProfileImageServiceImplementation implements ProfileImageService {
 	}
 
 	private void getImageDTO(UserImageEntity imageEntity){
-		mapper = EntityDTOMapperFactory.getEntityDTOMapper(USER_IMAGE_MAPPER);
 		byte [] imageData = getImageData(imageEntity.getImageUrl());
-		imageDTO = (ProfileImageDTO) mapper.mapEntityToDTO(imageEntity);
+		imageDTO = (ProfileImageDTO) converter.mapToDTO(imageEntity);
 		imageDTO.setImageData(imageData);
 	}
 

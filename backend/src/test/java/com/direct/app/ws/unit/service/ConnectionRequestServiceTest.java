@@ -11,6 +11,7 @@ import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.ConnectionRequestService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.implementation.ConnectionRequestServiceImplementation;
+import com.direct.app.shared.EntityDTOConverter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,8 @@ public class ConnectionRequestServiceTest {
     private RequestRepository connectionRequestsRepoMock;
     @Mock
     private ConnectionRepository connectionRepoMock;
+    @Mock
+    private EntityDTOConverter converter;
     @InjectMocks
     private ConnectionRequestService connectionRequestService;
 
@@ -175,27 +178,10 @@ public class ConnectionRequestServiceTest {
         }
     }
 
-    @Test
-    public void retrieveConnectionRequestsTest() throws Exception {
-        Long userId = 1L;
-
-        when(userServiceMock.getCurrentUserId())
-                .thenReturn(userId);
-        when(connectionRequestsRepoMock.findRequestsByReceiverId(userId))
-                .thenReturn(createRequestsEntities());
-
-        List<ConnectionRequestDto> connectionRequestDTOs = connectionRequestService.retrieveConnectionRequests();
-
-        List<ConnectionRequestDto> expectedDTOs = getRequestDTOs(createRequestsEntities());
-
-        assertEquals(expectedDTOs, connectionRequestDTOs);
-    }
-
     private List<ConnectionRequestDto> getRequestDTOs(List<RequestEntity> requests) {
-        List<ConnectionRequestDto> requestDTOs = new ArrayList<>();
-        EntityDTOMapper mapper = EntityDTOMapperFactory.getEntityDTOMapper(REQUEST_MAPPER);
+        EntityDTOConverter converter = new EntityDTOConverter();
 
-        requests.forEach(req -> requestDTOs.add((ConnectionRequestDto) mapper.mapEntityToDTO(req)));
+        List<ConnectionRequestDto> requestDTOs = (List<ConnectionRequestDto>) converter.mapToDTOs(requests);
 
         return requestDTOs;
     }

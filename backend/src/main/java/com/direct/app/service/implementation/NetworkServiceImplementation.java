@@ -9,6 +9,7 @@ import com.direct.app.mappers.EntityDTOMapper;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.service.NetworkService;
 import com.direct.app.service.UserService;
+import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,23 +30,15 @@ public class NetworkServiceImplementation implements NetworkService {
     @Autowired
     private UserService userService;
 
-    private EntityDTOMapper entityDTOMapper;
+    @Autowired
+    private EntityDTOConverter converter;
 
     @Override
-    public Set<ProfileDto> retrieveNetwork() throws Exception {
+    public List<ProfileDto> retrieveNetwork() throws Exception {
         Long userId = userService.getCurrentUserId();
         List<ConnectionEntity> connections = connectionRepo.findByUserId(userId);
-        Set<ProfileDto> profileDTOs = new HashSet<>();
-        entityDTOMapper = EntityDTOMapperFactory.getEntityDTOMapper(USER_MAPPER);
 
-        for(ConnectionEntity conn: connections){
-            UserEntity otherUser = getOtherUserInConnection(conn);
-            ProfileDto profileDTO = (ProfileDto) entityDTOMapper.mapEntityToDTO(otherUser);
-
-            profileDTOs.add(profileDTO);
-        }
-
-        return profileDTOs;
+        return (List<ProfileDto>) converter.mapToDTOs(connections);
     }
 
     private UserEntity getOtherUserInConnection(ConnectionEntity connection) throws Exception {

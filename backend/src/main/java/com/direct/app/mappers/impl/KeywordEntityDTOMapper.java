@@ -9,7 +9,7 @@ import com.direct.app.mappers.EntityDTOMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class KeywordEntityToDtoMapper implements EntityDTOMapper {
+public class KeywordEntityDTOMapper implements EntityDTOMapper {
 
 	@Override
 	public BaseEntity mapDtoToEntity(BaseDTO dto) {
