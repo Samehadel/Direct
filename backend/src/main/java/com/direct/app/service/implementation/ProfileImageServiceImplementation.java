@@ -2,13 +2,10 @@ package com.direct.app.service.implementation;
 
 import com.direct.app.config.AppConfiguration;
 import com.direct.app.exceptions.RuntimeBusinessException;
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.ProfileImageDTO;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.io.entities.UserImageEntity;
-import com.direct.app.mappers.EntityDTOMapper;
-import com.direct.app.mappers.impl.UserImageEntityDTOMapper;
 import com.direct.app.repositery.UserImageRepository;
 import com.direct.app.service.ProfileImageService;
 import com.direct.app.service.UserService;
@@ -22,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.direct.app.enumerations.EntityDTOMapperType.USER_IMAGE_MAPPER;
 import static com.direct.app.exceptions.ErrorCode.*;
 import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;

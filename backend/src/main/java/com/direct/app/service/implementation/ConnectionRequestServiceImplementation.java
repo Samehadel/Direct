@@ -15,6 +15,7 @@ import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 import static com.direct.app.enumerations.EntityDTOMapperType.REQUEST_MAPPER;
@@ -33,8 +34,12 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
     @Autowired
     private ConnectionRepository connectionRepo;
 
-    @Autowired
+    //@Autowired
     private EntityDTOConverter converter;
+    @PostConstruct
+    public void init(){
+        converter = new EntityDTOConverter();
+    }
 
 
     @Override

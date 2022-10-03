@@ -4,6 +4,8 @@ import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.BaseDTO;
 import com.direct.app.io.entities.BaseEntity;
 import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.repositery.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
