@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class UserDto extends BaseDTO {
+public class UserDTO extends BaseDTO {
 	private Long id;
 	private String firstName;
 	private String lastName;

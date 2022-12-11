@@ -1,16 +1,14 @@
-package com.direct.app.shared;
+package com.direct.app.mappers;
 
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.BaseDTO;
 import com.direct.app.io.entities.BaseEntity;
-import com.direct.app.mappers.EntityDTOMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class EntityDTOConverter {
+public class EntityDTOConverterFacade {
 
 	public BaseEntity mapToEntity(BaseDTO dto){
 		EntityDTOMapper mapper = EntityDTOMapperFactory.getEntityDTOMapper(dto);

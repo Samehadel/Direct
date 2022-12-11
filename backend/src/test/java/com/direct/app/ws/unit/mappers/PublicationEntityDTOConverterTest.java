@@ -5,19 +5,18 @@ import com.direct.app.io.dto.SenderDetails;
 import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.impl.PublicationEntityDTOMapper;
-import com.direct.app.shared.EntityDTOConverter;
+import com.direct.app.mappers.EntityDTOConverterFacade;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class PublicationEntityDTOConverterTest {
-	private EntityDTOConverter converter;
+	private EntityDTOConverterFacade converter;
 
 	@Before
 	public void initialize(){
-		converter = new EntityDTOConverter();
+		converter = new EntityDTOConverterFacade();
 	}
 
 	@Test

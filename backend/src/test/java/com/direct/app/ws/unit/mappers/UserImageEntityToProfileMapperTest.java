@@ -2,21 +2,21 @@ package com.direct.app.ws.unit.mappers;
 
 import com.direct.app.io.dto.ProfileImageDTO;
 import com.direct.app.io.entities.UserImageEntity;
-import com.direct.app.shared.EntityDTOConverter;
+import com.direct.app.mappers.EntityDTOConverterFacade;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class UserImageEntityToProfileMapperTest {
-	private EntityDTOConverter converter;
+	private EntityDTOConverterFacade converter;
 	private UserImageEntity originalEntity;
 	private ProfileImageDTO resultDTO;
 
 	@Before
 	public void init() {
 		originalEntity = new UserImageEntity();
-		converter = new EntityDTOConverter();
+		converter = new EntityDTOConverterFacade();
 	}
 
 	@Test

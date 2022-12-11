@@ -1,23 +1,19 @@
 package com.direct.app.service.implementation;
 
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.KeywordDto;
 import com.direct.app.io.dto.SubscriptionDTO;
 import com.direct.app.io.entities.KeywordEntity;
-import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.mappers.EntityDTOConverterFacade;
 import com.direct.app.repositery.KeywordRepository;
 import com.direct.app.service.KeywordService;
 import com.direct.app.service.SubscriptionService;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.direct.app.enumerations.EntityDTOMapperType.KEYWORD_MAPPER;
 
 @Service
 public class KeywordServiceImplementation implements KeywordService {
@@ -32,7 +28,7 @@ public class KeywordServiceImplementation implements KeywordService {
 	private SubscriptionService subscriptionService;
 
 	@Autowired
-	private EntityDTOConverter converter;
+	private EntityDTOConverterFacade converter;
 
 	@Override
 	public boolean addKeyword(String keyword) {

@@ -1,23 +1,18 @@
 package com.direct.app.service.implementation;
 
 import com.direct.app.exceptions.RuntimeBusinessException;
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.ProfileDto;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.mappers.EntityDTOConverterFacade;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.service.NetworkService;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import static com.direct.app.enumerations.EntityDTOMapperType.USER_MAPPER;
 import static com.direct.app.exceptions.ErrorCode.U$0008;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
@@ -31,7 +26,7 @@ public class NetworkServiceImplementation implements NetworkService {
     private UserService userService;
 
     @Autowired
-    private EntityDTOConverter converter;
+    private EntityDTOConverterFacade converter;
 
     @Override
     public List<ProfileDto> retrieveNetwork() throws Exception {

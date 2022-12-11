@@ -1,6 +1,6 @@
 package com.direct.app.io.entities;
 
-import com.direct.app.io.dto.UserDto;
+import com.direct.app.io.dto.UserDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -147,8 +147,8 @@ public class UserEntity extends BaseEntity implements Serializable {
 		receivedPublications.add(publication);
 	}
 
-	public UserDto generateUserDTOFromEntity(){
-		UserDto userDto = new UserDto();
+	public UserDTO generateUserDTOFromEntity(){
+		UserDTO userDto = new UserDTO();
 
 		userDto.setId(this.id);
 		userDto.setUsername(this.username);

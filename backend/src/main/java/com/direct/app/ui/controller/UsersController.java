@@ -3,7 +3,7 @@ package com.direct.app.ui.controller;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.security.SecurityConstants;
 import com.direct.app.service.UserService;
-import com.direct.app.io.dto.UserDto;
+import com.direct.app.io.dto.UserDTO;
 import com.direct.app.shared.JwtTokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +23,8 @@ public class UsersController {
 	
 	
 	@PostMapping("/signup")
-	public ResponseEntity<UserDto> createUser
-            (@RequestBody UserDto userDto) throws Exception {
+	public ResponseEntity<UserDTO> createUser
+            (@RequestBody UserDTO userDto) throws Exception {
 
 		UserEntity createdUserEntity = userService.createUser(userDto.generateUserEntityFromDTO());
 

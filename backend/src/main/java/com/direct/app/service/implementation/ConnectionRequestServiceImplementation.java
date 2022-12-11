@@ -1,23 +1,20 @@
 package com.direct.app.service.implementation;
 
 import com.direct.app.exceptions.RuntimeBusinessException;
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.ConnectionRequestDto;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.RequestEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.mappers.EntityDTOConverterFacade;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.ConnectionRequestService;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.direct.app.enumerations.EntityDTOMapperType.REQUEST_MAPPER;
 import static com.direct.app.exceptions.ErrorCode.*;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
@@ -34,7 +31,7 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
     private ConnectionRepository connectionRepo;
 
     @Autowired
-    private EntityDTOConverter converter;
+    private EntityDTOConverterFacade converter;
 
 
     @Override

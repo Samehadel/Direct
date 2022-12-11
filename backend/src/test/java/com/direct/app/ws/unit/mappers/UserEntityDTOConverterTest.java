@@ -8,6 +8,7 @@ import com.direct.app.mappers.impl.UserEntityDTOMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +20,7 @@ public class UserEntityDTOConverterTest {
 	@Before
 	public void init() {
 		originalEntity = new UserEntity();
-		entityMapper = new UserEntityDTOMapper();
+		entityMapper = UserEntityDTOMapper.getInstance(new BCryptPasswordEncoder());
 	}
 
 	@After

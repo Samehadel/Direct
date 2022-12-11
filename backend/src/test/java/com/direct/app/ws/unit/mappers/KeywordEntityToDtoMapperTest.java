@@ -2,7 +2,7 @@ package com.direct.app.ws.unit.mappers;
 
 import com.direct.app.io.dto.KeywordDto;
 import com.direct.app.io.entities.KeywordEntity;
-import com.direct.app.shared.EntityDTOConverter;
+import com.direct.app.mappers.EntityDTOConverterFacade;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 
 public class KeywordEntityToDtoMapperTest {
-	private EntityDTOConverter converter;
+	private EntityDTOConverterFacade converter;
 	private KeywordEntity originalEntity;
 	private KeywordDto resultDTO;
 	private List<KeywordDto> resultDTOs;
@@ -23,7 +23,7 @@ public class KeywordEntityToDtoMapperTest {
 	@Before
 	public void init() {
 		originalEntity = new KeywordEntity();
-		converter = new EntityDTOConverter();
+		converter = new EntityDTOConverterFacade();
 		originalEntities = new ArrayList<>();
 		random = new Random();
 	}

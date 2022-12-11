@@ -1,16 +1,14 @@
 package com.direct.app.service.util.publication_service_utils;
 
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.PublicationDto;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.io.entities.SubscriptionEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.mappers.EntityDTOConverterFacade;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.service.UserService;
-import com.direct.app.shared.EntityDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -20,8 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.direct.app.enumerations.EntityDTOMapperType.PUBLICATION_MAPPER;
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Service
@@ -37,7 +33,7 @@ public class PublishPostsUtil {
     private UserService userService;
 
     @Autowired
-    private EntityDTOConverter converter;
+    private EntityDTOConverterFacade converter;
 
     private UserEntity sender = new UserEntity();
     private List<ConnectionEntity> userConnections;

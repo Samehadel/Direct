@@ -1,17 +1,15 @@
 package com.direct.app.ws.unit.service;
 
 import com.direct.app.exceptions.RuntimeBusinessException;
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.ConnectionRequestDto;
 import com.direct.app.io.entities.RequestEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.EntityDTOMapper;
+import com.direct.app.mappers.EntityDTOConverterFacade;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.RequestRepository;
 import com.direct.app.service.ConnectionRequestService;
 import com.direct.app.service.UserService;
 import com.direct.app.service.implementation.ConnectionRequestServiceImplementation;
-import com.direct.app.shared.EntityDTOConverter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.direct.app.enumerations.EntityDTOMapperType.REQUEST_MAPPER;
 import static com.direct.app.exceptions.ErrorCode.U$0003;
 import static com.direct.app.exceptions.ErrorCode.U$0005;
 import static org.junit.Assert.assertEquals;
@@ -38,7 +35,7 @@ public class ConnectionRequestServiceTest {
     @Mock
     private ConnectionRepository connectionRepoMock;
     @Mock
-    private EntityDTOConverter converter;
+    private EntityDTOConverterFacade converter;
     @InjectMocks
     private ConnectionRequestService connectionRequestService;
 
@@ -179,7 +176,7 @@ public class ConnectionRequestServiceTest {
     }
 
     private List<ConnectionRequestDto> getRequestDTOs(List<RequestEntity> requests) {
-        EntityDTOConverter converter = new EntityDTOConverter();
+        EntityDTOConverterFacade converter = new EntityDTOConverterFacade();
 
         List<ConnectionRequestDto> requestDTOs = (List<ConnectionRequestDto>) converter.mapToDTOs(requests);
 

@@ -1,7 +1,7 @@
 package com.direct.app.ws.integration;
 
 import com.direct.app.security.SecurityConstants;
-import com.direct.app.io.dto.UserDto;
+import com.direct.app.io.dto.UserDTO;
 import com.direct.app.ui.controller.UsersController;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
@@ -36,14 +35,14 @@ public class UserControllerTest {
 
     @Test
     public void create_user_test_happy_path() throws Exception {
-        UserDto userDto = new UserDto(
+        UserDTO userDto = new UserDTO(
                 null,
                 "Sameh",
                 "Adel",
                 "email",
                 "pass");
 
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(USER_SIGN_UP_URL, userDto, UserDto.class);
+        ResponseEntity<UserDTO> responseEntity = testRestTemplate.postForEntity(USER_SIGN_UP_URL, userDto, UserDTO.class);
 
         Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         Assert.assertNotNull(responseEntity.getHeaders().get(SecurityConstants.HEADER_STRING));
@@ -59,26 +58,26 @@ public class UserControllerTest {
 
         signupUser(username); // To make the user already exist
 
-        UserDto userDto = new UserDto(
+        UserDTO userDto = new UserDTO(
                 null,
                 "fName",
                 "lName", username,
                 "pass");
 
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(USER_SIGN_UP_URL, userDto, UserDto.class);
+        ResponseEntity<UserDTO> responseEntity = testRestTemplate.postForEntity(USER_SIGN_UP_URL, userDto, UserDTO.class);
 
         Assert.assertNotEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
     }
 
     private void signupUser(String username){
-        UserDto userDto = new UserDto(
+        UserDTO userDto = new UserDTO(
                 null,
                 "fName",
                 "lName",
                 username,
                 "pass");
 
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(USER_SIGN_UP_URL, userDto, UserDto.class);
+        ResponseEntity<UserDTO> responseEntity = testRestTemplate.postForEntity(USER_SIGN_UP_URL, userDto, UserDTO.class);
     }
 }

@@ -5,22 +5,21 @@ import com.direct.app.io.dto.SenderDetails;
 import com.direct.app.io.entities.RequestEntity;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.shared.EntityDTOConverter;
-import org.junit.After;
+import com.direct.app.mappers.EntityDTOConverterFacade;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class RequestEntityDTOConverterTest {
-	private EntityDTOConverter converter;
+	private EntityDTOConverterFacade converter;
 	private RequestEntity originalEntity;
 	private ConnectionRequestDto resultDTO;
 
 	@Before
 	public void init() {
 		originalEntity = new RequestEntity();
-		converter = new EntityDTOConverter();
+		converter = new EntityDTOConverterFacade();
 	}
 
 	@Test

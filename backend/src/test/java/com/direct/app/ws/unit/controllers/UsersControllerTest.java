@@ -3,7 +3,7 @@ package com.direct.app.ws.unit.controllers;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.security.SecurityConstants;
 import com.direct.app.service.UserService;
-import com.direct.app.io.dto.UserDto;
+import com.direct.app.io.dto.UserDTO;
 import com.direct.app.ui.controller.UsersController;
 import com.direct.app.shared.JwtTokenGenerator;
 import org.junit.Assert;
@@ -41,7 +41,7 @@ public class UsersControllerTest {
 
     @Test
     public void create_user_test_happy_path() throws Exception {
-        UserDto userDto = new UserDto(
+        UserDTO userDto = new UserDTO(
                 null,
                 "Sameh",
                 "Adel",

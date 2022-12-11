@@ -5,11 +5,28 @@ import com.direct.app.io.dto.ProfileDto;
 import com.direct.app.io.entities.BaseEntity;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.mappers.EntityDTOMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserEntityDTOMapper implements EntityDTOMapper {
+	PasswordEncoder encoder;
+	private static UserEntityDTOMapper INSTANCE;
+
+	private UserEntityDTOMapper(PasswordEncoder encoder) {
+		this.encoder = encoder;
+	}
+
+	public static UserEntityDTOMapper getInstance(PasswordEncoder encoder){
+		if(INSTANCE == null){
+			INSTANCE = new UserEntityDTOMapper(encoder);
+			return INSTANCE;
+		}
+		return INSTANCE;
+	}
+
 
 	@Override
 	public BaseEntity mapDtoToEntity(BaseDTO dto) {

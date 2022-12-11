@@ -1,7 +1,6 @@
 package com.direct.app.ws.unit.service;
 
 import com.direct.app.exceptions.ErrorCode;
-import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.exceptions.RuntimeBusinessException;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.enumerations.UserRole;
@@ -10,18 +9,16 @@ import com.direct.app.repositery.UserDetailsRepository;
 import com.direct.app.repositery.UserRepository;
 import com.direct.app.service.UserService;
 import com.direct.app.service.implementation.UserServiceImplementation;
-import com.direct.app.io.dto.UserDto;
+import com.direct.app.io.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -179,7 +176,7 @@ public class UserServiceTest {
 
     @Test
     public void generateUserEntityFromDtoTest(){
-        UserDto userDto = new UserDto();
+        UserDTO userDto = new UserDTO();
 
         userDto.setId(1L);
         userDto.setUsername("username");
@@ -202,20 +199,20 @@ public class UserServiceTest {
         userEntity.setLastName("lName");
         userEntity.setEncryptedPassword("EncryptedPassword");
 
-        UserDto generatedUserDTO = userEntity.generateUserDTOFromEntity();
+        UserDTO generatedUserDTO = userEntity.generateUserDTOFromEntity();
 
         assertDTOMatchUserEntity(generatedUserDTO, userEntity);
     }
-    private void assertUserEntityMatchDTO(UserEntity userEntity, UserDto userDto){
+    private void assertUserEntityMatchDTO(UserEntity userEntity, UserDTO userDto){
         assertCommonField(userEntity, userDto);
         assertPasswordMatchEncryption(userDto.getPassword(), userEntity.getEncryptedPassword());
     }
 
-    private void assertDTOMatchUserEntity(UserDto userDto, UserEntity userEntity){
+    private void assertDTOMatchUserEntity(UserDTO userDto, UserEntity userEntity){
         assertCommonField(userEntity, userDto);
     }
 
-    private void assertCommonField(UserEntity userEntity, UserDto userDto){
+    private void assertCommonField(UserEntity userEntity, UserDTO userDto){
         assertEquals(userDto.getId(), userEntity.getId());
         assertEquals(userDto.getUsername(), userEntity.getUsername());
         assertEquals(userDto.getFirstName(), userEntity.getFirstName());
@@ -227,8 +224,8 @@ public class UserServiceTest {
         assertTrue(encoder.matches(password, encryptedPassword));
     }
 
-    private UserDto createUserDTO() {
-        UserDto dto = new UserDto();
+    private UserDTO createUserDTO() {
+        UserDTO dto = new UserDTO();
 
         dto.setId(1l);
         dto.setFirstName("fName");
