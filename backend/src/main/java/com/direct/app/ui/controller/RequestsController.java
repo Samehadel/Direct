@@ -18,10 +18,10 @@ public class RequestsController {
     private ConnectionRequestService requestService;
 
     @PostMapping("/send")
-    public ResponseEntity<Long> sendConnectionRequest(@RequestBody ConnectionRequestDto connectionRequestDto) throws Exception {
+    public ResponseEntity<Long> sendConnectionRequest(@RequestParam(name = "receiver") Long receiverId) throws Exception {
 
 
-        Long connectionRequestId = requestService.sendConnectionRequest(connectionRequestDto);
+        Long connectionRequestId = requestService.sendConnectionRequest(receiverId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

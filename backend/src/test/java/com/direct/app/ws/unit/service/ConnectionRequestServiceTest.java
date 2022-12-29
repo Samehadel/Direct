@@ -64,7 +64,7 @@ public class ConnectionRequestServiceTest {
         when(connectionRequestsRepoMock.save(any()))
                 .thenReturn(new RequestEntity(100L));
 
-        Long connectionRequestId = connectionRequestService.sendConnectionRequest(new ConnectionRequestDto(senderId, receiverId));
+        Long connectionRequestId = connectionRequestService.sendConnectionRequest(receiverId);
 
         // Assertion
         Assert.assertEquals(100L, connectionRequestId.longValue());
@@ -84,7 +84,7 @@ public class ConnectionRequestServiceTest {
                 .thenReturn(receiverId);
 
         try {
-            connectionRequestService.sendConnectionRequest(new ConnectionRequestDto(senderId, receiverId));
+            connectionRequestService.sendConnectionRequest(receiverId);
             assertEquals(0, 1);
         } catch (RuntimeBusinessException ex) {
             assertEquals(U$0003, ex.getErrorCode());

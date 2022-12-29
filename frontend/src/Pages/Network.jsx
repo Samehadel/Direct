@@ -40,7 +40,7 @@ function Network(props) {
                         connections.map(conn =>
                             <div className="conn-card" key={conn.id}>
                                 <div className="left">
-                                    <img src={conn.imageData === null ? noImage : 'data:' + conn.imageFormat + ';base64,' + conn.imageData} alt="" />
+                                    <img src={conn.image_data === null ? noImage : 'data:' + conn.image_format + ';base64,' + conn.image_data} alt="" />
                                     <div>
                                         <p className='name'>{conn.firstName.concat(' ', conn.lastName)}</p>
                                         <p className='title'>{conn.professionalTitle === null ? null : conn.professionalTitle}</p>
