@@ -46,9 +46,9 @@ function Connections(props) {
                 <div className='grid-2'>
                     {profiles.map(p =>
                         <div className='card' key={p.id}>
-                            <img className='personal-img' src={p.imageData === null ? noImage : 'data:' + p.imageFormat + ';base64,' + p.imageData} alt="pic" />
-                            <p>{p.firstName + " " + p.lastName}</p>
-                            <p className='title'>{p.professionalTitle === null ? null : p.professionalTitle}</p>
+                            <img className='personal-img' src={p.image_data === null ? noImage : 'data:' + p.image_format + ';base64,' + p.image_data} alt="pic" />
+                            <p>{p.first_name + " " + p.last_name}</p>
+                            <p className='title'>{p.professional_title === null ? null : p.professional_title}</p>
                             <button className='connect' onClick={() => sendConnectionRequest(p.id)}>Connect</button>
                         </div>
                     )}

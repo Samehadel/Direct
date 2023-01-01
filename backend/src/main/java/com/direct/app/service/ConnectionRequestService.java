@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ConnectionRequestService {
 	
-	public Long sendConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception;
+	public Long sendConnectionRequest(Long receiverId) throws Exception;
 	
 	public boolean acceptConnectionRequest(long id) throws Exception;
 	

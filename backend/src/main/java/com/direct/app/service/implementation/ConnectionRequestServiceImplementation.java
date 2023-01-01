@@ -43,29 +43,25 @@ public class ConnectionRequestServiceImplementation implements ConnectionRequest
 
 
     @Override
-    public Long sendConnectionRequest(ConnectionRequestDto connectionRequestDto) throws Exception {
+    public Long sendConnectionRequest(Long receiverId) throws Exception {
 
-        validateCurrentUserIsSender(connectionRequestDto.getSenderId());
         RequestEntity newRequest = new RequestEntity();
 
-        UserEntity sender = userService.retrieveUserById(connectionRequestDto.getSenderId());
-        UserEntity receiver = userService.retrieveUserById(connectionRequestDto.getReceiverId());
+        UserEntity sender = userService.getCurrentUserEntity();
+        UserEntity receiver = userService.retrieveUserById(receiverId);
 
         newRequest.assignConnectionRequestSender(sender);
         newRequest.assignConnectionRequestReceiver(receiver);
 
+        validateRequestNotExistInDB(newRequest);
         // Save the request
         newRequest = connectionRequestsRepo.save(newRequest);
 
         return newRequest.getId();
     }
 
-    private void validateCurrentUserIsSender(Long senderId) throws Exception {
-        Long currentUserId = userService.getCurrentUserId();
-
-        if (!currentUserId.equals(senderId))
-            throw new RuntimeBusinessException(NOT_ACCEPTABLE, U$0003, senderId);
-
+    private void validateRequestNotExistInDB(RequestEntity newRequest) {
+        //TODO: add implementation
     }
 
     @Override

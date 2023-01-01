@@ -54,10 +54,10 @@ function Requests(props) {
                 <div className='requests grid-2'>
                     {requests.map(req =>
                         <div className='card' key={req.id}>
-                            <img className='personal-img' src={req.senderDetails.imageData === null ? noImage : 'data:' + req.senderDetails.imageFormat + ';base64,' + req.senderDetails.imageData} alt="pic" />
+                            <img className='personal-img' src={req.sender_details.image_data === null ? noImage : 'data:' + req.sender_details.image_format + ';base64,' + req.sender_details.image_data} alt="pic" />
                             <div className="info">
-                                <p>{req.senderDetails.firstName + " " + req.senderDetails.lastName}</p>
-                                <p className='title'>{req.professionalTitle === null ? null : req.professionalTitle}</p>
+                                <p>{req.sender_details.first_name + " " + req.sender_details.last_name}</p>
+                                <p className='title'>{req.professional_title === null ? null : req.professional_title}</p>
                             </div>
                             <button className='accept' onClick={() => accept(req.id)}>Accept</button>
                             <button className='ignore' onClick={() => ignore(req.id)}>Ignore</button>

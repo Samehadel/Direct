@@ -1,19 +1,12 @@
 import axios from 'axios';
 
 class ProfilesServiceAPIs {
-  baseUrl = 'http://localhost:8082/profiles';
-
-  editAccountInfo(profileDetails) {
-    axios.defaults.headers.common = {
-      Authorization: sessionStorage.getItem('Authorization'),
-    };
-
-    return axios.put(this.baseUrl + '/details');
-  }
+  baseUrl = 'http://localhost:8082/profile';
 
   editAccoutImage(image) {
     axios.defaults.headers.common = {
       Authorization: sessionStorage.getItem('Authorization'),
+      
     };
     const formData = new FormData();
 
@@ -23,17 +16,17 @@ class ProfilesServiceAPIs {
       },
     };
 
-    formData.append('image', image);
-
+    formData.append('image_file', image);
     return axios.post(this.baseUrl + '/image', formData, config);
   }
 
-  getAccountDetails() {
+  getProfileImage() {
     axios.defaults.headers.common = {
       Authorization: sessionStorage.getItem('Authorization'),
     };
-
-    return axios.get(this.baseUrl + '/details');
+    console.log(this.baseUrl + '/image')
+    return axios.get(this.baseUrl + '/image');
   }
 }
+
 export default new ProfilesServiceAPIs();

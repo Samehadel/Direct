@@ -2,7 +2,7 @@ import axios from 'axios';
 
 class UserAPIs {
   signup(signupModel) {
-    const { firstName : first_name, lastName : last_name, userName : username, password } = signupModel;
+    const { firstName : first_name, lastName : last_name, username : username, password } = signupModel;
     console.log('Sign Up:', signupModel);
     return axios.post('http://localhost:8082/users/signup', {first_name, last_name, username, password});
   }

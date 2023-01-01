@@ -43,6 +43,7 @@ public class ProfilesServiceImplementation implements ProfilesService {
 	@Cacheable(cacheNames = CacheNames.SIMILAR_USERS, keyGenerator = "userBasedKeyGenerator")
 	@Override
 	public List<ProfileDto> retrieveSimilarUsers() throws Exception {
+		//TODO : enhance cache experience when user send connection request to one suggestion and retry to find similar users again
 		UserEntity user = userService.getCurrentUserEntity_FullData();
 		List<UserEntity> similarUsers = profilesServiceUtils
 				.retrieveSimilarUsersBySubscriptions(user.getSubscriptions(), user.getId())

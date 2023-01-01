@@ -5,17 +5,16 @@ import noImage from '../assets/img/no-image2.png';
 
 function Profile(props) {
 
-    const [details, setDetails] = useState(null);
+    const [details, setDetails] = useState({});
 
     useEffect(() => {
-        ProfilesServiceAPIs.getAccountDetails()
-            .then(res => {
-                console.log(res);
-                setDetails(res.data);
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        console.log('use Effect');
+        ProfilesServiceAPIs.getProfileImage()
+        .then(res => {
+            const d = {image_format: res.headers['content-type'], image_data: res.data}
+            console.log(res);
+            setDetails({image_data: res.data, image_format: res.headers['content-type']});
+        });
     }, []);
 
     const uploadImage = (event) => {
@@ -24,25 +23,29 @@ function Profile(props) {
 
         ProfilesServiceAPIs.editAccoutImage(uploadedImage)
             .then(res => {
-                console.log(res);
 
             })
             .catch(err => {
                 console.log(err);
             });
     }
+
+    const checkImageNotExist = () => {
+        return details === null || details.image_data == null || details.image_data == ''
+    }
+
     return (
         <section className='proflie-wrapper'>
             <div className="container-xl">
                 <form>
                     <label htmlFor="file-input" className='profile-imag'>
-                        <img src={details === null || details.imageData == null ? noImage : 'data:' + details.imageFormat + ';base64,' + details.imageData} />
+                        <img src={checkImageNotExist() ? noImage : 'data:' + details.image_format + ';base64,' + details.image_data} />            
                     </label>
                     <input type='file' accept='image/*' id='file-input' className='upload-image' onChange={uploadImage} />
                 </form>
                 <div className='info'>
-                    <p>{details === null ? null : details.firstName.concat(' ', details.lastName)}</p>
-                    <p>{details === null ? null : details.professionalTitle}</p>
+                    <p>{details === null ? null : details.first_name + ' ' + details.last_name}</p>
+                    <p>{details === null ? null : details.professional_title}</p>
                     <p>{ }</p>
                 </div>
             </div>

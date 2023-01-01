@@ -1,12 +1,10 @@
 package com.direct.app.service.util.publication_service_utils;
 
-import com.direct.app.factories.EntityDTOMapperFactory;
 import com.direct.app.io.dto.PublicationDto;
 import com.direct.app.io.entities.ConnectionEntity;
 import com.direct.app.io.entities.PublicationEntity;
 import com.direct.app.io.entities.SubscriptionEntity;
 import com.direct.app.io.entities.UserEntity;
-import com.direct.app.mappers.EntityDTOMapper;
 import com.direct.app.repositery.ConnectionRepository;
 import com.direct.app.repositery.PublicationsRepository;
 import com.direct.app.service.UserService;
@@ -21,11 +19,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.direct.app.enumerations.EntityDTOMapperType.PUBLICATION_MAPPER;
-
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Service
-public class PublishPostsUtil {
+public class PostsPublisherImpl implements PostsPublisher{
 
     @Autowired
     private PublicationsRepository publicationRepo;
@@ -45,13 +41,13 @@ public class PublishPostsUtil {
     private PublicationDto publicationDto;
 
 
-    public void publish(PublicationDto publicationDto) throws Exception {
+    public int publish(PublicationDto publicationDto) throws Exception {
 
         prepareEntities(publicationDto);
 
         List<PublicationEntity> publications = buildPublications();
 
-        savePublicationsToDB(publications);
+        return savePublicationsToDB(publications);
     }
 
     private void prepareEntities(PublicationDto publicationDto) throws Exception {
@@ -114,9 +110,16 @@ public class PublishPostsUtil {
         return publication;
     }
 
-    private void savePublicationsToDB(List<PublicationEntity> publications) {
-        for (PublicationEntity publication : publications)
-            publicationRepo.save(publication);
+    private int savePublicationsToDB(List<PublicationEntity> publications) {
+        int successfulPublications = 0;
+        for (PublicationEntity publication : publications) {
+            try{
+                publicationRepo.save(publication);
+                successfulPublications ++;
+            }catch (Exception e){
 
+            }
+        }
+        return successfulPublications;
     }
 }
