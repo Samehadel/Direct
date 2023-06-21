@@ -8,11 +8,11 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-	
+
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = false)
 @Table(name = "users")
 public class UserEntity extends BaseEntity implements Serializable {
 
@@ -156,5 +156,28 @@ public class UserEntity extends BaseEntity implements Serializable {
 		userDto.setLastName(this.lastName);
 
 		return userDto;
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || !(o instanceof UserEntity)) return false;
+		UserEntity that = (UserEntity) o;
+		return id.equals(that.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return "UserEntity{" +
+				"firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", username='" + username + '\'' +
+				'}';
 	}
 }

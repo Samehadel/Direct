@@ -44,8 +44,8 @@ public class ProfilesServiceUtils {
 		for (SubscriptionEntity sub : similarSubscriptions)
 			similarUsers.add(sub.getUser());
 
-		similarUsers = excludeConnectedProfiles(similarUsers, loggedUserId);
-		similarUsers = excludeRequestedProfiles(similarUsers, loggedUserId);
+		excludeConnectedProfiles(similarUsers, loggedUserId);
+		excludeRequestedProfiles(similarUsers, loggedUserId);
 
 		return similarUsers;
 	}

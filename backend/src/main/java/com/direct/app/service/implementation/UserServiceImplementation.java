@@ -8,6 +8,8 @@ import com.direct.app.repositery.UserAuthorityRepository;
 import com.direct.app.repositery.UserDetailsRepository;
 import com.direct.app.repositery.UserRepository;
 import com.direct.app.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,19 +26,21 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
 public class UserServiceImplementation implements UserService {
+    private final Logger logger = LogManager.getLogger(UserServiceImplementation.class);
 
     @Autowired
-    UserRepository userRepo;
+    private UserRepository userRepo;
 
     @Autowired
-    UserAuthorityRepository authRepo;
+    private UserAuthorityRepository authRepo;
 
     @Autowired
-    UserDetailsRepository detailsRepo;
+    private UserDetailsRepository detailsRepo;
 
 
     @Override
     public UserEntity createUser(UserEntity userEntity) throws Exception {
+        logger.info("Started createUser for " + userEntity);
         checkIfUsernameExists(userEntity.getUsername());
 
         UserAuthorityEntity authorities = new UserAuthorityEntity(ROLE_USER.name());

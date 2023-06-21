@@ -41,16 +41,6 @@ public class NetworkServiceImplementation implements NetworkService {
         return (List<ProfileDto>) converter.mapToDTOs(connections);
     }
 
-    private UserEntity getOtherUserInConnection(ConnectionEntity connection) throws Exception {
-        Long userId = userService.getCurrentUserId();
-
-        if(connection.getFirstUser().getId() != userId){
-            return connection.getFirstUser();
-        }else{
-            return connection.getSecondUser();
-        }
-    }
-
     @Override
     public void removeConnection(Long connectionId) throws Exception {
         Long currentUserId = userService.getCurrentUserId();

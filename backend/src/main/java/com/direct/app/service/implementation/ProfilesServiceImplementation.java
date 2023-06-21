@@ -40,7 +40,7 @@ public class ProfilesServiceImplementation implements ProfilesService {
 	@Autowired
 	private EntityDTOConverter converter;
 
-	@Cacheable(cacheNames = CacheNames.SIMILAR_USERS, keyGenerator = "userBasedKeyGenerator")
+	//@Cacheable(cacheNames = CacheNames.SIMILAR_USERS, keyGenerator = "userBasedKeyGenerator")
 	@Override
 	public List<ProfileDto> retrieveSimilarUsers() throws Exception {
 		//TODO : enhance cache experience when user send connection request to one suggestion and retry to find similar users again

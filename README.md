@@ -22,7 +22,8 @@ and to reach all the related posts is almost impossible. Here Direct came to sol
 5. Swagger
 6. Lombok
 7. JUnit & Mockito
-8. ReactJS
+8. HTML & CSS
+9. ReactJS
 
 ## Features
 - **Signup :** First user need to create account.
