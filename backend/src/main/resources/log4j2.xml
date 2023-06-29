@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="APP_LOG_ROOT">D:/logs</Property>
+    </Properties>
+    <Appenders>
+        <Console name="consoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} %5p [%t] %c{1}:%L - %m%n"/>
+        </Console>
+
+        <RollingFile name="fileAppender" fileName="${APP_LOG_ROOT}/direct.log"
+                     filePattern="${APP_LOG_ROOT}/direct-%d{MM-dd-yyyy}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} %5p [%t] %c{1}:%L - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <AsyncLogger  name="com.direct.app" level="DEBUG" additivity="false">
+            <AppenderRef ref="consoleAppender"/>
+            <AppenderRef ref="fileAppender"/>
+        </AsyncLogger >
+        <Root level="INFO">
+            <AppenderRef ref="consoleAppender"/>
+            <AppenderRef ref="fileAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>
