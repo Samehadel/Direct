@@ -40,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/v2/api-docs",
             "/webjars/**",
             "/signin",
+			"/users/test",
+			"/users/find/**",
             SecurityConstants.SIGN_UP_URL
     };
 	

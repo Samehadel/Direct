@@ -15,6 +15,7 @@ public enum ErrorCode {
 	U$0008("Connection ID: [%d] not exist with user ID: [%d]!"),
 	U$0009("No publication exist with ID: [%d]!"),
 	U$0010("User with ID [%d] not allowed to modify publication with ID: [%d]!"),
+	U$0011("Can't find user id for username [%s]!"),
 
 
 	IMG$0001("Could not create the Base directory [%s] for storing profile images!"),

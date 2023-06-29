@@ -1,16 +1,25 @@
 package com.direct.app.service.implementation;
 
 import com.direct.app.exceptions.RuntimeBusinessException;
+import com.direct.app.factories.EntityDTOMapperFactory;
+import com.direct.app.io.dto.BaseDTO;
+import com.direct.app.io.dto.ProfileDto;
+import com.direct.app.io.dto.UserDto;
 import com.direct.app.io.entities.UserAuthorityEntity;
 import com.direct.app.io.entities.UserDetailsEntity;
 import com.direct.app.io.entities.UserEntity;
+import com.direct.app.mappers.EntityDTOMapper;
 import com.direct.app.repositery.UserAuthorityRepository;
 import com.direct.app.repositery.UserDetailsRepository;
 import com.direct.app.repositery.UserRepository;
+import com.direct.app.service.RedisSchema;
 import com.direct.app.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -37,6 +46,8 @@ public class UserServiceImplementation implements UserService {
     @Autowired
     private UserDetailsRepository detailsRepo;
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public UserEntity createUser(UserEntity userEntity) throws Exception {
@@ -70,12 +81,16 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public UserEntity retrieveUser(String username) throws Exception {
+    @Cacheable(value = "users", key = "#username")
+    public ProfileDto retrieveUser(String username) throws Exception {
+        logger.info("UserService: retrieveUser for username: " + username);
         UserEntity userEntity =
                 userRepo.findByUsername(username)
                         .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0006, username));
 
-        return userEntity;
+        EntityDTOMapper mapper = EntityDTOMapperFactory.getEntityDTOMapper(userEntity);
+        BaseDTO userDTO = mapper.mapEntityToDTO(userEntity);
+        return (ProfileDto) userDTO;
     }
 
     @Override
@@ -83,9 +98,38 @@ public class UserServiceImplementation implements UserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
-        return userRepo.getUserId(username);
+        return getCurrentUserId(username);
     }
 
+    private Long getCurrentUserId(String username){
+        Long inMemoryUserId = getUserIdFromRedisCache(username);
+
+        if(inMemoryUserId == null){
+            Long dbUserId = userRepo.getUserId(username);
+            ofNullable(dbUserId)
+                    .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0011, username));
+            setUserIdForRedisCache(username, dbUserId);
+            return dbUserId;
+        }
+
+        return inMemoryUserId;
+    }
+
+    private void setUserIdForRedisCache(String username, long userId) {
+        logger.info("UserServiceImpl: setUserIdForRedisCache for username:" + username);
+        getRedisValueOps().set(RedisSchema.getUserIdKey(username), userId);
+    }
+
+    private Long getUserIdFromRedisCache(String username) {
+        logger.info("UserServiceImpl: getUserIdFromRedisCache for username:" + username);
+        Object userIdObj = getRedisValueOps().get(RedisSchema.getUserIdKey(username));
+
+        return (Long) userIdObj;
+    }
+
+    private ValueOperations getRedisValueOps(){
+        return redisTemplate.opsForValue();
+    }
     @Override
     public String getCurrentUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -94,6 +138,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public UserEntity getCurrentUserEntity() {
+        logger.info("UserServiceImpl: getCurrentUserEntity");
         String username = getCurrentUsername();
 
         UserEntity userEntity =
@@ -105,6 +150,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public UserEntity getCurrentUserEntity_FullData() {
+        logger.info("UserServiceImpl: getCurrentUserEntity_FullData");
         String username = getCurrentUsername();
         UserEntity userEntity =
                 userRepo.findByUsername_FullData(username)
@@ -115,6 +161,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public UserEntity retrieveUserById(long id) {
+        logger.info("UserServiceImpl: retrieveUserById for id:" + id);
         UserEntity userEntity =
                 userRepo.findById(id)
                         .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0002, id));
@@ -128,6 +175,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
+        logger.info("UserServiceImpl: loadUserByUsername for username:" + username);
         UserEntity user =
                 userRepo.findByUsername(username)
                         .orElseThrow(() -> new RuntimeBusinessException(NOT_ACCEPTABLE, U$0006, username));

@@ -23,5 +23,5 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 	Optional<UserEntity> findById(long id);
 
 	@Query(value = "SELECT id from users u WHERE u.username=:username", nativeQuery = true)
-	public long getUserId(String username);
+	public Long getUserId(String username);
 }

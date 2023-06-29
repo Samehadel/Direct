@@ -3,6 +3,7 @@ package com.direct.app.ws.unit.service;
 import com.direct.app.exceptions.ErrorCode;
 import com.direct.app.exceptions.ExceptionBody;
 import com.direct.app.exceptions.RuntimeBusinessException;
+import com.direct.app.io.dto.ProfileDto;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.enumerations.UserRole;
 import com.direct.app.repositery.UserAuthorityRepository;
@@ -110,7 +111,7 @@ public class UserServiceTest {
         when(userRepo.findByUsername(anyString()))
                 .thenReturn(Optional.of(new UserEntity()));
 
-        UserEntity user = userService.retrieveUser("username");
+        ProfileDto user = userService.retrieveUser("username");
 
         assertNotNull(user);
     }

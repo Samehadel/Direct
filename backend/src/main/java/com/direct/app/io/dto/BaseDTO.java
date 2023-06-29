@@ -1,4 +1,7 @@
 package com.direct.app.io.dto;
 
-public class BaseDTO {
+import java.io.Serializable;
+
+public class BaseDTO implements Serializable {
+
 }

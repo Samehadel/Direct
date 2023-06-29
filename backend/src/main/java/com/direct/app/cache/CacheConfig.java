@@ -25,8 +25,8 @@ import static org.ehcache.config.builders.ExpiryPolicyBuilder.timeToLiveExpirati
 import static org.ehcache.config.builders.ResourcePoolsBuilder.heap;
 import static org.ehcache.config.units.MemoryUnit.MB;
 
-@Configuration
-@EnableCaching
+/*@Configuration
+@EnableCaching*/
 public class CacheConfig extends CachingConfigurerSupport {
 
 	private List<String> cacheNames = asList(

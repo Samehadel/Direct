@@ -1,5 +1,6 @@
 package com.direct.app.ui.controller;
 
+import com.direct.app.io.dto.ProfileDto;
 import com.direct.app.io.entities.UserEntity;
 import com.direct.app.security.SecurityConstants;
 import com.direct.app.service.UserService;
@@ -46,4 +47,15 @@ public class UsersController {
 	public boolean isAuthenticated() {
 		return true;
 	}
+
+	@GetMapping("/find/{username}")
+	public ProfileDto findByUsername(@PathVariable("username") String username) throws Exception {
+		return userService.retrieveUser(username);
+	}
+
+	@GetMapping("/find/id")
+	public Long findCurrentUserId() throws Exception {
+		return userService.getCurrentUserId();
+	}
+
 }

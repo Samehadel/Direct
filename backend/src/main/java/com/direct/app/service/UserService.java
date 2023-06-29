@@ -1,5 +1,7 @@
 package com.direct.app.service;
 
+import com.direct.app.io.dto.ProfileDto;
+import com.direct.app.io.dto.UserDto;
 import com.direct.app.io.entities.UserEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -7,7 +9,7 @@ public interface UserService extends UserDetailsService {
 
 	public UserEntity createUser(UserEntity userEntity) throws Exception;
 	
-	public UserEntity retrieveUser(String username) throws Exception;
+	public ProfileDto retrieveUser(String username) throws Exception;
 
 	public Long getCurrentUserId();
 

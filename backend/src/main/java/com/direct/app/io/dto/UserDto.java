@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,5 +35,16 @@ public class UserDto extends BaseDTO {
 		userEntity.setEncryptedPassword(encoder.encode(this.password));
 
 		return userEntity;
+	}
+
+	@Override
+	public String toString() {
+		return "UserDto{" +
+				"id=" + id +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				'}';
 	}
 }

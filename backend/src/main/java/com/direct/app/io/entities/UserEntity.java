@@ -1,5 +1,6 @@
 package com.direct.app.io.entities;
 
+
 import com.direct.app.io.dto.UserDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 @Entity
 @Data
 @Table(name = "users")
-public class UserEntity extends BaseEntity implements Serializable {
+@EntityListeners(PrePersistUserEntityListener.class)
+public class UserEntity extends BaseEntity {
 
 	private static final long serialVersionUID = -6671347407969225029L;
 
@@ -42,10 +43,10 @@ public class UserEntity extends BaseEntity implements Serializable {
 	@Column(name = "email_verification_status", nullable = false)
 	private boolean emailVerificationStatus = false;
 
-	@Column(name = "virtual_user_id", nullable = false, length = 255)
-	private String virtualUserId;
+	@Column(name = "user_code")
+	private String userCode;
 
-	
+
 	// Relationships
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL) // 1- with 'user_authorities'
@@ -71,7 +72,7 @@ public class UserEntity extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "secondUser", cascade = CascadeType.ALL) // 7- with 'connections'
 	private List<ConnectionEntity> receivedConnections;
 
-	
+
 	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL) // 8- with 'publications'
 	private List<PublicationEntity> sentPublications;
 
@@ -91,7 +92,7 @@ public class UserEntity extends BaseEntity implements Serializable {
 		this.id = id;
 	}
 
-	// Add subscription to the user
+
 	public void addSubscription(SubscriptionEntity sub) {
 		if (subscriptions == null)
 			subscriptions = new ArrayList<>();
@@ -99,7 +100,6 @@ public class UserEntity extends BaseEntity implements Serializable {
 		subscriptions.add(sub);
 	}
 
-	// Add sent request to the user
 	public void addSentRequest(RequestEntity request) {
 		if (sentRequests == null)
 			sentRequests = new ArrayList<>();
@@ -107,7 +107,6 @@ public class UserEntity extends BaseEntity implements Serializable {
 		sentRequests.add(request);
 	}
 
-	// Add received request to the user
 	public void addReceivedRequest(RequestEntity request) {
 		if (receivedRequests == null)
 			receivedRequests = new ArrayList<>();
@@ -115,7 +114,6 @@ public class UserEntity extends BaseEntity implements Serializable {
 		receivedRequests.add(request);
 	}
 
-	// Add sent connection to the user
 	public void addSentConnection(ConnectionEntity connection) {
 		if (sentConnections == null)
 			sentConnections = new ArrayList<>();
@@ -123,7 +121,6 @@ public class UserEntity extends BaseEntity implements Serializable {
 		sentConnections.add(connection);
 	}
 
-	// Add received connection to the user
 	public void addReceivedConnection(ConnectionEntity connection) {
 		if (receivedConnections == null)
 			receivedConnections = new ArrayList<>();
@@ -131,7 +128,6 @@ public class UserEntity extends BaseEntity implements Serializable {
 		receivedConnections.add(connection);
 	}
 
-	// Add sent connection to the user
 	public void addSentPublication(PublicationEntity publication) {
 		if (sentPublications == null)
 			sentPublications = new ArrayList<>();
@@ -139,7 +135,6 @@ public class UserEntity extends BaseEntity implements Serializable {
 		sentPublications.add(publication);
 	}
 
-	// Add received connection to the user
 	public void addReceivedPublication(PublicationEntity publication) {
 		if (receivedPublications == null)
 			receivedPublications = new ArrayList<>();
@@ -181,3 +176,4 @@ public class UserEntity extends BaseEntity implements Serializable {
 				'}';
 	}
 }
+
