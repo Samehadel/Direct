@@ -25,6 +25,7 @@ and to reach all the related posts is almost impossible. Here Direct came to sol
 7. JUnit & Mockito
 8. HTML & CSS
 9. ReactJS
+10. Redis (Lettuce)
 
 ## Features
 - **Signup :** First user need to create account.

@@ -1,6 +1,8 @@
 package com.direct.app.io.dto;
 
 import com.direct.app.io.entities.UserEntity;
+import com.direct.app.redis.RedisHash;
+import com.direct.app.redis.RedisSchema;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
@@ -8,14 +10,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class UserDto extends BaseDTO {
+public class UserDto extends BaseDTO implements RedisHash {
 	private Long id;
 	private String firstName;
 	private String lastName;
@@ -47,4 +48,10 @@ public class UserDto extends BaseDTO {
 				", password='" + password + '\'' +
 				'}';
 	}
+
+	@Override
+	public String getRedisKey() {
+		return RedisSchema.getUserHashKey() + ":" + getId().toString();
+	}
+
 }

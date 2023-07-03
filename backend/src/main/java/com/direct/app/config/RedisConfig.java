@@ -8,19 +8,26 @@ import net.javacrumbs.shedlock.provider.redis.spring.RedisLockProvider;
 import net.javacrumbs.shedlock.spring.ScheduledLockConfiguration;
 import net.javacrumbs.shedlock.spring.ScheduledLockConfigurationBuilder;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.time.Duration;
 
+@EnableTransactionManagement
 @Configuration
 public class RedisConfig {
 
@@ -42,9 +49,11 @@ public class RedisConfig {
 	@Value("${taskScheduler.defaultLockMaxDurationMinutes}")
 	private int lockMaxDuration;
 
+	@Autowired
+	private DataSource dataSource;
 
 	@Bean(destroyMethod = "shutdown")
-	ClientResources clientResources() {
+	public ClientResources clientResources() {
 		return DefaultClientResources.create();
 	}
 
@@ -93,6 +102,15 @@ public class RedisConfig {
 	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
 		RedisTemplate<String, Object> template = new RedisTemplate<>();
 		template.setConnectionFactory(redisConnectionFactory);
+		template.setKeySerializer(new StringRedisSerializer());
+		template.setHashKeySerializer(new StringRedisSerializer());
+		template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+		template.setEnableTransactionSupport(true);
 		return template;
+	}
+
+	@Bean
+	public PlatformTransactionManager transactionManager() throws SQLException {
+		return new DataSourceTransactionManager(dataSource);
 	}
 }

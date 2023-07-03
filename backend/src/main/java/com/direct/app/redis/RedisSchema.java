@@ -1,4 +1,4 @@
-package com.direct.app.service;
+package com.direct.app.redis;
 
 public class RedisSchema {
 	private static final String DEFAULT_GLOBAL_PREFIX = "direct";
