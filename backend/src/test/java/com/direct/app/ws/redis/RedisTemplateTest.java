@@ -2,8 +2,10 @@ package com.direct.app.ws.redis;
 
 import com.direct.app.enumerations.UserRole;
 import com.direct.app.io.dto.UserDto;
+import com.direct.app.redis.LuaScriptRunner;
 import com.direct.app.redis.RedisSchema;
 import com.direct.app.redis.RedisTemplateHolder;
+import io.lettuce.core.ScriptOutputType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +23,9 @@ public class RedisTemplateTest {
 
 	@Autowired
 	private RedisTemplateHolder redisTemplateHolder;
+
+	@Autowired
+	private LuaScriptRunner luaScriptRunner;
 
 	@Test
 	public void testSaveUser(){
@@ -63,27 +68,11 @@ public class RedisTemplateTest {
 		return (String) redisTemplateHolder.findString(RedisSchema.getUserHashKey(id));
 	}
 
-	/*@Test
-	public void testRedisTransactions() {
+	@Test
+	public void testLuaScriptExecution() {
+		Boolean result = (Boolean) luaScriptRunner.executeLuaScript("checkThenUpdate", ScriptOutputType.BOOLEAN, new String[]{"user:1"}, "45");
 
-		List<Object> transactionResults = redisTemplate.execute(new SessionCallback<List<Object>>() {
-
-			@Override
-			public List<Object> execute(RedisOperations redisOperations) throws DataAccessException {
-				redisOperations.multi();
-				UserDto user1 = buildUserDTO();
-				UserDto user2 = buildUserDTO();
-
-				user2.setId(2L);
-
-				redisOperations.opsForHash().put(RedisSchema.getUserHashKey(), user1.getId(), user1);
-				redisOperations.opsForHash().put(RedisSchema.getUserHashKey(), user2.getId(), user2);
-
-				return redisOperations.exec();
-			}
-		});
-
-		System.out.println(transactionResults);
-	}*/
+		Assert.assertTrue(result);
+	}
 
 }

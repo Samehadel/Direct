@@ -1,6 +1,8 @@
 package com.direct.app.config;
 
 import io.lettuce.core.ClientOptions;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
 import net.javacrumbs.shedlock.core.LockProvider;
@@ -112,5 +114,10 @@ public class RedisConfig {
 	@Bean
 	public PlatformTransactionManager transactionManager() throws SQLException {
 		return new DataSourceTransactionManager(dataSource);
+	}
+
+	@Bean
+	public RedisClient redisClient(){
+		return RedisClient.create(RedisURI.create(host, port));
 	}
 }
