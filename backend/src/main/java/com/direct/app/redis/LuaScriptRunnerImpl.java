@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentMap;
 @ThreadSafe
 @Service
 public class LuaScriptRunnerImpl implements LuaScriptRunner {
-	private final Logger logger = LogManager.getLogger(RedisTemplateHolderImpl.class);
+	private final Logger logger = LogManager.getLogger(RedisHashOperatorImpl.class);
 	private final ConcurrentMap<String, String> scriptsSHA = new ConcurrentHashMap<>();
 
 	@Autowired

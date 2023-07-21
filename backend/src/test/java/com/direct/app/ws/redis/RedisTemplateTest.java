@@ -4,15 +4,26 @@ import com.direct.app.enumerations.UserRole;
 import com.direct.app.io.dto.UserDto;
 import com.direct.app.redis.LuaScriptRunner;
 import com.direct.app.redis.RedisSchema;
-import com.direct.app.redis.RedisTemplateHolder;
+import com.direct.app.redis.RedisHashOperator;
+import com.direct.app.redis.pubsub.MessagePublisher;
+import io.lettuce.core.LettuceFutures;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisFuture;
 import io.lettuce.core.ScriptOutputType;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.async.RedisAsyncCommands;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -22,15 +33,15 @@ public class RedisTemplateTest {
 	private int port;
 
 	@Autowired
-	private RedisTemplateHolder redisTemplateHolder;
+	private RedisHashOperator redisHashOperator;
 
 	@Autowired
 	private LuaScriptRunner luaScriptRunner;
 
 	@Test
-	public void testSaveUser(){
+	public void testSaveUser() {
 		UserDto user = buildUserDTO(10L);
-		redisTemplateHolder.saveHash(user);
+		redisHashOperator.saveHash(user);
 
 		Assert.assertEquals(user, getInMemoryUser(user.getId()));
 	}
@@ -51,7 +62,7 @@ public class RedisTemplateTest {
 	}
 
 	private UserDto getInMemoryUser(Long id) {
-		return (UserDto) redisTemplateHolder.findHash(id, UserDto.class);
+		return (UserDto) redisHashOperator.findHash(id, UserDto.class);
 	}
 
 	@Test
@@ -59,13 +70,13 @@ public class RedisTemplateTest {
 		UserDto user = buildUserDTO();
 		UserRole role = UserRole.ROLE_ADMIN;
 
-		redisTemplateHolder.saveString(user.getRedisKey(), role.toString());
+		redisHashOperator.saveString(user.getRedisKey(), role.toString());
 		Assert.assertEquals(role.toString(), getInMemoryUserRole(user.getId()));
 	}
 
 
 	private String getInMemoryUserRole(Long id) {
-		return (String) redisTemplateHolder.findString(RedisSchema.getUserHashKey(id));
+		return (String) redisHashOperator.findString(RedisSchema.getUserHashKey(id));
 	}
 
 	@Test
@@ -75,4 +86,42 @@ public class RedisTemplateTest {
 		Assert.assertTrue(result);
 	}
 
+
+	@Autowired
+	public RedisClient client;
+
+	@Test
+	public void testPipeline() {
+		StatefulRedisConnection<String, String> connection = client.connect();
+		RedisAsyncCommands<String, String> commands = connection.async();
+
+		// disable auto-flushing
+		commands.setAutoFlushCommands(false);
+
+		// perform a series of independent calls
+		List<RedisFuture<?>> futures = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			futures.add(commands.sadd("Set-0", "value-" + i));
+		}
+
+		// write all commands to the transport layer
+		commands.flushCommands();
+
+		// synchronization example: Wait until all futures complete
+		boolean result = LettuceFutures.awaitAll(5, TimeUnit.SECONDS,
+				futures.toArray(new RedisFuture[futures.size()]));
+
+		connection.close();
+	}
+	@Autowired
+	@Qualifier("UserCreationPublisher")
+	private MessagePublisher publisher;
+
+	@Test
+	public void testPubSubModel() {
+		publisher.publish("User Created with ID: 1");
+		publisher.publish("User Created with ID: 2");
+		publisher.publish("User Created with ID: 3");
+		publisher.publish("User Created with ID: 4");
+	}
 }

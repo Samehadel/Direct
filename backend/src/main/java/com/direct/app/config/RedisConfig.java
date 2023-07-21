@@ -106,7 +106,9 @@ public class RedisConfig {
 		template.setConnectionFactory(redisConnectionFactory);
 		template.setKeySerializer(new StringRedisSerializer());
 		template.setHashKeySerializer(new StringRedisSerializer());
+		template.setDefaultSerializer(new StringRedisSerializer());
 		template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+		template.setStringSerializer(new StringRedisSerializer());
 		template.setEnableTransactionSupport(true);
 		return template;
 	}
