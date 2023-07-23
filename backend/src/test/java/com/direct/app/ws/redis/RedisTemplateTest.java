@@ -1,11 +1,13 @@
 package com.direct.app.ws.redis;
 
 import com.direct.app.enumerations.UserRole;
+import com.direct.app.io.dto.PublicationDto;
 import com.direct.app.io.dto.UserDto;
 import com.direct.app.redis.LuaScriptRunner;
 import com.direct.app.redis.RedisSchema;
 import com.direct.app.redis.RedisHashOperator;
 import com.direct.app.redis.pubsub.MessagePublisher;
+import com.direct.app.redis.stream.EventPublisher;
 import io.lettuce.core.LettuceFutures;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisFuture;
@@ -90,29 +92,6 @@ public class RedisTemplateTest {
 	@Autowired
 	public RedisClient client;
 
-	@Test
-	public void testPipeline() {
-		StatefulRedisConnection<String, String> connection = client.connect();
-		RedisAsyncCommands<String, String> commands = connection.async();
-
-		// disable auto-flushing
-		commands.setAutoFlushCommands(false);
-
-		// perform a series of independent calls
-		List<RedisFuture<?>> futures = new ArrayList<>();
-		for (int i = 0; i < 5; i++) {
-			futures.add(commands.sadd("Set-0", "value-" + i));
-		}
-
-		// write all commands to the transport layer
-		commands.flushCommands();
-
-		// synchronization example: Wait until all futures complete
-		boolean result = LettuceFutures.awaitAll(5, TimeUnit.SECONDS,
-				futures.toArray(new RedisFuture[futures.size()]));
-
-		connection.close();
-	}
 	@Autowired
 	@Qualifier("UserCreationPublisher")
 	private MessagePublisher publisher;
@@ -123,5 +102,16 @@ public class RedisTemplateTest {
 		publisher.publish("User Created with ID: 2");
 		publisher.publish("User Created with ID: 3");
 		publisher.publish("User Created with ID: 4");
+	}
+
+	@Autowired
+	private EventPublisher eventPublisher;
+	@Test
+	public void testRedisStream() {
+		PublicationDto publication = new PublicationDto();
+		publication.setContent("Java Developer Job at FIS");
+		publication.setLink("www.fis.com/jobs/566");
+
+		eventPublisher.publish(publication);
 	}
 }
