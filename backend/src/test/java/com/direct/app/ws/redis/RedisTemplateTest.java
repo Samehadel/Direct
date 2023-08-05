@@ -7,13 +7,11 @@ import com.direct.app.redis.LuaScriptRunner;
 import com.direct.app.redis.RedisSchema;
 import com.direct.app.redis.RedisHashOperator;
 import com.direct.app.redis.pubsub.MessagePublisher;
-import com.direct.app.redis.stream.EventPublisher;
-import io.lettuce.core.LettuceFutures;
+import com.direct.app.redis.stream.publisher.EventPublisher;
+import com.direct.app.redis.stream.subscribe.EventSubscriptionManager;
+import com.direct.app.redis.stream.PublicationHandler;
 import io.lettuce.core.RedisClient;
-import io.lettuce.core.RedisFuture;
 import io.lettuce.core.ScriptOutputType;
-import io.lettuce.core.api.StatefulRedisConnection;
-import io.lettuce.core.api.async.RedisAsyncCommands;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,9 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.net.UnknownHostException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -106,12 +102,21 @@ public class RedisTemplateTest {
 
 	@Autowired
 	private EventPublisher eventPublisher;
+	@Autowired
+	private EventSubscriptionManager subscriptionManager;
+
 	@Test
-	public void testRedisStream() {
+	public void testRedisStream() throws UnknownHostException {
+		String streamKey = "NOTIFICATION:JAVA:25";
 		PublicationDto publication = new PublicationDto();
 		publication.setContent("Java Developer Job at FIS");
 		publication.setLink("www.fis.com/jobs/566");
 
-		eventPublisher.publish(publication);
+		eventPublisher.publish(publication, streamKey);
+		eventPublisher.publish(publication, streamKey);
+		eventPublisher.publish(publication, streamKey);
+		PublicationHandler handler = new PublicationHandler();
+		subscriptionManager.addSubscriber(streamKey, handler, "database-group");
+		subscriptionManager.addSubscriber(streamKey, handler);
 	}
 }
