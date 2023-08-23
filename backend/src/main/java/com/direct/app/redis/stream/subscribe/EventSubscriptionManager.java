@@ -43,7 +43,19 @@ public class EventSubscriptionManager {
 		}
 	}
 	private void createConsumerGroupIfNotExists(String streamKey, String groupName){
-		ReadOffset offset = ReadOffset.from("0-0");
-		redisTemplate.opsForStream().createGroup(streamKey, offset, groupName);
+		if(!consumerGroupExists(streamKey, groupName)){
+			ReadOffset offset = ReadOffset.from("0-0");
+			redisTemplate.opsForStream().createGroup(streamKey, offset, groupName);
+		}
+	}
+
+	private boolean consumerGroupExists(String streamKey, String groupName) {
+		StreamInfo.XInfoGroups xInfoGroups = redisTemplate.opsForStream().groups(streamKey);
+		for (StreamInfo.XInfoGroup group : xInfoGroups.stream().toList()) {
+			if (group.groupName().equals(groupName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
