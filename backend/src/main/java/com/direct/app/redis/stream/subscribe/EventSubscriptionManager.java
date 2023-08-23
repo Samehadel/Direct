@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.stream.Consumer;
 import org.springframework.data.redis.connection.stream.ReadOffset;
+import org.springframework.data.redis.connection.stream.StreamInfo;
 import org.springframework.data.redis.connection.stream.StreamOffset;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.stream.StreamListener;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -51,7 +54,8 @@ public class EventSubscriptionManager {
 
 	private boolean consumerGroupExists(String streamKey, String groupName) {
 		StreamInfo.XInfoGroups xInfoGroups = redisTemplate.opsForStream().groups(streamKey);
-		for (StreamInfo.XInfoGroup group : xInfoGroups.stream().toList()) {
+		List<StreamInfo.XInfoGroup> groups = xInfoGroups.stream().collect(Collectors.toList());
+		for (StreamInfo.XInfoGroup group : groups) {
 			if (group.groupName().equals(groupName)) {
 				return true;
 			}
