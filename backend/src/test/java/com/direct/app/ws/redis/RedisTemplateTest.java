@@ -3,12 +3,13 @@ package com.direct.app.ws.redis;
 import com.direct.app.enumerations.UserRole;
 import com.direct.app.io.dto.PublicationDto;
 import com.direct.app.io.dto.UserDto;
+import com.direct.app.mq.MQPublisher;
+import com.direct.app.mq.MQSubscriptionManager;
+import com.direct.app.mq.MessageHandler;
 import com.direct.app.redis.LuaScriptRunner;
 import com.direct.app.redis.RedisSchema;
 import com.direct.app.redis.RedisHashOperator;
 import com.direct.app.redis.pubsub.MessagePublisher;
-import com.direct.app.redis.stream.publisher.EventPublisher;
-import com.direct.app.redis.stream.subscribe.EventSubscriptionManager;
 import com.direct.app.redis.stream.PublicationHandler;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.ScriptOutputType;
@@ -21,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.net.UnknownHostException;
+import static com.direct.app.mq.QueuesNames.JAVA_PUBLICATION_QUEUE;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -101,22 +102,22 @@ public class RedisTemplateTest {
 	}
 
 	@Autowired
-	private EventPublisher eventPublisher;
+	private MQPublisher mqPublisher;
 	@Autowired
-	private EventSubscriptionManager subscriptionManager;
+	private MQSubscriptionManager mqSubscriptionManager;
 
 	@Test
-	public void testRedisStream() throws UnknownHostException {
-		String streamKey = "NOTIFICATION:JAVA:25";
+	public void testRedisStream() throws Exception {
+		String streamKey = JAVA_PUBLICATION_QUEUE;
 		PublicationDto publication = new PublicationDto();
 		publication.setContent("Java Developer Job at FIS");
 		publication.setLink("www.fis.com/jobs/566");
 
-		eventPublisher.publish(publication, streamKey);
-		eventPublisher.publish(publication, streamKey);
-		eventPublisher.publish(publication, streamKey);
-		PublicationHandler handler = new PublicationHandler();
-		subscriptionManager.addSubscriber(streamKey, handler, "database-group");
-		subscriptionManager.addSubscriber(streamKey, handler);
+		mqPublisher.publish(publication, streamKey);
+		mqPublisher.publish(publication, streamKey);
+		mqPublisher.publish(publication, streamKey);
+		MessageHandler handler = new PublicationHandler();
+		mqSubscriptionManager.addSubscriber(streamKey, handler, "otherGroup");
+		mqSubscriptionManager.addSubscriber(streamKey, handler, null);
 	}
 }

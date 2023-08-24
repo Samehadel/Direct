@@ -1,7 +1,6 @@
 package com.direct.app.redis.stream.publisher;
 
-import com.direct.app.io.dto.PublicationDto;
-import com.direct.app.redis.stream.publisher.EventPublisher;
+import com.direct.app.mq.MQPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.stream.ObjectRecord;
@@ -10,31 +9,28 @@ import org.springframework.data.redis.connection.stream.StreamRecords;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.net.UnknownHostException;
-
 @Service
 @Slf4j
-public class PublicationEventPublisher implements EventPublisher<PublicationDto> {
+public class PublicationEventPublisher implements MQPublisher {
 	@Autowired
 	private RedisTemplate redisTemplate;
 
 	@Override
-	public void publish(PublicationDto event, String streamKey) throws UnknownHostException {
+	public boolean publish(Object event, String queueName) throws Exception {
 		try {
-			ObjectRecord<String, PublicationDto> record = StreamRecords
+			ObjectRecord<String, Object> record = StreamRecords
 					.newRecord()
 					.ofObject(event)
-					.withStreamKey(streamKey);
+					.withStreamKey(queueName);
 			RecordId recordId = redisTemplate.opsForStream().add(record);
 			if (recordId == null) {
-				log.error("");
+				return false;
 			}
 			log.info("recordID {}", recordId.getValue());
+			return true;
 		} catch (Exception exception) {
 			log.error("Can't publish object {} due to {}", event, exception.getMessage(), exception);
 			throw exception;
 		}
-
-
 	}
 }
