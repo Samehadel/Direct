@@ -118,17 +118,15 @@ public class RedisTemplateTest {
 	@Test
 	public void testRedisStream() throws Exception {
 		String streamKey = JAVA_PUBLICATION_QUEUE;
-		PublicationDto publication = new PublicationDto();
-		publication.setContent("Java Developer Job at FIS");
-		publication.setLink("www.fis.com/jobs/566");
+		PublicationDto publication = PublicationDto.builder()
+				.content("Java Developer Job at FIS")
+				.link("www.fis.com/jobs/566")
+				.build();
 
 		PublicationHandler handler = new PublicationHandler();
 		mqSubscriptionManager.addSubscriber(listenerContainer, streamKey, handler, null);
-		//mqSubscriptionManager.addSubscriber(streamKey, handler, "otherGroup");
 
 		mqPublisher.publish(publication, streamKey);
-		//mqPublisher.publish(publication, streamKey);
-		//mqPublisher.publish(publication, streamKey);
 	}
 
 }
