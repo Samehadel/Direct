@@ -1,5 +1,7 @@
 package com.direct.app.mq;
 
+import com.direct.app.io.dto.PublicationDto;
+
 public interface MQPublisher {
-	boolean publish(Object event, String queueName) throws Exception;
+	boolean publish(MQMessage event, String queueName) throws Exception;
 }

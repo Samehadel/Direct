@@ -1,5 +1,6 @@
 package com.direct.app.io.dto;
 
+import com.direct.app.mq.MQMessage;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
@@ -8,7 +9,7 @@ import java.util.List;
 
 @Data
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class PublicationDto extends BaseDTO {
+public class PublicationDto extends BaseDTO implements MQMessage {
 	private Long id;
 	private Long senderId;
 	private SenderDetails senderDetails;

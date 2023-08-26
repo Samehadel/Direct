@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.stream.Record;
 
 @Slf4j
-public class PublicationHandler implements RedisMessageHandler /*implements StreamListener<String, ObjectRecord<String, PublicationDto>>*/ {
+public class PublicationHandler implements RedisMessageHandler {
 
 	@Override
 	public void onMessage(Record message) {

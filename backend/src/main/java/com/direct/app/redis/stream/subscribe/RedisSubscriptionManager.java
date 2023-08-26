@@ -21,18 +21,16 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class RedisSubscriptionManager implements MQSubscriptionManager {
-	@Autowired
-	private StreamMessageListenerContainer listenerContainer;
 
 	@Autowired
 	private RedisTemplate redisTemplate;
 
 	@Override
-	public void addSubscriber(String queueName, MessageHandler messageHandler, String groupName) throws Exception {
-		addSubscriber(queueName, (StreamListener) messageHandler, groupName);
+	public void addSubscriber(StreamMessageListenerContainer listenerContainer, String queueName, MessageHandler messageHandler, String groupName) throws Exception {
+		addSubscriber(listenerContainer, queueName, (StreamListener) messageHandler, groupName);
 	}
 
-	private void addSubscriber(String streamKey, StreamListener streamListener, String groupName) throws UnknownHostException {
+	private void addSubscriber(StreamMessageListenerContainer listenerContainer, String streamKey, StreamListener streamListener, String groupName) throws UnknownHostException {
 		String consumerGroupName = getGroupName(streamKey, groupName);
 		createConsumerGroupIfNotExists(streamKey, consumerGroupName);
 		Consumer consumer = Consumer.from(consumerGroupName, InetAddress.getLocalHost().getHostName());

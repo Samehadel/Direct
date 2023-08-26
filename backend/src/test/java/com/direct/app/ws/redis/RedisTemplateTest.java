@@ -20,7 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.core.publisher.Flux;
+
+import java.util.function.Consumer;
 
 import static com.direct.app.mq.QueuesNames.JAVA_PUBLICATION_QUEUE;
 
@@ -36,6 +40,24 @@ public class RedisTemplateTest {
 
 	@Autowired
 	private LuaScriptRunner luaScriptRunner;
+
+	@Autowired
+	public RedisClient client;
+
+	@Autowired
+	@Qualifier("UserCreationPublisher")
+	private MessagePublisher publisher;
+
+	@Autowired
+	private MQPublisher mqPublisher;
+
+	@Autowired
+	private MQSubscriptionManager mqSubscriptionManager;
+
+	@Autowired
+	@Qualifier("publicationListenerContainer")
+	private StreamMessageListenerContainer listenerContainer;
+
 
 	@Test
 	public void testSaveUser() {
@@ -86,13 +108,6 @@ public class RedisTemplateTest {
 	}
 
 
-	@Autowired
-	public RedisClient client;
-
-	@Autowired
-	@Qualifier("UserCreationPublisher")
-	private MessagePublisher publisher;
-
 	@Test
 	public void testPubSubModel() {
 		publisher.publish("User Created with ID: 1");
@@ -100,12 +115,6 @@ public class RedisTemplateTest {
 		publisher.publish("User Created with ID: 3");
 		publisher.publish("User Created with ID: 4");
 	}
-
-	@Autowired
-	private MQPublisher mqPublisher;
-	@Autowired
-	private MQSubscriptionManager mqSubscriptionManager;
-
 	@Test
 	public void testRedisStream() throws Exception {
 		String streamKey = JAVA_PUBLICATION_QUEUE;
@@ -113,11 +122,13 @@ public class RedisTemplateTest {
 		publication.setContent("Java Developer Job at FIS");
 		publication.setLink("www.fis.com/jobs/566");
 
+		PublicationHandler handler = new PublicationHandler();
+		mqSubscriptionManager.addSubscriber(listenerContainer, streamKey, handler, null);
+		//mqSubscriptionManager.addSubscriber(streamKey, handler, "otherGroup");
+
 		mqPublisher.publish(publication, streamKey);
-		mqPublisher.publish(publication, streamKey);
-		mqPublisher.publish(publication, streamKey);
-		MessageHandler handler = new PublicationHandler();
-		mqSubscriptionManager.addSubscriber(streamKey, handler, "otherGroup");
-		mqSubscriptionManager.addSubscriber(streamKey, handler, null);
+		//mqPublisher.publish(publication, streamKey);
+		//mqPublisher.publish(publication, streamKey);
 	}
+
 }

@@ -1,5 +1,7 @@
 package com.direct.app.redis.stream.publisher;
 
+import com.direct.app.io.dto.PublicationDto;
+import com.direct.app.mq.MQMessage;
 import com.direct.app.mq.MQPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +18,11 @@ public class PublicationEventPublisher implements MQPublisher {
 	private RedisTemplate redisTemplate;
 
 	@Override
-	public boolean publish(Object event, String queueName) throws Exception {
+	public boolean publish(MQMessage event, String queueName) throws Exception {
 		try {
-			ObjectRecord<String, Object> record = StreamRecords
+			ObjectRecord<String, PublicationDto> record = StreamRecords
 					.newRecord()
-					.ofObject(event)
+					.ofObject((PublicationDto) event)
 					.withStreamKey(queueName);
 			RecordId recordId = redisTemplate.opsForStream().add(record);
 			if (recordId == null) {
